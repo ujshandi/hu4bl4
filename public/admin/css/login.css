@@ -1,5 +1,65 @@
  @import url("../css/button.css");
- 
+
+
+#bgWow{
+background: #003366;
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#003366', endColorstr='#ffffff');
+background: -webkit-gradient(linear, left top, left bottom, from(#003366), to(#ffffff));
+background: -moz-linear-gradient(top, #003366, #ffffff);
+	
+} 
+
+.titLog {
+	color:#fff;
+	font-size:0.95em;
+	font-family:"Myriad Pro", Arial, Helvetica, sans-serif;
+	width:100px;
+	line-height:30px;
+	float:left;
+	/* 
+	border:1px solid #ff0000;
+	text-align:right;
+	 */
+}
+
+.titLogDiv {
+	/* 
+	border:1px solid #ff0000;
+	 */
+	width:83%;
+	margin:0 auto;
+}
+
+.bgLogo{
+background-image: url(../../admin/images/login/h-logo.png);
+	/*
+	background-position:bottom right;
+	background-repeat:no-repeat;
+	position:absolute;
+	border:1px solid #ff0000; 
+	*/
+	top:-125;
+	left:160;
+	width:70px;
+	height:80px;
+	position:absolute;
+	}
+
+.bgWow {
+background-image: url(../../admin/images/login/imgWow.png);
+	background-position:bottom right;
+	background-repeat:repeat-x;
+	/* 
+	border:1px solid #ff0000; 
+	position:absolute;
+	bottom:1;
+	*/
+	height:95%;
+	width:93%;
+	padding-left:54px;
+	margin:0 auto;
+	}
+
 #login {
 	width:400px;
 	height:254px;
@@ -15,18 +75,22 @@
 	min-width:200px;
 	border-radius: 15px;
 	-webkit-border-radius: 15px;
+	/* 
 	background-image: url(../../admin/images/login/img-login.png);
+	 */
 	background-color:#000;
+	opacity:0.75;
+	filter:alpha(opacity=75);
 }
 
 #login .ribbon {
-	background-image: url(../../admin/images/login/logform.png);
+	/* background-image: url(../../admin/images/login/logform.png);
 	position: absolute;
 	width: 111px;
 	height: 110px;
 	z-index: 0;
 	margin-top: 0px;
-	margin-left: 0px;
+	margin-left: 0px; */
 
 }
 
@@ -61,8 +125,8 @@
 }
 
 #login .logo {
-	width:191px;
-	height:80px;
+	width:391px;
+	height:50px;
 	margin:20px auto;
 /*	
 	border:1px solid #ff0000;
@@ -96,29 +160,32 @@
 #login #username_id, #login #password {
 	font-size: 20px;
 	background-repeat:no-repeat;
-/*	padding-left: 35px;*/
-text-align:center;
+	/* 
+	padding-left: 35px; 
+	background-position:right center;
+	*/
+	text-align:center;
 	margin:auto;	
 	height: 27px;
 	background-position: 2px 3px;
-/*	background-position:right center; */
 	line-height: 27px;
 	color: #999;
-	width: 80%;
+	width: 65%;
 	margin-bottom: 10px;
 	font-family:"Myriad Pro", Arial, Helvetica, sans-serif;
 	opacity:0.6;
 	filter:alpha(opacity=60);
+	float:right;
 }
 #login #username_id:focus, #login #password:focus {
 	color:#000;
 }
 #login #username_id {
-	background-image: url(../../admin/images/login/user_.png);
+	/* background-image: url(../../admin/images/login/user_.png); */
 	
 }
 #login #password {
-	background-image: url(../../admin/images/login/pass_.png);
+	/* background-image: url(../../admin/images/login/pass_.png); */
 	
 }
 #login .loginButton{
@@ -127,6 +194,29 @@ text-align:center;
 	margin: 0px auto 20px auto;
 }
 
+.error {
+	color:#ff0000;
+	width:215px;
+	float:left;
+	font-weight:bold;
+	font: 0.95em/1em "Myriad Pro", Arial, Helvetica, sans-serif;
+}
 
 
-
+#footer{
+width:100%;
+clear:both;
+margin:0 0 0 0;
+/* background:url(../images/portal/footer-bg.png) repeat left top; */
+border-top:solid 3px #FFCC00;
+position: fixed;
+height: 29px;
+bottom: 0;
+left: 0;
+text-align: center;
+line-height: 29px;
+z-index: 11;
+background: #336699;
+background: -moz-linear-gradient(top, #336699 0%, #003366 50%, #022C56 51%, #02172C 100%);
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#336699), color-stop(50%,#003366), color-stop(51%,#022C56), color-stop(100%,#02172C));
+}
