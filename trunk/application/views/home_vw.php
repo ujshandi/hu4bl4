@@ -469,7 +469,7 @@
 	</script>
 </head>
 
-<body id="homeBody" >
+<body id="homeBody">
 	<div id="topheader">
 		<div class="bg">
 		  
