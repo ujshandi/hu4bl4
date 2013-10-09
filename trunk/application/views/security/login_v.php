@@ -67,7 +67,7 @@
 				<div class="bgLogo"></div>
             	<!--<image src="logo_login.png" alt="logo_login.png"/>-->
 					<div class="captTit" align="center">
-						<font color="#444ea8">Sistem dan Aplikasi Pengukuran Data Kinerja</font><br/>
+						<font color="#444ea8">Sistem Informasi Pengukuran Kinerja Program/Kegiatan</font><br/>
 						<font color="#444ea8">Direktorat Jenderal Perhubungan Laut</font>
 					</div>
 				</div>

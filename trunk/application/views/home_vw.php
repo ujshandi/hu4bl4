@@ -474,7 +474,7 @@
 		<div class="bg">
 		  
 			<div class="logo"><a href="<?=base_url()?>">home</a></div>
-			<div class="title"><h1>e-Performance</h1><h2>Sistem Aplikasi Pengukuran Kinerja Direktorat Jenderal Perhubungan Laut</h2><!--<h2>Sistem Informasi Pengukuran Kinerja Kementerian Perhubungan</h2>--></div>
+			<div class="title"><h1>Sistem Informasi Pengukuran Kinerja Program/Kegiatan</h1><h2> Direktorat Jenderal Perhubungan Laut</h2><!--<h2>Sistem Informasi Pengukuran Kinerja Kementerian Perhubungan</h2>--></div>
 			
 			<div class="rpanel">
 				<div class="left">
@@ -527,7 +527,7 @@
 	<div id="footer">
 		<div class="footer_content">
 	        <div class="footer_bottom">
-	            <div class="copyright" style="align:center">&copy; e-Perfomance 2013 - <a href="#" target="_blank">Sistem Aplikasi Pengukuran Kinerja Direktorat Jenderal Perhubungan Laut</a></div>
+	            <div class="copyright" style="align:center">&copy; 2013 - <a href="#" target="_blank">Sistem Informasi Pengukuran Kinerja Program/Kegiatan Direktorat Jenderal Perhubungan Laut</a></div>
 	            <!-- modif by chan 
 	            <div class="footer_right_links">
 	                <ul>
