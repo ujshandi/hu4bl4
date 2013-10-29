@@ -40,7 +40,8 @@ class Home extends CI_Controller {
 		//$data['title'] =$this->session->userdata('userlogin');
 	  
 		////$data['menuList'] =  $this->sys_menu_model->prepareMenuManual();//($this->session->userdata('groupId'),'');
-		$data['menuList'] =  $this->loadMegaMenu(false);//($this->session->userdata('groupId'),'');
+		//$data['menuList'] =  $this->loadMegaMenu(false);//($this->session->userdata('groupId'),'');
+		$data['menuList'] =  $this->loadApycomMenu(false);//($this->session->userdata('groupId'),'');
 		//var_dump($data['menuList']);
 		$data['listAutoTab'] = $this->sys_menu_model->getAutoTab($this->session->userdata('group_id'));
 		$this->load->view('home_vw',$data);
@@ -61,6 +62,14 @@ class Home extends CI_Controller {
 			echo $this->sys_menu_model->loadMegaMenu($this->session->userdata('app_type'),null,true);
 		else
 			return $this->sys_menu_model->loadMegaMenu($this->session->userdata('app_type'),null,true);
+	}
+	
+	public function loadApycomMenu($ajax=true){
+	//	var_dump('tes');
+		if ($ajax)
+			echo $this->sys_menu_model->loadApycomMenu($this->session->userdata('app_type'),null,true);
+		else
+			return $this->sys_menu_model->loadApycomMenu($this->session->userdata('app_type'),null,true);
 	}
 	
 	function getLoginStatus(){
