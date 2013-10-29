@@ -40,6 +40,11 @@
 			color:#fff;
 			text-decoration:none
 		}
+		
+		div#menu {
+			margin:30px 0 0 95px;
+			position:absolute;
+		}
 	</style>
 	<!--	
 		background-color:#212121;
@@ -259,11 +264,13 @@
 				direction: 'left'
 			}); */
 			
+/*
 			$('#mega-menu-1').dcMegaMenu({
 				rowItems: '3',
 				speed: 'fast',
 				effect: 'fade'
 			});
+*/
 			
 			/* $('#leftMenu').tree({
 				checkbox: false,
@@ -492,8 +499,11 @@
 		</div><!-- End of Header-->
 		
 		<!-- menu start -->
-		<div class="blue" >  
-			<ul id="mega-menu-1" class="mega-menu">
+		<!--<div class="blue" >  -->
+		<div id="menu">
+		<ul class="menu"> 
+			<!--<ul id="mega-menu-1" class="mega-menu"> -->
+			<!--<ul id="mega-menu-1" class="mega-menu"> -->
 				<?=$menuList?>
 			
 			</ul>
