@@ -56,7 +56,7 @@ border-bottom:solid 3px #FFCC00;
 .rpanel hr {border-bottom-color: #20568B;border-top-color: #042C54;margin: 3px 0;}
 .rpanel .inlink {background: #336699;border-radius: 4px;color: #FFFFFF;display: inline-block;float: left;font-size: 11px;font-weight: bold;margin: 3px 3px 0 0;padding: 1px 5px;text-decoration: none;text-shadow: 0 1px 1px #333333;}
 .rpanel .inlink:hover {background: #000033;}
-.rpanel .logout {height:40px;line-height:40px;border-left: 1px dotted #6699CC;color: #fff;display: block;font-size: 11px;font-weight: bold;margin: 15px 0 0 10px;padding: 0 0 0 40px;text-align: center;text-decoration: none;text-shadow: 0 1px 0 #000;background:url(../images/ic-logout.png) no-repeat 10px 50%}
+.rpanel .logout {height:40px;line-height:40px;border-left: 1px dotted #6699CC;color: #fff;display: block;font-size: 11px;font-weight: bold;margin: 15px 0 0 10px;padding: 0 0 0 40px;text-align: center;text-decoration: none;text-shadow: 0 1px 0 #000;background:url(../images/logout.png) no-repeat 10px 50%}
 .rpanel .logout:hover {color:#FFCC00}
 
 /* footer */

@@ -56,6 +56,27 @@ class Sys_menu_model extends CI_Model
 		return json_encode($result);
 	}
 	
+	public function loadApycomMenu($app_type,$imported=null,$cekPolicy=false){
+		$sql = "select m.* from tbl_menu m where hide<>1 and menu_parent is null and app_types like '%$app_type%'"
+		//.($menuparent==null?' where menu_parent is null ':' where menu_parent = '.$menuparent)
+		.($imported==null?'  ':' and imported = '.$imported)
+		.' order by menu_id ';
+		$query = $this->db->query($sql);
+		$result = "";
+		foreach ($query->result() as $row){
+			
+			$child = $this->loadApycomChild($row->menu_id,$app_type,$imported,$cekPolicy,$policy);
+			
+			$result .= "<li><a href='#' ".($child!=""?'class="parent"':"")."><span>$row->menu_name</span></a>";
+			
+			if ($child!="")
+				$result .= "<div><ul>".$child."</ul></div>";
+			$result .= "</li>";
+		}	
+		//var_dump($result);die;
+		return $result;
+	}
+	
 	public function loadMegaMenu($app_type,$imported=null,$cekPolicy=false){
 		$sql = "select m.* from tbl_menu m where hide<>1 and menu_parent is null and app_types like '%$app_type%'"
 		//.($menuparent==null?' where menu_parent is null ':' where menu_parent = '.$menuparent)
@@ -150,6 +171,36 @@ class Sys_menu_model extends CI_Model
 		}	
 		//if($i>0)
 		//		$result .= "</ul>";
+		return $result;		
+	}
+	
+	public function loadApycomChild($menuparent,$app_type,$imported=null,$cekPolicy=false,& $policy){
+		$sql = 'select m.* from tbl_menu m '
+		.' where hide<>1 and menu_parent = '.$menuparent
+		."  and app_types like '%$app_type%' "
+		.($imported==null?'  ':' and imported = '.$imported)
+		.' order by menu_id ';
+		$query = $this->db->query($sql);
+		$result = "";
+		$i=0;
+		foreach ($query->result() as $row){
+			
+			
+			$childs = $this->loadApycomChild($row->menu_id,$app_type,$imported,$cekPolicy,$policy);
+			
+			if ($childs==""){ 
+				
+				$result .= '<li><a href="#" onclick="addTab(\''.$row->menu_name.'\',\''.$row->url.'\')"><span>'.$row->menu_name.'</a></span></li>';
+			}
+			else {
+				$result .= "<li><a href='#' class='parent'><span>$row->menu_name</span></a>";
+				
+				$result .= "<div><ul>".$childs."</ul></div></li>";
+				
+			}
+			$i++;
+		}	
+	
 		return $result;		
 	}
 	

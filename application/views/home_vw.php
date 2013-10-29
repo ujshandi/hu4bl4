@@ -40,11 +40,11 @@
 			color:#fff;
 			text-decoration:none
 		}
-		
+		/* 
 		div#menu {
-			margin:30px 0 0 95px;
+			margin:0 0 0 0;
 			position:absolute;
-		}
+		} */
 	</style>
 	<!--	
 		background-color:#212121;
@@ -334,10 +334,12 @@
 
 		var index = 0;
 		function addTab(aTitle,aHref){
+			
 			index++;
 			if ($('#tt').tabs('exists',aTitle)){
 				$('#tt').tabs('select', aTitle);
 			} else {
+				//alert('kadie uy');
 				var content = '<iframe scrolling="auto" frameborder="0"  src="'+base_url+aHref+'" style="width:100%;height:100%;"></iframe>'; 
 				$('#tt').tabs('add',{
 					title:aTitle,
@@ -500,14 +502,73 @@
 		
 		<!-- menu start -->
 		<!--<div class="blue" >  -->
-		<div id="menu">
-		<ul class="menu"> 
+	
 			<!--<ul id="mega-menu-1" class="mega-menu"> -->
 			<!--<ul id="mega-menu-1" class="mega-menu"> -->
-				<?=$menuList?>
-			
-			</ul>
-			</div>
+				<?='';//$menuList?>
+				
+<div id="menu09">
+    <ul class="menu09">
+    <?=$menuList?>
+       <!-- <li><a href="#" class="parent"><span>Home</span></a>
+            <div><ul>
+                <li><a href="#" class="parent"><span>Sub Item 1</span></a>
+                    <div><ul>
+                        <li><a href="#" class="parent"><span>Sub Item 1.1</span></a>
+                            <div><ul>
+                                <li><a href="#"><span>Sub Item 1.1.1</span></a></li>
+                                <li><a href="#"><span>Sub Item 1.1.2</span></a></li>
+                            </ul></div>
+                        </li>
+                        <li><a href="#"><span>Sub Item 1.2</span></a></li>
+                        <li><a href="#"><span>Sub Item 1.3</span></a></li>
+                        <li><a href="#"><span>Sub Item 1.4</span></a></li>
+                        <li><a href="#"><span>Sub Item 1.5</span></a></li>
+                        <li><a href="#"><span>Sub Item 1.6</span></a></li>
+                        <li><a href="#" class="parent"><span>Sub Item 1.7</span></a>
+                            <div><ul>
+                                <li><a href="#"><span>Sub Item 1.7.1</span></a></li>
+                                <li><a href="#"><span>Sub Item 1.7.2</span></a></li>
+                            </ul></div>
+                        </li>
+                    </ul></div>
+                </li>
+                <li><a href="#"><span>Sub Item 2</span></a></li>
+                <li><a href="#"><span>Sub Item 3</span></a></li>
+            </ul></div>
+        </li>
+        <li><a href="#" class="parent"><span>Product Info</span></a>
+            <div><ul>
+                <li><a href="#" class="parent"><span>Sub Item 1</span></a>
+                    <div><ul>
+                        <li><a href="#"><span>Sub Item 1.1</span></a></li>
+                        <li><a href="#"><span>Sub Item 1.2</span></a></li>
+                    </ul></div>
+                </li>
+                <li><a href="#" class="parent"><span>Sub Item 2</span></a>
+                    <div><ul>
+                        <li><a href="#"><span>Sub Item 2.1</span></a></li>
+                        <li><a href="#"><span>Sub Item 2.2</span></a></li>
+                    </ul></div>
+                </li>
+                <li><a href="#"><span>Sub Item 3</span></a></li>
+                <li><a href="#"><span>Sub Item 4</span></a></li>
+                <li><a href="#"><span>Sub Item 5</span></a></li>
+                <li><a href="#"><span>Sub Item 6</span></a></li>
+                <li><a href="#"><span>Sub Item 7</span></a></li>
+            </ul></div>
+        </li>
+        <li><a href="#"><span>Help</span></a></li>
+        <li class="last"><a href="#"><span>Contacts</span></a></li>-->
+    </ul>
+</div>
+
+
+
+
+
+
+		
 		 <!-- end menu -->
 <!--
 	<div region="north" border="false">
@@ -526,15 +587,19 @@
 		<hr>
 	</div> -->
 <div id="divLayout" class="easyui-layout" style="width:1024px;height:500px;">	
-	<div region="center" title="">
-		
+	<div region="center" title="">		
 		<div id="tt" class="easyui-tabs" style="width:500px;height:250px;">
 		</div>
 	</div>
 
 	<div region="south" border="false" style="height:30px;background:#000000;padding:5px;"></div>
 
-	<div id="footer">
+	
+</div>	
+	<!-- <div id="versionBar">
+		<div class="copyright"> Copyright 2012  All Rights Reserved <span class="tip"><a href="#" title="Kemenhub">Sistem Aplikasi Pengukuran Kinerja Kementerian Perhubungan</a></span></div>
+	</div> -->
+<div id="footer">
 		<div class="footer_content">
 	        <div class="footer_bottom">
 	            <div class="copyright" style="align:center">&copy; 2013 - <a href="#" target="_blank">Sistem Informasi Pengukuran Kinerja Program/Kegiatan Direktorat Jenderal Perhubungan Laut</a></div>
@@ -551,11 +616,6 @@
 	     <div class="clear"></div>   
 		</div><!--end footer content-->
 	</div><!--end all footer-->
-</div>	
-	<!-- <div id="versionBar">
-		<div class="copyright"> Copyright 2012  All Rights Reserved <span class="tip"><a href="#" title="Kemenhub">Sistem Aplikasi Pengukuran Kinerja Kementerian Perhubungan</a></span></div>
-	</div> -->
-
 	<!-- AREA untuk Form Add/EDIT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  -->
 	
 	<div id="dglChangePasswd" class="easyui-dialog" style="width:440px;height:320px;padding:10px 20px" closed="true" buttons="#dlg-buttons">
@@ -615,6 +675,7 @@
 						?>
 						},100);
 	</script>
+	<div id="copyright" style="display:none">Menu by <a href="http://apycom.com/">Apycom jQuery Menus</a></div>
 </body>
 
 </html>
