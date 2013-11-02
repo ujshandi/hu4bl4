@@ -586,9 +586,9 @@
 		</div>
 		<hr>
 	</div> -->
-<div id="divLayout" class="easyui-layout" style="width:1024px;height:500px;">	
+<div id="divLayout" class="easyui-layout" style="width:1024px;height:100px;">	
 	<div region="center" title="">		
-		<div id="tt" class="easyui-tabs" style="width:500px;height:250px;">
+		<div id="tt" class="easyui-tabs" style="width:500px;height:150px;">
 		</div>
 	</div>
 
