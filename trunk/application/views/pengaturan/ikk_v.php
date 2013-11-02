@@ -119,7 +119,11 @@
 				$("#kode_ikk<?=$objectId?>").removeAttr('readonly');
 			}
 			//end newData 
-			
+
+			download<?=$objectId;?>=function(){
+				window.location=base_url+"download/format_excel_import/ikk.xls"
+			}
+				
 			import<?=$objectId;?> = function (){  
 				$('#dlgimport<?=$objectId;?>').dialog('open').dialog('setTitle','Import Indikator Kinerja Kegiatan');
 				$('#fmimport<?=$objectId;?>').form('clear');  
@@ -221,16 +225,20 @@
 				var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
 				$('#fm<?=$objectId;?>').form('clear');  
 			//
-				//alert(row.dokter_kode);
+				
 				if (row){
 					$('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Edit IKK Eselon II');
 					$('#fm<?=$objectId;?>').form('load',row);
 					//	initCombo();
-					setListE2<?=$objectId?>();
-					setIKUE1<?=$objectId;?>($("#tahun<?=$objectId?>").val(),$("#kode_e1<?=$objectId?>").val(),row.kode_iku_e1,row.deskripsi_e1);
+					setTimeout(function(){
+							setListE2<?=$objectId?>();
+							setIKUE1<?=$objectId;?>($("#tahun<?=$objectId?>").val(),$("#kode_e1<?=$objectId?>").val(),row.kode_iku_e1,row.deskripsi_e1);
+						},1000);
+					
+					setSasaranE2<?=$objectId?>($("#tahun<?=$objectId?>").val(),$("#kode_e2<?=$objectId?>").val(),row.kode_sasaran_e2,row.deskripsi_sasaran_e2);
 					url = base_url+'pengaturan/ikk/save/edit/'+row.kode_ikk+"/"+row.tahun;//+row.id;//'update_user.php?id='+row.id;
 					
-					$("#kode_ikk<?=$objectId?>").attr("readonly","readonly");
+					//$("#kode_ikk<?=$objectId?>").attr("readonly","readonly");
 				}
 			}
 			//end editData
@@ -316,6 +324,9 @@
 						case "kode_iku_e1":
 							showPopup('#popdesc<?=$objectId?>', row.e1_deskripsi);
 							break;
+						case "kode_sasaran_e2":
+							showPopup('#popdesc<?=$objectId?>', row.deskripsi_sasaran_e2);
+							break;
 						default:
 							closePopup('#popdesc<?=$objectId?>');
 							break;
@@ -348,7 +359,7 @@
 							$("#txtkode_sasaran_e2ListSasaran<?=$objectId;?>").val(chose);
 							$("#dropListSasaran<?=$objectId;?>").slideUp("slow");
 						});
-						
+					//	alert(val);
 						if (key!=null)
 							$('#kode_sasaran_e2ListSasaran<?=$objectId;?>').val(key);
 						if (val!=null)
@@ -532,6 +543,7 @@
 			<? if($this->sys_menu_model->cekAkses('IMPORT;',36,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 				<a href="#" onclick="import<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-import" plain="true">Import</a>
 			<?}?>
+			<a href="#" onclick="download<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-download" plain="true">Download Format Excel</a>
 		</div>
 	</div>
 	
@@ -540,20 +552,24 @@
 		<tr>
 			<th field="tahun" sortable="true" width="15px">Tahun</th>
 			<th field="kode_e2" sortable="true" width="25"<?=($this->session->userdata('unit_kerja_e2')=='-1'?'':'hidden="true"')?>>Kode Eselon II</th>
+			
 			<th field="nama_e2" hidden="true">Nama</th>
 			<th field="kode_e1" sortable="true" width="35" hidden="true">Kode E1</th>
+			<th field="kode_sasaran_e2" sortable="true"  width="35">Sasaran Eselon II</th>
 			<th field="kode_ikk" sortable="true" width="35">Kode IKK</th>
 			<th field="deskripsi" sortable="true" width="125">Deskripsi</th>
 			<th field="satuan" sortable="true" width="20">Satuan</th>
 			<th field="kode_iku_e1" sortable="true" width="30">Kode IKU Eselon I</th>
 			<th field="e1_deskripsi" hidden="true">desk</th>
+			
+			<th field="deskripsi_sasaran_e2" hidden="true">desk</th>
 		</tr>
 	</thead>  
 	</table>
 
 	<!-- AREA untuk Form Add/EDIT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  -->
 	
-	<div id="dlg<?=$objectId;?>" class="easyui-dialog" style="width:700px;height:400px;padding:10px 20px" closed="true" buttons="#dlg-buttons">
+	<div id="dlg<?=$objectId;?>" class="easyui-dialog" style="width:800px;height:500px;padding:10px 20px" closed="true" buttons="#dlg-buttons">
 		<!----------------Edit title-->
 		<div id="ftitle<?=$objectId?>" class="ftitle">Add/Edit/View Data Indikator Kerja Kegiatan</div>
 		<form id="fm<?=$objectId;?>" method="post">
@@ -635,4 +651,4 @@
     	</div>
 	</div>
 
-	<div class="popdesc" id="popdesc<?=$objectId?>">indriyanto</div>
+	<div class="popdesc" id="popdesc<?=$objectId?>">&nbsp;</div>

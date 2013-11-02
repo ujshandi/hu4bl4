@@ -176,8 +176,11 @@
 			
 			//http://www.dynamicdrive.com/dynamicindex16/formwizard.htm
 			//chan --------------------------------------
-			if (response==""){
+			if (response=="-1"){
 				$("#detail<?=$objectId;?>").html('Data PK belum lengkap.');
+			}
+			else if (response=="-2"){
+				$("#detail<?=$objectId;?>").html('Data Kegiatan belum diset.');
 			}
 			else {
 				var myform = new formtowizard({
@@ -295,7 +298,7 @@
 							</span>
 						</div>
 						<br>
-						<detail id="detail<?=$objectId;?>">
+						<detail id="detail<?=$objectId;?>" >
 							
 						</detail>
 					</form>

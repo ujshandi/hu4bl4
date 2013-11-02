@@ -199,6 +199,7 @@ class Sasaran_eselon1_model extends CI_Model
 		
 		$this->db->where('kode_sasaran_e1',$kode);		
 		$this->db->set('tahun',$data['tahun']);
+		$this->db->set('kode_sasaran_e1',$data['kode_sasaran_e1']);
 		$this->db->set('kode_e1',$data['kode_e1']);
 		$this->db->set('kode_sasaran_kl',(($data['kode_sasaran_kl']=="")||($data['kode_sasaran_kl']==null)||($data['kode_sasaran_kl']=="-1")?null:$data['kode_sasaran_kl']));
 		$this->db->set('deskripsi',$data['deskripsi']);
@@ -301,7 +302,7 @@ class Sasaran_eselon1_model extends CI_Model
 		//var_dump($que->num_rows());
 		//chan
 		if ($que->num_rows()==0){
-			$out = "Data Sasaran Eselon 1 untuk tingkat Eselon ini belum tersedia.";
+			$out = "Data Sasaran Eselon I untuk tingkat Eselon ini belum tersedia.";
 		}
 		
 		echo $out;

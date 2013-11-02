@@ -44,8 +44,8 @@ class Penetapaneselon2_model extends CI_Model
 			$this->db->select("tbl_pk_eselon2.*, tbl_ikk.deskripsi as deskripsi_iku_e2,tbl_ikk.satuan,tbl_sasaran_eselon2.deskripsi as deskripsi_sasaran_e2,tbl_eselon2.nama_e2",false);
 			$this->db->from('tbl_pk_eselon2');
 			$this->db->join('tbl_ikk', 'tbl_ikk.kode_ikk = tbl_pk_eselon2.kode_ikk and tbl_ikk.tahun = tbl_pk_eselon2.tahun');
-			$this->db->join('tbl_sasaran_eselon2','tbl_sasaran_eselon2.kode_sasaran_e2 = tbl_pk_eselon2.kode_sasaran_e2', 'left');
-			$this->db->join('tbl_sasaran_eselon1', 'tbl_sasaran_eselon1.kode_sasaran_e1 = tbl_sasaran_eselon2.kode_sasaran_e1', 'left');
+			$this->db->join('tbl_sasaran_eselon2','tbl_sasaran_eselon2.kode_sasaran_e2 = tbl_pk_eselon2.kode_sasaran_e2 and tbl_sasaran_eselon2.tahun = tbl_pk_eselon2.tahun', 'left');
+			$this->db->join('tbl_sasaran_eselon1', 'tbl_sasaran_eselon1.kode_sasaran_e1 = tbl_sasaran_eselon2.kode_sasaran_e1 and tbl_sasaran_eselon1.tahun = tbl_sasaran_eselon2.tahun', 'left');
 			$this->db->join('tbl_eselon2', 'tbl_eselon2.kode_e2 = tbl_pk_eselon2.kode_e2', 'left');
 
 			$this->db->order_by("tbl_pk_eselon2.tahun DESC, tbl_pk_eselon2.kode_sasaran_e2 ASC, tbl_pk_eselon2.kode_ikk ASC");
@@ -124,8 +124,8 @@ class Penetapaneselon2_model extends CI_Model
 		}
 		$this->db->select("tbl_pk_eselon2.*, tbl_ikk.deskripsi as deskripsi_iku_e2,tbl_ikk.satuan,tbl_sasaran_eselon2.deskripsi as deskripsi_sasaran_e2,tbl_eselon2.nama_e2",false);		$this->db->from('tbl_pk_eselon2');
 		$this->db->join('tbl_ikk', 'tbl_ikk.kode_ikk = tbl_pk_eselon2.kode_ikk and tbl_ikk.tahun = tbl_pk_eselon2.tahun');
-		$this->db->join('tbl_sasaran_eselon2','tbl_sasaran_eselon2.kode_sasaran_e2 = tbl_pk_eselon2.kode_sasaran_e2');
-		$this->db->join('tbl_sasaran_eselon1', 'tbl_sasaran_eselon1.kode_sasaran_e1 = tbl_sasaran_eselon2.kode_sasaran_e1', 'left');
+		$this->db->join('tbl_sasaran_eselon2','tbl_sasaran_eselon2.kode_sasaran_e2 = tbl_pk_eselon2.kode_sasaran_e2 and tbl_sasaran_eselon2.tahun = tbl_pk_eselon2.tahun');
+		$this->db->join('tbl_sasaran_eselon1', 'tbl_sasaran_eselon1.kode_sasaran_e1 = tbl_sasaran_eselon2.kode_sasaran_e1 and tbl_sasaran_eselon1.tahun = tbl_sasaran_eselon2.tahun', 'left');
 		$this->db->join('tbl_eselon2', 'tbl_eselon2.kode_e2 = tbl_pk_eselon2.kode_e2', 'left');
 		return $this->db->count_all_results();
 		$this->db->free_result();
@@ -362,6 +362,15 @@ class Penetapaneselon2_model extends CI_Model
 			$this->db->set('penetapan',			$qt->row()->penetapan);
 			$this->db->set('log',				'DELETE;'.$this->session->userdata('user_id').';'.date('Y-m-d H:i:s'));
 			$result = $this->db->insert('tbl_pk_eselon2_log');
+			
+			//ubah status rkt
+		$this->db->flush_cache();
+				$this->db->set('status', '0');
+				$this->db->where('tahun', $qt->row()->tahun);
+				$this->db->where('kode_e2',$qt->row()->kode_e2);
+				$this->db->where('kode_sasaran_e2', $qt->row()->kode_sasaran_e2);
+				$this->db->where('kode_ikk', $qt->row()->kode_ikk);
+				$this->db->update('tbl_rkt_eselon2');
 		
 		$this->db->flush_cache();
 		$this->db->where('id_pk_e2', $id);

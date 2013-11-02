@@ -48,6 +48,7 @@ class Iku_e1 extends CI_Controller {
 		$data['deskripsi'] = $this->input->post("deskripsi", TRUE);
 		$data['satuan'] = $this->input->post("satuan", TRUE);
 		$data['tahun'] = $this->input->post("tahun", TRUE);
+		$data['kode_sasaran_e1'] = $this->input->post("kode_sasaran_e1", TRUE);
 		return $data;
     }
 	
@@ -66,6 +67,7 @@ class Iku_e1 extends CI_Controller {
 		$this->form_validation->set_rules("deskripsi", 'Deskripsi', 'trim|required|xss_clean');
 		$this->form_validation->set_rules("satuan", 'Satuan', 'trim|required|xss_clean');
 		$this->form_validation->set_rules("tahun", 'Tahun', 'trim|required|xss_clean');
+		$this->form_validation->set_rules("kode_sasaran_e1", 'Sasaran Eselon I', 'trim|required|xss_clean');
 		
 		# message rules
 		$this->form_validation->set_message('required', 'Field %s harus diisi.');
@@ -79,6 +81,7 @@ class Iku_e1 extends CI_Controller {
 			$data["pesan_error"].=(trim(form_error("deskripsi"," "," "))==""?"":form_error("deskripsi"," "," ")."<br>");
 			$data["pesan_error"].=(trim(form_error("satuan"," "," "))==""?"":form_error("satuan"," "," ")."<br>");
 			$data["pesan_error"].=(trim(form_error("tahun"," "," "))==""?"":form_error("tahun"," "," ")."<br>");
+			$data["pesan_error"].=(trim(form_error("kode_sasaran_e1"," "," "))==""?"":form_error("kode_sasaran_e1"," "," ")."<br>");
 		
 			$status = $data["pesan_error"];
 		}else{
@@ -128,7 +131,7 @@ class Iku_e1 extends CI_Controller {
 	
 	function getNewCode($e1,$tahun,$kodesasaran){
 		//fieldName,$tblName,$condition,$prefix,$suffix,$minLength=5
-		$prefix = $this->utility->getValueFromSQL("select prefix_iku as rs from tbl_prefix where kode_e1 = '$e1'","UNSET").$kodesasaran;
+		$prefix = $this->utility->getValueFromSQL("select prefix_iku as rs from tbl_prefix where kode_e1 = '$e1'","-").$kodesasaran;//UNSET
 		//var_dump($prefix); die;
 		echo $this->utility->ourGetNextIDNum("kode_iku_e1","tbl_iku_eselon1"," and tahun = '$tahun'",$prefix.".","",2);
 	}

@@ -51,7 +51,7 @@
 					url = base_url+'pengaturan/sasaran_kl/save/edit/'+row.kode_sasaran_kl+"/"+row.tahun;//+row.id;//'update_user.php?id='+row.id;
 				}
 				
-				$("#kode_sasaran_kl<?=$objectId?>").attr("readonly","readonly");
+				//$("#kode_sasaran_kl<?=$objectId?>").attr("readonly","readonly");
 
 			}
 			//end editData
@@ -331,10 +331,11 @@
 			<? if($this->sys_menu_model->cekAkses('IMPORT;',31,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 				<a href="#" onclick="import<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-import" plain="true">Import</a>
 			<?}?>
+			
 		</div>
 	</div>
 	
-	<table id="dg<?=$objectId;?>" class="easyui-datagrid" style="height:auto;width:auto" title="Data Sasaran Kementerian" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true">
+	<table id="dg<?=$objectId;?>" class="easyui-datagrid" style="height:auto;width:auto" title="Data Sasaran Kementerian" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true" nowrap="false">
 		<thead>
 			<tr>
 				<th field="kode_kl" sortable="true" width="15" hidden="true">Kode KL</th>
