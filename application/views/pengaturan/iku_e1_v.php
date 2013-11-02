@@ -59,6 +59,7 @@
 			
 			$("#tahun<?=$objectId;?>").change(function(){
 				//alert($(this).val());
+				setSasaranE1<?=$objectId;?>($(this).val(),$("#kode_e1<?=$objectId?>").val(),'','')
 				 setIKUKL<?=$objectId;?>($(this).val(),"","");
 				  setKodeOtomatis<?=$objectId?>();
 			});
@@ -113,7 +114,11 @@
 				$("#kode_iku_e1<?=$objectId?>").removeAttr('readonly');
 			}
 			//end newData 
-			
+
+			download<?=$objectId;?>=function(){
+				window.location=base_url+"download/format_excel_import/iku_e1.xls"
+			}
+				
 			import<?=$objectId;?> = function (){  
 				$('#dlgimport<?=$objectId;?>').dialog('open').dialog('setTitle','Import Indikator Kinerja Utama Eselon 1');
 				$('#fmimport<?=$objectId;?>').form('clear');  
@@ -216,6 +221,7 @@
 					setIKUKL<?=$objectId;?>($("#tahun<?=$objectId?>").val(),row.kode_iku_kl,row.deskripsi_ikukl);
 					setListE2<?=$objectId?>(row.kode_e2);
 					kodeE1Change<?=$objectId?>(true);
+					setSasaranE1<?=$objectId?>($("#tahun<?=$objectId?>").val(),$("#kode_e1<?=$objectId?>").val(),row.kode_sasaran_e1,row.deskripsi_sasaran_e1);
 					/* // ajax
 					var response = '';
 					$.ajax({ type: "GET",   
@@ -232,7 +238,7 @@
 					url = base_url+'pengaturan/iku_e1/save/edit/'+row.kode_iku_e1+"/"+row.tahun;//+row.id;//'update_user.php?id='+row.id;
 					//alert(row.kode_e2);
 					
-					$("#kode_iku_e1<?=$objectId?>").attr("readonly","readonly");
+					//$("#kode_iku_e1<?=$objectId?>").attr("readonly","readonly");
 				}
 			}
 			//end editData
@@ -313,6 +319,9 @@
 							break;
 						case "kode_iku_kl":
 							showPopup('#popdesc<?=$objectId?>', row.kl_deskripsi);
+							break;
+						case "kode_sasaran_e1":
+							showPopup('#popdesc<?=$objectId?>', row.deskripsi_sasaran_e1);
 							break;
 						default:
 							closePopup('#popdesc<?=$objectId?>');
@@ -523,6 +532,7 @@
 		<? if($this->sys_menu_model->cekAkses('IMPORT;',35,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="import<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-import" plain="true">Import</a>
 		<?}?>
+		<a href="#" onclick="download<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-download" plain="true">Download Format Excel</a>
 	  </div>
 	</div>
 	
@@ -532,6 +542,7 @@
 		<th field="tahun" sortable="true" width="15px">Tahun</th>
 		<th field="kode_e1" sortable="true" width="30"  <?=($this->session->userdata('unit_kerja_e1')=='-1'?'':'hidden="true"')?>>Kode Eselon I</th>
 		<th field="nama_e1" sortable="true" hidden="true" >Nama</th>
+		<th field="kode_sasaran_e1" sortable="true" width="35">Sasaran Eselon I</th>	
 		<th field="kode_e2" sortable="true" width="30"  hidden="true">Kode Eselon II</th>
 		<th field="kode_iku_e1" sortable="true" width="35">Kode IKU</th>
 		<th field="deskripsi" sortable="true" width="125">Deskripsi IKU</th>
@@ -539,13 +550,15 @@
 		<th field="kode_iku_kl" sortable="true" width="20">Kode IKU KL</th>	
 		<th field="kl_deskripsi" sortable="true" hidden="true">Kode IKU KL</th>	
 		
+		<th field="deskripsi_sasaran_e1" sortable="true" hidden="true">kode sasaran e1</th>	
+		
 	  </tr>
 	  </thead>  
 	</table>
 
 	 <!-- AREA untuk Form Add/EDIT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  -->
 	
-	<div id="dlg<?=$objectId;?>" class="easyui-dialog" style="width:800px;height:400px;padding:10px 20px" closed="true" buttons="#dlg-buttons">
+	<div id="dlg<?=$objectId;?>" class="easyui-dialog" style="width:800px;height:500px;padding:10px 20px" closed="true" buttons="#dlg-buttons">
 		<!----------------Edit title-->
 		<div id="ftitle<?=$objectId?>" class="ftitle">Add/Edit/View Data Indikator Kinerja Utama (IKU) Eselon I</div>
 		<form id="fm<?=$objectId;?>" method="post">
@@ -563,13 +576,7 @@
 			</div>
 			
 			<div class="fitem">
-				<label style="width:120px;vertical-align:top">IKU Kementerian :</label>
-				<?//=$this->iku_kl_model->getListIKU_KL($objectId,"",false)?>
-				<span id="divIKUKL<?=$objectId?>">
-				</span>
-			</div>
-			<div class="fitem">
-				<label style="width:120px">Sasaran Eselon 1:</label>					
+				<label style="width:120px">Sasaran Eselon I:</label>					
 					<span id="divSasaranE1<?=$objectId?>">
 				</span>
 			</div>
@@ -584,6 +591,13 @@
 			<div class="fitem">
 				<label style="width:120px;vertical-align:top">Satuan :</label>
 				<input name="satuan" size="60" class="easyui-validatebox">
+			</div>
+			
+			<div class="fitem">
+				<label style="width:120px;vertical-align:top">IKU Kementerian :</label>
+				<?//=$this->iku_kl_model->getListIKU_KL($objectId,"",false)?>
+				<span id="divIKUKL<?=$objectId?>">
+				</span>
 			</div>
 			<!--request bos toto 2013.05.30
 			<div class="fitem">							
@@ -617,4 +631,4 @@
     	</div>
 	</div>
 	
-	<div class="popdesc" id="popdesc<?=$objectId?>">indriyanto</div>
+	<div class="popdesc" id="popdesc<?=$objectId?>">&nbsp;</div>

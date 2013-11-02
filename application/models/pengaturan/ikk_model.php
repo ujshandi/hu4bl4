@@ -42,11 +42,12 @@ class Ikk_model extends CI_Model
 			}
 			//$this->db->order_by($sort." ".$order );
 			if($purpose==1){$this->db->limit($limit,$offset);}
-			$this->db->select("a.tahun,a.kode_e2, a.kode_ikk, a.deskripsi, a.satuan, a.kode_iku_e1, c.kode_e1, b.nama_e2, d.deskripsi AS e1_deskripsi",false);
+			$this->db->select("a.tahun,a.kode_e2, a.kode_ikk, a.deskripsi, a.satuan, a.kode_iku_e1, c.kode_e1, b.nama_e2, d.deskripsi AS e1_deskripsi,a.kode_sasaran_e2,e.deskripsi as deskripsi_sasaran_e2",false);
 			$this->db->from('tbl_ikk a');
 			$this->db->join('tbl_eselon2 b', 'b.kode_e2 = a.kode_e2');
 			$this->db->join('tbl_eselon1 c', 'c.kode_e1 = b.kode_e1');
-			$this->db->join('tbl_iku_eselon1 d', 'd.kode_iku_e1 = a.kode_iku_e1','left');
+			$this->db->join('tbl_iku_eselon1 d', 'd.kode_iku_e1 = a.kode_iku_e1 and a.tahun=d.tahun','left');
+			$this->db->join('tbl_sasaran_eselon2 e', 'e.kode_sasaran_e2 = a.kode_sasaran_e2 and e.tahun=a.tahun','left');
 			$this->db->order_by("a.kode_e2 ASC, a.kode_ikk ASC");
 			//$this->db->select("a.kode_e2, a.kode_ikk, b.kode_iku_e1, a.deskripsi, a.satuan",false);
 			//$this->db->from('tbl_ikk a');
@@ -69,6 +70,8 @@ class Ikk_model extends CI_Model
 				$response->rows[$i]['kode_iku_e1']=$row->kode_iku_e1;
 				$response->rows[$i]['e1_deskripsi']=$row->e1_deskripsi;
 				$response->rows[$i]['tahun']=$row->tahun;
+				$response->rows[$i]['kode_sasaran_e2']=$row->kode_sasaran_e2;
+				$response->rows[$i]['deskripsi_sasaran_e2']=$row->deskripsi_sasaran_e2;
 				
 				//utk kepentingan export excel ==========================
 				// $row->keterangan = str_replace("<br>",", ",$response->rows[$i]['pejabat']);
@@ -79,6 +82,8 @@ class Ikk_model extends CI_Model
 					unset($row->kode_e2);
 					unset($row->nama_e2);
 					unset($row->e1_deskripsi);
+					unset($row->deskripsi_sasaran_e2);
+					unset($row->kode_sasaran_e2);
 					
 				//============================================================
 					
@@ -109,6 +114,8 @@ class Ikk_model extends CI_Model
 				$response->rows[$count]['deskripsi_e1']='';
 				$response->rows[$count]['satuan']='';
 				$response->rows[$count]['tahun']='';
+				$response->rows[$count]['kode_sasaran_e2']='';
+				$response->rows[$count]['deskripsi_sasaran_e2']='';
 				$response->lastNo = 0;
 		}
 		
@@ -129,7 +136,7 @@ class Ikk_model extends CI_Model
 					//$colHeaders = array("Kode Eselon 2","Kode IKK","Kode IKU Eselon 1","Deskripsi IKK","Satuan");
 			else
 				$colHeaders = array("Tahun","Kode Eselon II","Kode IKK","Deskripsi","Satuan");
-				//$colHeaders = array("Kode Eselon 2","Kode IKK","Kode IKU Eselon 1","Deskripsi IKK","Satuan");
+				//$colHeaders = array("Kode Eselon 2","Kode IKK","Kode IKU Eselon 1`","Deskripsi IKK","Satuan");
 					
 		//	var_dump($query->result());die;
 			to_excel($query,"IKK",$colHeaders);
@@ -156,7 +163,7 @@ class Ikk_model extends CI_Model
 		$this->db->from('tbl_ikk a');
 		$this->db->join('tbl_eselon2 b', 'b.kode_e2 = a.kode_e2');
 		$this->db->join('tbl_eselon1 c', 'c.kode_e1 = b.kode_e1');
-		$this->db->join('tbl_iku_eselon1 d', 'd.kode_iku_e1 = a.kode_iku_e1','left');
+		$this->db->join('tbl_iku_eselon1 d', 'd.kode_iku_e1 = a.kode_iku_e1  and a.tahun=d.tahun','left');
 
 		//$this->db->select("*",false);
 		//$this->db->from('tbl_ikk');
@@ -203,8 +210,10 @@ class Ikk_model extends CI_Model
 		$this->db->set('deskripsi',$data['deskripsi']);
 		$this->db->set('satuan',$data['satuan']);
 		//$this->db->set('kode_iku_e1',$data['kode_iku_e1']);
+		
 		$this->db->set('kode_iku_e1',(($data['kode_iku_e1']=="")||($data['kode_iku_e1']==null)||($data['kode_iku_e1']=="-1")?null:$data['kode_iku_e1']));
 		$this->db->set('kode_e2',$data['kode_e2']);
+		$this->db->set('kode_sasaran_e2',$data['kode_sasaran_e2']);
 		$this->db->set('log_insert', 		$this->session->userdata('user_id').';'.date('Y-m-d H:i:s'));
 		try {
 			$result = $this->db->insert('tbl_ikk');
@@ -217,6 +226,7 @@ class Ikk_model extends CI_Model
 			$this->db->set('satuan',$data['satuan']);
 			$this->db->set('kode_iku_e1',(($data['kode_iku_e1']=="")||($data['kode_iku_e1']==null)||($data['kode_iku_e1']=="-1")?null:$data['kode_iku_e1']));
 			$this->db->set('kode_e2',$data['kode_e2']);
+			$this->db->set('kode_sasaran_e2',$data['kode_sasaran_e2']);
 			$this->db->set('log',				'INSERT;'.$this->session->userdata('user_id').';'.date('Y-m-d H:i:s'));
 			$result = $this->db->insert('tbl_ikk_log');
 			
@@ -246,12 +256,13 @@ class Ikk_model extends CI_Model
 		$this->db->where('tahun',$tahun);
 		
 		$this->db->set('tahun',$data['tahun']);
-		//$this->db->set('kode_e1',$data['kode_e1']);
+$this->db->set('kode_ikk',$data['kode_ikk']);
 		$this->db->set('kode_e2',$data['kode_e2']);
 		//$this->db->set('kode_iku_e1',$data['kode_iku_e1']);
 		$this->db->set('kode_iku_e1',(($data['kode_iku_e1']=="")||($data['kode_iku_e1']==null)||($data['kode_iku_e1']=="-1")?null:$data['kode_iku_e1']));
 		$this->db->set('deskripsi',$data['deskripsi']);		
 		$this->db->set('satuan',$data['satuan']);		
+		$this->db->set('kode_sasaran_e2',$data['kode_sasaran_e2']);		
 		$this->db->set('log_update', 		$this->session->userdata('user_id').';'.date('Y-m-d H:i:s'));
 		$result=$this->db->update('tbl_ikk');
 		
@@ -264,6 +275,7 @@ class Ikk_model extends CI_Model
 		$this->db->set('satuan',$data['satuan']);
 		$this->db->set('kode_iku_e1',(($data['kode_iku_e1']=="")||($data['kode_iku_e1']==null)||($data['kode_iku_e1']=="-1")?null:$data['kode_iku_e1']));
 		$this->db->set('kode_e2',$data['kode_e2']);
+		$this->db->set('kode_sasaran_e2',$data['kode_sasaran_e2']);
 		$this->db->set('log',				'UPDATE;'.$this->session->userdata('user_id').';'.date('Y-m-d H:i:s'));
 		$result = $this->db->insert('tbl_ikk_log');
 		

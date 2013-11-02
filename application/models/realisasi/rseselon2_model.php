@@ -43,8 +43,8 @@ class rseselon2_model extends CI_Model
 			$this->db->from('tbl_kinerja_eselon2');
 			$this->db->join('tbl_pk_eselon2', 'tbl_kinerja_eselon2.kode_ikk = tbl_pk_eselon2.kode_ikk');
 			$this->db->join('tbl_ikk', 'tbl_ikk.kode_ikk = tbl_kinerja_eselon2.kode_ikk and tbl_ikk.tahun = tbl_kinerja_eselon2.tahun');
-			$this->db->join('tbl_sasaran_eselon2','tbl_sasaran_eselon2.kode_sasaran_e2 = tbl_kinerja_eselon2.kode_sasaran_e2', 'left');
-			$this->db->join('tbl_sasaran_eselon1', 'tbl_sasaran_eselon1.kode_sasaran_e1 = tbl_sasaran_eselon2.kode_sasaran_e1', 'left');
+			$this->db->join('tbl_sasaran_eselon2','tbl_sasaran_eselon2.kode_sasaran_e2 = tbl_kinerja_eselon2.kode_sasaran_e2 and tbl_sasaran_eselon2.tahun = tbl_kinerja_eselon2.tahun', 'left');
+			$this->db->join('tbl_sasaran_eselon1', 'tbl_sasaran_eselon1.kode_sasaran_e1 = tbl_sasaran_eselon2.kode_sasaran_e1 and tbl_sasaran_eselon1.tahun = tbl_sasaran_eselon2.tahun', 'left');
 			$this->db->join('tbl_eselon2', 'tbl_eselon2.kode_e2 = tbl_kinerja_eselon2.kode_e2', 'left');
 			$this->db->order_by("tbl_kinerja_eselon2.tahun DESC, triwulan ASC, kode_sasaran_e2 ASC, tbl_kinerja_eselon2.kode_ikk ASC");
 			$query = $this->db->get();
@@ -123,8 +123,8 @@ class rseselon2_model extends CI_Model
 			$this->db->from('tbl_kinerja_eselon2');
 			$this->db->join('tbl_pk_eselon2', 'tbl_kinerja_eselon2.kode_ikk = tbl_pk_eselon2.kode_ikk');
 			$this->db->join('tbl_ikk', 'tbl_ikk.kode_ikk = tbl_kinerja_eselon2.kode_ikk and tbl_ikk.tahun = tbl_kinerja_eselon2.tahun');
-			$this->db->join('tbl_sasaran_eselon2','tbl_sasaran_eselon2.kode_sasaran_e2 = tbl_kinerja_eselon2.kode_sasaran_e2', 'left');
-			$this->db->join('tbl_sasaran_eselon1', 'tbl_sasaran_eselon1.kode_sasaran_e1 = tbl_sasaran_eselon2.kode_sasaran_e1', 'left');
+			$this->db->join('tbl_sasaran_eselon2','tbl_sasaran_eselon2.kode_sasaran_e2 = tbl_kinerja_eselon2.kode_sasaran_e2 and tbl_sasaran_eselon2.tahun = tbl_kinerja_eselon2.tahun', 'left');
+			$this->db->join('tbl_sasaran_eselon1', 'tbl_sasaran_eselon1.kode_sasaran_e1 = tbl_sasaran_eselon2.kode_sasaran_e1 and tbl_sasaran_eselon1.tahun = tbl_sasaran_eselon2.tahun', 'left');
 			$this->db->join('tbl_eselon2', 'tbl_eselon2.kode_e2 = tbl_kinerja_eselon2.kode_e2', 'left');
 		return $this->db->count_all_results();
 		$this->db->free_result();
@@ -350,7 +350,13 @@ class rseselon2_model extends CI_Model
 		
 		if ($result->num_rows() > 0){
 			$dt[0] = $result->row()->realisasi;
-			$dt[1] = ($dt[0]/$result->row()->penetapan)*100;
+			if (is_numeric($result->row()->penetapan)){
+				if ($result->row()->penetapan>0)
+					$dt[1] = ($dt[0]/$result->row()->penetapan)*100;
+			}	
+			else {
+				$dt[1] = 0;
+			}
 		}else{
 			$dt[0] = 0;
 			$dt[1] = 0;
