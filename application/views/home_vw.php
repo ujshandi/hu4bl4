@@ -480,11 +480,12 @@
 
 <body id="homeBody">
 	<div id="topheader">
-		<div class="bg">
-		  
+		<div class="bg">		  
 			<div class="logo"><a href="<?=base_url()?>">home</a></div>
-			<div class="title"><h1>Sistem Informasi Pengukuran Kinerja Program/Kegiatan</h1><h2> Direktorat Jenderal Perhubungan Laut</h2><!--<h2>Sistem Informasi Pengukuran Kinerja Kementerian Perhubungan</h2>--></div>
-			
+			<div class="title">
+				<h1>Sistem Informasi Pengukuran Kinerja Program/Kegiatan</h1><h2> Direktorat Jenderal Perhubungan Laut</h2>
+				<!--<h2>Sistem Informasi Pengukuran Kinerja Kementerian Perhubungan</h2>-->
+			</div>
 			<div class="rpanel">
 				<div class="left">
 					<h4>Welcome :</h4>
@@ -496,128 +497,118 @@
 				<div class="clear"></div>
 			</div>
 			<div class="clear"></div>
-
 		</div>
-		</div><!-- End of Header-->
-		
-		<!-- menu start -->
-		<!--<div class="blue" >  -->
+	</div>
+	<!-- End of Header-->
 	
-			<!--<ul id="mega-menu-1" class="mega-menu"> -->
-			<!--<ul id="mega-menu-1" class="mega-menu"> -->
-				<?='';//$menuList?>
+	<!-- menu start -->
+	<!--<div class="blue" >  -->
+
+	<!--<ul id="mega-menu-1" class="mega-menu"> -->
+	<!--<ul id="mega-menu-1" class="mega-menu"> -->
+	<!--?='';//$menuList?-->
 				
-<div id="menu09">
-    <ul class="menu09">
-    <?=$menuList?>
-       <!-- <li><a href="#" class="parent"><span>Home</span></a>
-            <div><ul>
-                <li><a href="#" class="parent"><span>Sub Item 1</span></a>
-                    <div><ul>
-                        <li><a href="#" class="parent"><span>Sub Item 1.1</span></a>
-                            <div><ul>
-                                <li><a href="#"><span>Sub Item 1.1.1</span></a></li>
-                                <li><a href="#"><span>Sub Item 1.1.2</span></a></li>
-                            </ul></div>
-                        </li>
-                        <li><a href="#"><span>Sub Item 1.2</span></a></li>
-                        <li><a href="#"><span>Sub Item 1.3</span></a></li>
-                        <li><a href="#"><span>Sub Item 1.4</span></a></li>
-                        <li><a href="#"><span>Sub Item 1.5</span></a></li>
-                        <li><a href="#"><span>Sub Item 1.6</span></a></li>
-                        <li><a href="#" class="parent"><span>Sub Item 1.7</span></a>
-                            <div><ul>
-                                <li><a href="#"><span>Sub Item 1.7.1</span></a></li>
-                                <li><a href="#"><span>Sub Item 1.7.2</span></a></li>
-                            </ul></div>
-                        </li>
-                    </ul></div>
-                </li>
-                <li><a href="#"><span>Sub Item 2</span></a></li>
-                <li><a href="#"><span>Sub Item 3</span></a></li>
-            </ul></div>
-        </li>
-        <li><a href="#" class="parent"><span>Product Info</span></a>
-            <div><ul>
-                <li><a href="#" class="parent"><span>Sub Item 1</span></a>
-                    <div><ul>
-                        <li><a href="#"><span>Sub Item 1.1</span></a></li>
-                        <li><a href="#"><span>Sub Item 1.2</span></a></li>
-                    </ul></div>
-                </li>
-                <li><a href="#" class="parent"><span>Sub Item 2</span></a>
-                    <div><ul>
-                        <li><a href="#"><span>Sub Item 2.1</span></a></li>
-                        <li><a href="#"><span>Sub Item 2.2</span></a></li>
-                    </ul></div>
-                </li>
-                <li><a href="#"><span>Sub Item 3</span></a></li>
-                <li><a href="#"><span>Sub Item 4</span></a></li>
-                <li><a href="#"><span>Sub Item 5</span></a></li>
-                <li><a href="#"><span>Sub Item 6</span></a></li>
-                <li><a href="#"><span>Sub Item 7</span></a></li>
-            </ul></div>
-        </li>
-        <li><a href="#"><span>Help</span></a></li>
-        <li class="last"><a href="#"><span>Contacts</span></a></li>-->
-    </ul>
-</div>
-
-
-
-
-
-
-		
-		 <!-- end menu -->
-<!--
-	<div region="north" border="false">
-		
-		
-	</div>  end north-->
+	<div id="menu09">
+	    <ul class="menu09">
+	    <?=$menuList?>
+	       <!-- <li><a href="#" class="parent"><span>Home</span></a>
+	            <div><ul>
+	                <li><a href="#" class="parent"><span>Sub Item 1</span></a>
+	                    <div><ul>
+	                        <li><a href="#" class="parent"><span>Sub Item 1.1</span></a>
+	                            <div><ul>
+	                                <li><a href="#"><span>Sub Item 1.1.1</span></a></li>
+	                                <li><a href="#"><span>Sub Item 1.1.2</span></a></li>
+	                            </ul></div>
+	                        </li>
+	                        <li><a href="#"><span>Sub Item 1.2</span></a></li>
+	                        <li><a href="#"><span>Sub Item 1.3</span></a></li>
+	                        <li><a href="#"><span>Sub Item 1.4</span></a></li>
+	                        <li><a href="#"><span>Sub Item 1.5</span></a></li>
+	                        <li><a href="#"><span>Sub Item 1.6</span></a></li>
+	                        <li><a href="#" class="parent"><span>Sub Item 1.7</span></a>
+	                            <div><ul>
+	                                <li><a href="#"><span>Sub Item 1.7.1</span></a></li>
+	                                <li><a href="#"><span>Sub Item 1.7.2</span></a></li>
+	                            </ul></div>
+	                        </li>
+	                    </ul></div>
+	                </li>
+	                <li><a href="#"><span>Sub Item 2</span></a></li>
+	                <li><a href="#"><span>Sub Item 3</span></a></li>
+	            </ul></div>
+	        </li>
+	        <li><a href="#" class="parent"><span>Product Info</span></a>
+	            <div><ul>
+	                <li><a href="#" class="parent"><span>Sub Item 1</span></a>
+	                    <div><ul>
+	                        <li><a href="#"><span>Sub Item 1.1</span></a></li>
+	                        <li><a href="#"><span>Sub Item 1.2</span></a></li>
+	                    </ul></div>
+	                </li>
+	                <li><a href="#" class="parent"><span>Sub Item 2</span></a>
+	                    <div><ul>
+	                        <li><a href="#"><span>Sub Item 2.1</span></a></li>
+	                        <li><a href="#"><span>Sub Item 2.2</span></a></li>
+	                    </ul></div>
+	                </li>
+	                <li><a href="#"><span>Sub Item 3</span></a></li>
+	                <li><a href="#"><span>Sub Item 4</span></a></li>
+	                <li><a href="#"><span>Sub Item 5</span></a></li>
+	                <li><a href="#"><span>Sub Item 6</span></a></li>
+	                <li><a href="#"><span>Sub Item 7</span></a></li>
+	            </ul></div>
+	        </li>
+	        <li><a href="#"><span>Help</span></a></li>
+	        <li class="last"><a href="#"><span>Contacts</span></a></li>-->
+	    </ul>
+	</div>
+	<!-- end menu -->
+	<!--
+	<div region="north" border="false"> </div>  
+	end north-->
 
 	<!--
 	<div region="west" split="true" title="Daftar Menu" style="width:200px;padding:10px;">
 		<div class="blue">
 		<ul id="megaMenu" class="mega-menu">
-			<?='';//$menuList?>
-			
+		<//?='';//$menuList?>
 		</ul>
 		</div>
 		<hr>
 	</div> -->
-<div id="divLayout" class="easyui-layout" style="width:1024px;height:100px;">	
-	<div region="center" title="">		
-		<div id="tt" class="easyui-tabs" style="width:500px;height:150px;">
+	<div id="divLayout" class="easyui-layout">	
+		<div region="center" title="">		
+			<div id="tt" class="easyui-tabs" style="width:500px;height:150px;"></div>
 		</div>
+		<div region="south" border="false" style="height:30px;background:#000000;padding:5px;"></div>
 	</div>
-
-	<div region="south" border="false" style="height:30px;background:#000000;padding:5px;"></div>
-
-	
-</div>	
 	<!-- <div id="versionBar">
 		<div class="copyright"> Copyright 2012  All Rights Reserved <span class="tip"><a href="#" title="Kemenhub">Sistem Aplikasi Pengukuran Kinerja Kementerian Perhubungan</a></span></div>
 	</div> -->
-<div id="footer">
+	<div id="footer">
 		<div class="footer_content">
 	        <div class="footer_bottom">
-	            <div class="copyright" style="align:center">&copy; 2013 - <a href="#" target="_blank">Sistem Informasi Pengukuran Kinerja Program/Kegiatan Direktorat Jenderal Perhubungan Laut</a></div>
+	            <div class="copyright" style="align:center">&copy; 2013 - 
+					<a href="#" target="_blank">Sistem Informasi Pengukuran Kinerja Program/Kegiatan Direktorat Jenderal Perhubungan Laut</a>
+				</div>
 	            <!-- modif by chan 
-	            <div class="footer_right_links">
-	                <ul>
-	                    <li class="selected"><a href="<?=base_url();?>">HOME</a></li>
-	                    <li><a href="#">KONTAK</a></li>
-	                    <li><a href="#">WEB MAIL</a></li>
-	                    <li><a href="#">LOGIN</a></li>
-	                </ul>
-	            </div>-->
+			            <div class="footer_right_links">
+			                <ul>
+			                    <li class="selected"><a href="</?=base_url();?>">HOME</a></li>
+			                    <li><a href="#">KONTAK</a></li>
+			                    <li><a href="#">WEB MAIL</a></li>
+			                    <li><a href="#">LOGIN</a></li>
+			                </ul>
+			            </div>-->
 	        </div>
-	     <div class="clear"></div>   
-		</div><!--end footer content-->
-	</div><!--end all footer-->
-	<!-- AREA untuk Form Add/EDIT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  -->
+			<div class="clear"></div>   
+		</div>
+		<!--end footer content-->
+	</div>
+	<!--end all footer-->
 	
+	<!-- AREA untuk Form Add/EDIT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  -->
 	<div id="dglChangePasswd" class="easyui-dialog" style="width:440px;height:320px;padding:10px 20px" closed="true" buttons="#dlg-buttons">
 		<div class="ftitle">Edit Data Pribadi</div>
 		<form id="fm" method="post">
@@ -646,36 +637,33 @@
 	
 	<script type="text/javascript">
 		setTimeout(function(){
-					//var wWidth = $(window).width();
-					var wWidth = $("#topheader").width();
-					var wHeight = $(window).height();
-					 var c = $('#divLayout');
-					 var header = $('#topheader');
-					 var footer = $('#footer');
-					/* var p = c.layout('panel','center');    // get the center panel
-					var oldHeight = p.panel('panel').outerHeight();
-					p.panel('resize', {height:'auto'});
-					var newHeight = p.panel('panel').outerHeight(); */
-					//c.height(c.height() + newHeight - oldHeight);
-					c.width(wWidth-17);
-					c.height(wHeight-header.height()-footer.height()-3);
-					
-					c.layout('resize');
-					
-					//$("#divLayout").css('width',wWidth);
-					//$("#divLayout").css('height',wHeight);
-				
-							//addTab('Dashboard','dashboard');
-					//	var autotab = <?=$listAutoTab;?>
-						//alert(autoTab);
-						<? foreach ($listAutoTab as $row){?>
-						//	alert("<?=$row->menu_name?>");
-						addTab('<?=$row->menu_name?>','<?=$row->url?>');
-						<? }
-						?>
-						},100);
+			//var wWidth = $(window).width();
+			var wWidth = $("#topheader").width();
+			var wHeight = $(window).height();
+			var c = $('#divLayout');
+			var header = $('#topheader');
+			var footer = $('#footer');
+			/* var p = c.layout('panel','center');    // get the center panel
+			var oldHeight = p.panel('panel').outerHeight();
+			p.panel('resize', {height:'auto'});
+			var newHeight = p.panel('panel').outerHeight(); */
+			//c.height(c.height() + newHeight - oldHeight);
+			c.width(wWidth-17);
+			c.height(wHeight-header.height()-footer.height()-3);
+			c.layout('resize');
+			//$("#divLayout").css('width',wWidth);
+			//$("#divLayout").css('height',wHeight);
+		
+			//addTab('Dashboard','dashboard');
+			//var autotab = <?=$listAutoTab;?>
+			//alert(autoTab);
+				<? foreach ($listAutoTab as $row){?>
+			//alert("<?=$row->menu_name?>");
+					addTab('<?=$row->menu_name?>','<?=$row->url?>');
+				<? }
+				?>
+				},100);
 	</script>
 	<div id="copyright" style="display:none">Menu by <a href="http://apycom.com/">Apycom jQuery Menus</a></div>
 </body>
-
 </html>
