@@ -55,7 +55,7 @@ div#menu09 ul.menu09 {
 div#menu09 li {
     position: relative;
     margin: 0;
-    padding: 0 0px 0 0;
+    padding: 0 5px 0 0;
     display: block;
     float: left;
     z-index: 9;
@@ -72,9 +72,9 @@ div#menu09 li div {
     top: 22px;
     left: 0;
     visibility: hidden;
-    width: 280px;
+    width: 160px;
 	margin: 0px 0 0 0px;
-    padding: 5px 0 0 0; 
+    padding: 5px 0 0 2px; 
 	/* 
 	background: url(images/subsubmenu-top.png) no-repeat 0px 0;
 	_background: url(images/subsubmenu-top.gif) no-repeat 0px 0;  
@@ -82,13 +82,13 @@ div#menu09 li div {
 }
 div#menu09 ul ul {
 	z-index: 12;
-    padding: 10px 4px 5px 4px;
+    padding: 10px 0px 5px 0px;
     /* background: url(images/submenu-bottom.png) no-repeat 0px bottom;
     background: url(images/submenu-bottom.gif) repeat 0px bottom;
     _background: url(images/submenu-bottom.gif) no-repeat 0px bottom; */
     background: url(images/submenu-bottom.png) repeat 0px bottom;
     margin: 5px 0 0 0;
-	width:280px;
+	width: 160px;
 }
 div#menu09 li:hover>div {
     visibility: visible;
@@ -143,12 +143,12 @@ div#menu09 a:hover span {
 div#menu09 li.current a,
 div#menu09 ul.menu09>li:hover>a {
     background: url(images/selected-right-sub.png)  no-repeat right -1px;
-    height: 32px;
+    height: auto;
 }
 div#menu09 li.current a span,
 div#menu09 ul.menu09>li:hover>a span {
     background: url(images/selected-left-sub.png) no-repeat 0 -3px;
-    height: 32px;
+    height: auto;
 }
 
 div#menu09 ul.menu09>li:hover>a span {
@@ -183,7 +183,7 @@ div#menu09 ul ul a span {
 	padding: 0 5px;
     line-height: 25px;
     font-size: 13px;
-	width:200px;
+	width:auto;
 }
 div#menu09 li.current ul a,
 div#menu09 li.current ul a span {
@@ -192,51 +192,51 @@ div#menu09 li.current ul a span {
 div#menu09 ul ul a:hover {
  background:none;
  background-color: #004054;
-    height: 32px;
+    height: auto;
 }
 div#menu09 ul ul a:hover span {
 	background:none;
 	color: #24c9ff;
-    height: 32px;
+    height: auto;
 }
 div#menu09 ul ul a.parent {
   background: url(images/submenu-pointer.png) no-repeat right center;
   _background-image: url(images/submenu-pointer.gif);
-    height: 32px;
+    height: auto;
 }
 div#menu09 ul ul a.parent span {
   background:none; 
-    height: 32px;
+    height: auto;
 }
 div#menu09 ul ul a.parent:hover {
   background: url(images/submenu-pointer.png) no-repeat right center;
   _background: url(images/submenu-pointer-hover.gif) no-repeat right center;
   background-color: #004054;
-    height: 32px;
+    height: auto;
 }
 div#menu09 ul ul a.parent:hover span {
   background:none;
-    height: 32px;
+    height: auto;
 }
 div#menu09 ul ul span {
     margin-top: 0;
     text-align: left;
-    height: 32px;
+    height: auto;
 }
 div#menu09 ul ul li.last { background: none; }
 div#menu09 ul ul li {
     width: 100%;
-    height: 32px;
+    height: auto;
 }
 
 /* menu09::level3 */
 div#menu09 ul ul div {
     width: 180px;
     padding: 0;
-    margin: -32px 0 0 280px !important;
+    margin: -32px 0 0 160px !important;
 }
 div#menu09 ul ul ul {
-    padding: 5px 4px 10px 4px;
+    padding: 5px 4px 15px 4px;
 	margin: 0 0 0 0;
 }
 div#menu09 ul ul div li {
