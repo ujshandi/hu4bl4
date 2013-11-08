@@ -198,15 +198,17 @@
 		base_url = '<?= base_url();?>';
 		//]]>
 		$(document).ready(function(){
+		
 			jQuery(document).ajaxStart(function(){
 				$.ajax({
 							  url: base_url+"home/getLoginStatus",
 							  data: { },
 							  success : function(data, textStatus){
-								//alert(data);
+								
+								
 								if (data==""){
 									
-									window.location.replace(base_url);//+"security/login"
+									window.location.replace("security/login");
 								}
 							  },
 							  complete: function(xmlHttp) {
