@@ -305,10 +305,10 @@
 			</tr>
 		</table>
 		<div style="margin-bottom:5px">  
-			<? if($this->sys_menu_model->cekAkses('PRINT;',356,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+			<? if($this->sys_menu_model->cekAkses('PRINT;',556,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 				<!--<a href="#" onclick="printData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-print" plain="true">Print</a>-->
 			<?}?>
-			<? if($this->sys_menu_model->cekAkses('EXCEL;',356,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+			<? if($this->sys_menu_model->cekAkses('EXCEL;',556,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 				<a href="#" onclick="toExcel<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-excel" plain="true">Excel</a>
 			<?}?>
 		</div>
