@@ -630,9 +630,13 @@
 	  <thead>
 	  <tr>
 		<!--<th field="lkepusat_id" hidden="true" sortable="true" width="50px">id</th> -->
-		<th field="nama_komponen" sortable="true" width="150px">Komponen/Sub Komponen</th>		
-		<th field="persen" sortable="true" width="30px">Persen</th>		
-		
+		<th field="nama_komponen" sortable="true" width="150px" rowspan="2">Komponen/Sub Komponen</th>		
+		<th sortable="true" width="30px" colspan="2">Unit Kerja</th>		
+		<th field="ref" sortable="false" width="30px" rowspan="2">REF</th>
+	  </tr>
+	  <tr>
+		<th field="yt" sortable="false" align="center" width="20px">Y/T.</th>
+		<th field="persen" sortable="false" align="center"  width="20px">Nilai</th>		
 	  </tr>
 	  </thead>  
 	</table>

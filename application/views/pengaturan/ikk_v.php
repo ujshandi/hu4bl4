@@ -197,6 +197,12 @@
 				}
 			}
 			
+			submitEnter<?=$objectId;?> = function (e) {
+				if (e.keyCode == 13) {
+					searchData<?=$objectId;?>();
+				}
+			}
+			
 			searchData<?=$objectId;?> = function (){
 				//ambil nilai-nilai filter
 				$('#dg<?=$objectId;?>').datagrid({
@@ -371,15 +377,7 @@
 			}
 		 });
 	</script>
-	
-	<script>
-		<!--Enter-->
-		function submitEnter<?=$objectId;?>(e) {
-			if (e.keyCode == 13) {
-				searchData<?=$objectId;?>();
-			}
-		}
-	</script>
+
 	
 	<!-- Dari Stef -->
 	<script type="text/javascript">
