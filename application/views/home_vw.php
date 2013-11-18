@@ -410,7 +410,20 @@
 							//alert('onBeforeOpen'+data);
 							//return false;
 						},
-						closable:true,/* 
+						closable:true,
+						//iconCls : "icon-reload",
+						toolPosition : "left",
+						tools:[{
+							iconCls:'icon-mini-refresh',
+							handler:function(){
+								//alert('refresh');
+								// call 'refresh' method for tab panel to update its content
+								var tab = $('#tt').tabs('getSelected');  // get selected panel
+								tab.panel('refresh', base_url+aHref);
+
+							}
+						}]
+						/* 
 						 
 						extractor:function(data){
 							 alert(data.redirect);

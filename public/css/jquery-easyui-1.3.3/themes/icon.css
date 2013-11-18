@@ -53,6 +53,25 @@
 	background:url('icons/tip.png') no-repeat center center;
 }
 
+.icon-reset{
+	background:url('icons/reset.png') no-repeat;
+}
+.icon-excel{
+	background:url('icons/excel.png') no-repeat;
+}
+.icon-import{
+	background:url('icons/import.png') no-repeat;
+}
+.icon-view{
+	background:url('icons/view.png') no-repeat;
+}
+.icon-copy{
+	background:url('icons/copy.png') no-repeat;
+}
+.icon-download{
+	background:url('icons/download.png') no-repeat;
+}
+
 .icon-mini-add{
 	background:url('icons/mini_add.png') no-repeat center center;
 }

@@ -3,7 +3,7 @@
  *INVISI
 */
 
-class Kke1_2_model extends CI_Model
+class Kke2a_model extends CI_Model
 {	
 	/**
 	* constructor
