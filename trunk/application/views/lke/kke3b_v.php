@@ -8,8 +8,8 @@
 				$("#filter_e1<?=$objectId;?>").val('');			
 				$("#filter_sasaran<?=$objectId;?>").val('');			
 				$("#filter_iku<?=$objectId;?>").val('');			
-				//$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>lke/kke1_3/grid/"+filtahun+"/"+filnama+"/"+filalamat});
-					//$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>lke/kke1_3/grid/"+filtahun+"/"+filnama+"/"+filalamat});
+				//$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>lke/kke3b/grid/"+filtahun+"/"+filnama+"/"+filalamat});
+					//$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>lke/kke3b/grid/"+filtahun+"/"+filnama+"/"+filalamat});
 			}
 			
 				//tipe 1=grid, 2=pdf, 3=excel
@@ -40,12 +40,12 @@
 				var filiku = "-1";
 				
 				if (tipe==1){
-					return "<?=base_url()?>lke/kke1_3/grid/"+filtahun+"/"+file1;
+					return "<?=base_url()?>lke/kke3b/grid/"+filtahun+"/"+file1;
 				}
 				else if (tipe==2){
-					return "<?=base_url()?>lke/kke1_3/pdf/"+filtahun+"/"+file1+"/"+filsasaran+"/"+filiku+paging;
+					return "<?=base_url()?>lke/kke3b/pdf/"+filtahun+"/"+file1+"/"+filsasaran+"/"+filiku+paging;
 				}else if (tipe==3){
-					return "<?=base_url()?>lke/kke1_3/excel/"+filtahun+"/"+file1+"/"+filsasaran+"/"+filiku+paging;
+					return "<?=base_url()?>lke/kke3b/excel/"+filtahun+"/"+file1+"/"+filsasaran+"/"+filiku+paging;
 				}
 				
 			}
@@ -154,7 +154,7 @@
 			
 			setTimeout(function(){
 				/* $('#dg<?=$objectId;?>').datagrid({
-				url:"<?=base_url()?>lke/kke1_3/grid",
+				url:"<?=base_url()?>lke/kke3b/grid",
 				queryParams:{lastNo:'0'},		
 					onLoadSuccess:function(data){
 						$('#dg<?=$objectId;?>').datagrid('options').queryParams.lastNo = data.lastNo;
@@ -227,11 +227,6 @@
 			width:84px;
 			margin-bottom:5px;
 		}
-		
-		.datagrid-header .datagrid-cell{
-			height:auto;
-			line-height:auto;
-		}
 	</style>
 	<div id="tb<?=$objectId;?>" style="height:auto">
 	  <table border="0" cellpadding="1" cellspacing="1" width="100%">
@@ -243,7 +238,7 @@
 			<tr>
 				<td>Tahun :</td>
 				<td>
-				<?=$this->kke1_3_model->getListTahun($objectId)?>
+				<?=$this->kke3b_model->getListTahun($objectId)?>
 				</td>
 			</tr>
 			<tr>
@@ -299,36 +294,97 @@
 	  </div>
 	</div>
 	
-	<table id="dg<?=$objectId;?>" class="easyui-datagrid" style="height:auto;width:auto" title="Laporan KKE1-III Capaian" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="false" pagination="true"  nowrap="false">
+	<table id="dg<?=$objectId;?>" class="easyui-datagrid" style="height:auto;width:auto" title="Laporan KKE3B IK" toolbar="#tb<?=$objectId;?>" fitColumns="false" singleSelect="true" rownumbers="false" pagination="true"  nowrap="false">
 	  <thead>
 	  <tr>
 		
-		<th field="no" rowspan="3" sortable="false" width="25px">No.</th>
-		<th field="sasaran_strategis" rowspan="3"  halign="center" sortable="false" width="250px">Sasaran Strategis</th>
-		<th  sortable="false" rowspan="3"  halign="center" field="iku_e1" width="250px">Indikator Kinerja Utama</th>
-		<th sortable="false" colspan="10" align="center" halign="center">Acuan Kinerja</th>
+		<th field="no" rowspan="5" sortable="false" width="25px">No.</th>
+		<th field="sasaran_strategis"  rowspan="5"  sortable="false" width="250px">Sasaran Strategis</th>
+		<th  sortable="false" colspan="2" rowspan="4" width="250px">Indikator Kinerja Utama</th>
+		
+		<th colspan="28" sortable="false" align="center" >Indikator Kinerja Terukur Dalam Dokumen Perencanaan</th>
+		<th colspan="16" sortable="false" align="center" >Kriteria</th>
+		<th colspan="4" sortable="false" align="center" >Pengukuran</th>
 		
 	  </tr>
-	  <tr>
-		<th sortable="false" halign="center" colspan="2" >Pencatatan Keuangan & Integritas</th>
-		<th sortable="false" halign="center" colspan="2" >Masyarakat/Publik</th>
-		<th sortable="false" halign="center" colspan="2" >Instansi Pemerintah Lainnya</th>
-		<th sortable="false" halign="center" colspan="2" >Transparansi</th>
-		<th sortable="false" halign="center" colspan="2" >Penghargaan Lainnya</th>	
+	  <tr>				
+		<th sortable="false" rowspan="2" colspan="4">RENSTRA IP</th>
+		<th sortable="false" rowspan="2" colspan="4">RKT IP</th>
+		<th sortable="false" rowspan="2" colspan="4">PK IP</th>
+		<th sortable="false" colspan="16">IKU</th>	
+		<th sortable="false" rowspan="2" colspan="4">Measurable</th>		
+		<th sortable="false" rowspan="2" colspan="4">Orientasi Hasil</th>		
+		<th sortable="false" rowspan="2" colspan="4">Relevan</th>		
+		<th sortable="false" rowspan="2" colspan="4">Cukup</th>	
+		<th sortable="false" rowspan="2" colspan="4">Unit Kerja</th>	
+	  </tr>
+	  <tr>						
+		<th sortable="false" colspan="4">Measurable</th>		
+		<th sortable="false" colspan="4">Orientasi Hasil</th>		
+		<th sortable="false" colspan="4">Relevan</th>		
+		<th sortable="false" colspan="4">Cukup</th>		
 	  </tr>
 	  <tr>
-		
-		
-		<th sortable="false" halign="center" align="center" field="">Index</th>
-		<th sortable="false" halign="center" align="center" field="">Nilai</th>
-		<th sortable="false" halign="center" align="center" field="">Index</th>
-		<th sortable="false" halign="center" align="center" field="">Nilai</th>
-		<th sortable="false" halign="center" align="center" field="">Index</th>
-		<th sortable="false" halign="center" align="center" field="">Nilai</th>
-		<th sortable="false" halign="center" align="center" field="">Index</th>
-		<th sortable="false" halign="center" align="center" field="">Nilai</th>
-		<th sortable="false" halign="center" align="center" field="">Index</th>
-		<th sortable="false" halign="center" align="center" field="">Nilai</th>
+		<th sortable="false" colspan="2">Unit Kerja A</th>		
+		<th sortable="false" colspan="2">Unit Kerja B</th>		
+		<th sortable="false" colspan="2">Unit Kerja A</th>		
+		<th sortable="false" colspan="2">Unit Kerja B</th>		
+		<th sortable="false" colspan="2">Unit Kerja A</th>		
+		<th sortable="false" colspan="2">Unit Kerja B</th>		
+		<th sortable="false" colspan="2">Unit Kerja A</th>		
+		<th sortable="false" colspan="2">Unit Kerja B</th>		
+		<th sortable="false" colspan="2">Unit Kerja A</th>		
+		<th sortable="false" colspan="2">Unit Kerja B</th>		
+		<th sortable="false" colspan="2">Unit Kerja A</th>		
+		<th sortable="false" colspan="2">Unit Kerja B</th>		
+		<th sortable="false" colspan="2">Unit Kerja A</th>		
+		<th sortable="false" colspan="2">Unit Kerja B</th>		
+		<th sortable="false" colspan="2">Unit Kerja A</th>		
+		<th sortable="false" colspan="2">Unit Kerja B</th>		
+		<th sortable="false" colspan="2">Unit Kerja A</th>		
+		<th sortable="false" colspan="2">Unit Kerja B</th>		
+		<th sortable="false" colspan="2">Unit Kerja A</th>		
+		<th sortable="false" colspan="2">Unit Kerja B</th>	
+		<th sortable="false" colspan="2">Unit Kerja A</th>		
+		<th sortable="false" colspan="2">Unit Kerja B</th>		
+		<th sortable="false" colspan="2">Unit Kerja A</th>		
+		<th sortable="false" colspan="2">Unit Kerja B</th>				
+	  </tr>
+	  <tr>		
+		<th field="no_indikator" sortable="false" width="30px" >No.</th>
+		<th field="indikator_kinerja" sortable="false" width="220px" >Deskripsi</th>
+		<th field="" sortable="false" >Index</th>
+		<th field="" sortable="false" >Nilai</th>
+		<th field="" sortable="false" >Index</th>
+		<th field="" sortable="false" >Nilai</th>
+		<th field="" sortable="false" >Index</th>
+		<th field="" sortable="false" >Nilai</th>
+		<th field="" sortable="false" >Index</th>
+		<th field="" sortable="false" >Nilai</th>
+		<th field="" sortable="false" >Index</th>
+		<th field="" sortable="false" >Nilai</th>
+		<th field="" sortable="false" >Index</th>
+		<th field="" sortable="false" >Nilai</th>
+		<th field="" sortable="false" >Index</th>
+		<th field="" sortable="false" >Nilai</th>
+		<th field="" sortable="false" >Index</th>
+		<th field="" sortable="false" >Nilai</th>
+		<th field="" sortable="false" >Index</th>
+		<th field="" sortable="false" >Nilai</th>
+		<th field="" sortable="false" >Index</th>
+		<th field="" sortable="false" >Nilai</th>
+		<th field="" sortable="false" >Index</th>
+		<th field="" sortable="false" >Nilai</th>
+		<th field="" sortable="false" >Index</th>
+		<th field="" sortable="false" >Nilai</th>
+		<th field="" sortable="false" >Index</th>
+		<th field="" sortable="false" >Nilai</th>
+		<th field="" sortable="false" >Index</th>
+		<th field="" sortable="false" >Nilai</th>
+		<th field="" sortable="false" >Index</th>
+		<th field="" sortable="false" >Nilai</th>
+		<th field="" sortable="false" >Index</th>
+		<th field="" sortable="false" >Nilai</th>
 	  </tr>
 	 
 	  </thead>  

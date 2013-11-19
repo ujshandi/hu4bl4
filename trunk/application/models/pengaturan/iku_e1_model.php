@@ -283,7 +283,7 @@ class Iku_e1_model extends CI_Model
 	
 	
 	
-	public function getListTahun($objectId){
+	public function getListTahun($objectId,$name="filter_tahun",$required="false",$withAll=true){
 		
 		$this->db->flush_cache();
 		$this->db->select('distinct tahun',false);
@@ -297,7 +297,8 @@ class Iku_e1_model extends CI_Model
 		
 		$que = $this->db->get();
 		
-		$out = '<select name="filter_tahun'.$objectId.'" id="filter_tahun'.$objectId.'">';
+		$out = '<select name="'.$name.$objectId.'" id="'.$name.$objectId.'"  class="easyui-validatebox" required="'.$required.'">';
+		if ($withAll)
 		$out .= '<option value="-1">Semua</option>';
 		foreach($que->result() as $r){
 			$out .= '<option value="'.$r->tahun.'">'.$r->tahun.'</option>';

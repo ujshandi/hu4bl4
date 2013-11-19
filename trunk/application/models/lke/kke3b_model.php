@@ -3,7 +3,7 @@
  *INVISI
 */
 
-class Kke2a_model extends CI_Model
+class Kke3b_model extends CI_Model
 {	
 	/**
 	* constructor
@@ -126,7 +126,7 @@ class Kke2a_model extends CI_Model
 		
 		$this->db->flush_cache();
 		$this->db->select('distinct tahun',false);
-		$this->db->from('tbl_kke2a_e1');
+		$this->db->from('tbl_kke3b_e1');
 		$e1 = $this->session->userdata('unit_kerja_e1');
 		if (($e1!="-1")&&($e1!=null)){
 			$this->db->where('kode_e1',$e1);
@@ -166,7 +166,7 @@ class Kke2a_model extends CI_Model
 		if($filiku != '' && $filiku != '-1' && $filiku != null) {
 				$this->db->where("rkt.kode_iku_e1",$filiku);
 		}
-		//$this->db->from('tbl_kke2a_e1');
+		//$this->db->from('tbl_kke3b_e1');
 		//$this->db->select("select sasaran.deskripsi as sasaran_srategis, iku.deskripsi as indikator_kinerja, rkt.target",false);
 			$this->db->from('tbl_iku_eselon1 iku left join tbl_sasaran_eselon1 sasaran on sasaran.kode_sasaran_e1 = iku.kode_sasaran_e1 and sasaran.tahun=iku.tahun', false);
 		
@@ -177,7 +177,7 @@ class Kke2a_model extends CI_Model
 	public function getIndex($field,$tahun,$kode_sasaran,$kode_iku){
 		$this->db->flush_cache();
 		$this->db->select($field.' as index',false);
-		$this->db->from('tbl_kke2a_e1');
+		$this->db->from('tbl_kke3b_e1');
 		$this->db->where('kode_iku_e1', $kode_iku);
 		$this->db->where('kode_sasaran_e1', $kode_sasaran);
 		$this->db->where('tahun', $tahun);

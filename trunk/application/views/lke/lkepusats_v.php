@@ -5,10 +5,10 @@
 				var rowIndexDetail;
 
 		$(function(){
-			var wWidth = $(window).width();
+			/* var wWidth = $(window).width();
 			var wHeight = $(window).height();
 			$("#dlg<?=$objectId;?>").css('width',wWidth);
-			$("#dlg<?=$objectId;?>").css('height',wHeight);
+			$("#dlg<?=$objectId;?>").css('height',wHeight); */
 			
 			
 			
@@ -16,23 +16,24 @@
 			newData<?=$objectId;?> = function (){  
 				var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
 				if (row){
+					if (row.has_child) {
+						alert("Pilih data subkomponen terlebih dahulu");
+						return false;
+					}
 					$('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Add LKE Pusat');  
 					$('#fm<?=$objectId;?>').form('clear');  
-					$("#cmbPeriode<?=$objectId?>").prop('disabled', false);
-					url = base_url+'lke/lkepusat/save';  
-					$("#deskripsi_iku_kl<?=$objectId?>").val(row.deskripsi_iku_kl);
-					$("#deskripsi_sasaran_kl<?=$objectId?>").val(row.deskripsi_sasaran_kl);
-					$("#lkepusat_id<?=$objectId?>").val(row.lkepusat_id);
-					$("#penanggungjawab<?=$objectId?>").val(row.nama_kl);
 					
-					$("#kd_kl<?=$objectId?>").val(row.kode_kl);
-					$("#cmbPeriode<?=$objectId?>").val(<?=date("n")?>);
-					$('#files').empty();
-					//$("#nama_folder_pendukung<?=$objectId?>").val(row.nama_folder_pendukung);
+					url = base_url+'lke/lkepusat/save';  
+					
+					$("#deskripsi_komponen<?=$objectId?>").load(base_url+'lke/lkepusat/loadtreeup/'+row.komponen_id);
+					//$("#lkepusat_id<?=$objectId?>").val(row.lkepusat_id);
+					$("#id_komponen<?=$objectId?>").val(row.komponen_id);
+					$("#lkepusat_id<?=$objectId?>").val("");
+					
 					
 				}	
 				else {
-					alert("Pilih data Penetapan Kinerja terlebih dahulu");
+					alert("Pilih data subkomponen terlebih dahulu");
 				}
 				//addTab("Add PK Kementerian", "lke/lkepusat/add");
 			}
@@ -60,21 +61,12 @@
 						$('#fm<?=$objectId;?>').form('clear');  
 						$('#files').empty();
 						url = base_url+'lke/lkepusat/save';  
-						$("#cmbPeriode<?=$objectId?>").prop('disabled', 'disabled');
-						$("#deskripsi_iku_kl<?=$objectId?>").val(data.deskripsi_iku_kl);
-						$("#deskripsi_sasaran_kl<?=$objectId?>").val(data.deskripsi_sasaran_kl);
-						$("#lkepusat_id<?=$objectId?>").val(data.lkepusat_id);
-						$("#lkepusat_id<?=$objectId?>").val(data.lkepusat_id);
-						$("#penanggungjawab<?=$objectId?>").val(data.nama_kl);
-						$("#kriteria<?=$objectId?>").val(data.kriteria);
-						$("#unitkerja<?=$objectId?>").val(data.unit_kerja);
-						$("#ukuran<?=$objectId?>").val(data.ukuran);
-						$("#target<?=$objectId?>").val(data.target);
-						$("#keterangan<?=$objectId?>").val(data.keterangan);
-						$("#capaian<?=$objectId?>").val(data.capaian);
-						$("#cmbPeriode<?=$objectId?>").val(data.periode);
-						$("#kd_kl<?=$objectId?>").val(row.kode_kl);
-						$("#nama_folder_pendukung<?=$objectId?>").val(row.nama_folder_pendukung);
+						
+						$("#deskripsi_komponen<?=$objectId?>").load(base_url+'lke/lkepusat/loadtreeup/'+row.komponen_id);
+						//$("#lkepusat_id<?=$objectId?>").val(row.lkepusat_id);
+						$("#id_komponen<?=$objectId?>").val(row.komponen_id);
+						$("#lkepusat_id<?=$objectId?>").val(row.lkepusat_id);
+						$("#ref<?=$objectId?>").val(row.ref);
 						
 					}});
 					
@@ -82,51 +74,7 @@
 			}
 			//end editData
 			
-			deleteData<?=$objectId;?> = function (){
-				<? if ($this->session->userdata('unit_kerja_e1')=='-1'){?>				
-					var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
-					if ((idLkepusat<?=$objectId;?> ==null)||(idLkepusat<?=$objectId;?> =='undefined')) {						
-						alert("Pilih data Checkpoint terlebih dahulu");
-						return false;
-					}
-					$.ajax({
-					url:'<?=base_url()?>lke/lkepusat/getDataEdit/'+idLkepusat<?=$objectId;?>,
-					success:function(data){
-						var data = eval('('+data+')');
-						if(confirm("Apakah yakin akan menghapus data " + '' + "?")){
-							var response = '';
-							$.ajax({ type: "GET",
-									 url: base_url+'lke/lkepusat/delete/' + data.lkepusat_id,
-									 async: false,
-									 success : function(response)
-									 {
-										var response = eval('('+response+')');
-										if (response.success){
-											$.messager.show({
-												title: 'Success',
-												msg: 'Data Berhasil Dihapus'
-											});
-											
-											// reload and close tab
-										//	$('#dg<?=$objectId;?>').datagrid('reload');
-										$('#ddv<?=$objectId;?>-'+rowIndexDetail).datagrid('reload');
-										} else {
-											$.messager.show({
-												title: 'Error',
-												msg: response.msg
-											});
-										}
-									 }
-							});
-						}
-					}});
-						
-					
-				<?} else { ?>	
-					alert("Silahkan Login sebagai Superadmin");
-				<?} ?>
-			}
-			//end deleteData 
+			
 			
 			clearFilter<?=$objectId;?> = function (){
 				$("#filter_tahun<?=$objectId;?>").val('');
@@ -503,76 +451,9 @@
 		  text-align: center;
 		  vertical-align: middle;
 		}
+
+
 		
-		.progress {
-		  background-color: #F7F7F7;
-		  background-image: linear-gradient(to bottom, #F5F5F5, #F9F9F9);
-		  background-repeat: repeat-x;
-		  border-radius: 4px 4px 4px 4px;
-		  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) inset;
-		  height: 20px;
-		  margin-bottom: 20px;
-		  overflow: hidden;
-		}
-		
-		.progress-striped .bar {
-			background-color: #149BDF;
-			background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
-			background-size: 40px 40px;
-		}
-		.progress-success .bar, .progress .bar-success {
-			background-color: #5EB95E;
-			background-image: linear-gradient(to bottom, #62C462, #57A957);
-			background-repeat: repeat-x;
-		}
-
-		.progress-success.progress-striped .bar, .progress-striped .bar-success {
-			background-color: #62C462;
-			background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
-		}
-		
-		.icon-bootstrap-upload {
-		  background-position: -144px -24px;
-		}
-		
-		[class^="icon-bootstrap"],
-		[class*=" icon-bootstrap-"] {
-		  display: inline-block;
-		  width: 14px;
-		  height: 14px;
-		  margin-top: 1px;
-		  *margin-right: .3em;
-		  line-height: 14px;
-		  vertical-align: text-top;
-		  background-image: url("<?=base_url();?>public/images/glyphicons-halflings.png");
-		  background-position: 14px 14px;
-		  background-repeat: no-repeat;
-		}
-
-		.icon-bootstrap-white, .nav-pills > .active > a > [class^="icon-bootstrap-"], .nav-pills > .active > a > [class*=" icon-bootstrap-"], .nav-list > .active > a > [class^="icon-bootstrap-"], .nav-list > .active > a > [class*=" icon-bootstrap-"], .navbar-inverse .nav > .active > a > [class^="icon-bootstrap-"], .navbar-inverse .nav > .active > a > [class*=" icon-bootstrap-"], .dropdown-menu > li > a:hover > [class^="icon-bootstrap-"], .dropdown-menu > li > a:focus > [class^="icon-bootstrap-"], .dropdown-menu > li > a:hover > [class*=" icon-bootstrap-"], .dropdown-menu > li > a:focus > [class*=" icon-bootstrap-"], .dropdown-menu > .active > a > [class^="icon-bootstrap-"], .dropdown-menu > .active > a > [class*=" icon-bootstrap-"], .dropdown-submenu:hover > a > [class^="icon-bootstrap-"], .dropdown-submenu:focus > a > [class^="icon-bootstrap-"], .dropdown-submenu:hover > a > [class*=" icon-bootstrap-"], .dropdown-submenu:focus > a > [class*=" icon-bootstrap-"] {
-		  background-image: url("<?=base_url();?>public/images/glyphicons-halflings-white.png");
-		}
-		.icon-bootstrap-trash {
-		  background-position: -456px 0;
-		}
-		.icon-bootstrap-ban-circle {
-			background-position: -216px -96px;	
-		}
-		.icon-bootstrap-upload {
-		  background-position: -144px -24px;
-		}
-		.icon-bootstrap-plus {
-		  background-position: -408px -96px;
-		}
-		
-		.table-striped tbody > tr:nth-child(odd) > td,
-		.table-striped tbody > tr:nth-child(odd) > th {
-		  background-color: #f9f9f9;
-		}
-
-
-
-
 	</style>
 	
 	<div id="tb<?=$objectId;?>" style="height:auto">
@@ -584,7 +465,7 @@
 				<tr>
 					<td>Tahun :</td>
 					<td>
-					<?='';////$this->lkepusat_model->getListFilterTahun($objectId)?>
+					<?=$this->lkepusat_model->getListTahun($objectId)?>
 					</td>
 				</tr>
 				<tr style="height:10px">
@@ -615,9 +496,7 @@
 		<? if($this->sys_menu_model->cekAkses('VIEW;',302,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="editData<?=$objectId;?>(false);" class="easyui-linkbutton" iconCls="icon-view" plain="true">View</a>
 		<?}?>
-		<? if($this->sys_menu_model->cekAkses('DELETE;',302,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
-			<a href="#" onclick="deleteData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-remove" plain="true">Delete</a>
-		<?}?>
+		
 		<!--
 		<a href="#" onclick="printData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-print" plain="true">Print</a>
 		<a href="#" onclick="toExcel<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-excel" plain="true">Excel</a>
@@ -629,51 +508,51 @@
 	 title="Data LKE Pusat" idField="id" treeField="nama_komponen" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true">
 	  <thead>
 	  <tr>
-		<!--<th field="lkepusat_id" hidden="true" sortable="true" width="50px">id</th> -->
+		<th field="has_child" hidden="true" sortable="true" width="50px">has_child</th> 
+		<th field="komponen_id" hidden="true" sortable="true" width="50px">komponen_id</th> 
 		<th field="nama_komponen" sortable="true" width="150px" rowspan="2">Komponen/Sub Komponen</th>		
 		<th sortable="true" width="30px" colspan="2">Unit Kerja</th>		
 		<th field="ref" sortable="false" width="30px" rowspan="2">REF</th>
 	  </tr>
 	  <tr>
-		<th field="yt" sortable="false" align="center" width="20px">Y/T.</th>
-		<th field="persen" sortable="false" align="center"  width="20px">Nilai</th>		
+		<th field="index_mutu" sortable="false" align="center" width="20px">Y/T.</th>
+		<th field="nilai" sortable="false" align="center"  width="20px">Nilai</th>		
 	  </tr>
 	  </thead>  
 	</table>
 	
 	<!-- Area untuk Form Add/Edit >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  -->
 	
-	<div id="dlg<?=$objectId;?>" class="easyui-dialog" style="padding:10px 20px" closed="true"  buttons="#dlg-buttons">
+	<div id="dlg<?=$objectId;?>" class="easyui-dialog" style="width:720px;height:400px;padding:10px 20px" closed="true"  buttons="#dlg-buttons">
 		<!----------------Edit title-->
-		<!--<div id="ftitle<?=$objectId?>" class="ftitle">Add/Edit/View Rencana Checkpoint Kementerian</div> -->
-		<form id="fm<?=$objectId;?>" method="post" enctype="multipart/form-data">
-			<input type="hidden" name="kd_kl<?=$objectId?>" id="kd_kl<?=$objectId?>" value=""/>
+		
+		<form id="fm<?=$objectId;?>" method="post" >			
 			<div class="fitem">
-				<label style="width:130px">Sasaran Strategis:</label>					
-					<textarea readonly name="deskripsi_sasaran_kl" id="deskripsi_sasaran_kl<?=$objectId?>" cols="70" class="easyui-validatebox" ></textarea>
-				<input type="hidden" id="lkepusat_id<?=$objectId?>" name="lkepusat_id"/>
-				<input type="hidden" id="lkepusat_id<?=$objectId?>" name="lkepusat_id"/>
 				
-				<input type="hidden" id="nama_folder_pendukung<?=$objectId?>" name="nama_folder_pendukung" value=""/>
+					<div id="deskripsi_komponen<?=$objectId?>" cols="70" class="easyui-validatebox" ></div>
+				<input type="hidden" id="lkepusat_id<?=$objectId?>" name="lkepusat_id"/>
+				<input type="hidden" id="id_komponen<?=$objectId?>" name="id_komponen"/>				
+				
+			</div>
+			
+			<div class="fitem">
+				
+				<hr>
+			</div>
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">Tahun :</label>
+				<input name="tahun" size="5" maxlength="4" id="tahun<?=$objectId?>" class="easyui-validatebox required">
 			</div>
 			
 			
 			<div class="fitem">
-				<label style="width:130px;vertical-align:top">Unit Kerja Terkait :</label>
-				<input name="unitkerja" size="60" id="unitkerja<?=$objectId?>" class="easyui-validatebox">
-			</div>
-			
-			
-			<div class="fitem">
-				<label style="width:130px;vertical-align:top">Target (%):</label>
-				<input name="target" size="5" id="target<?=$objectId?>" readonly class="easyui-validatebox">
-				&nbsp;&nbsp;Capaian (%):
-				<input name="capaian" id="capaian<?=$objectId?>" size="5" class="easyui-validatebox">
+				<label style="width:130px;vertical-align:top">Index</label>
+				 <?=$indexmutu?>
 			</div>
 			
 			<div class="fitem">
-				<label style="width:130px;vertical-align:top">Keterangan :</label>
-				<input name="keterangan" size="60" id="keterangan<?=$objectId?>" class="easyui-validatebox">
+				<label style="width:130px;vertical-align:top">Referensi :</label>
+				<input name="ref" size="60" id="ref<?=$objectId?>" class="easyui-validatebox">
 			</div>
 			
 			

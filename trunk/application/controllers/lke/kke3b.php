@@ -1,7 +1,7 @@
 <?php
 
-class Kke1_2 extends CI_Controller {
-	var $objectId = 'kke1_2';
+class kke3b extends CI_Controller {
+
 	function __construct()
 	{
 		parent::__construct();			
@@ -12,103 +12,34 @@ class Kke1_2 extends CI_Controller {
 				
 		//if ($this->session->userdata('logged_in') != TRUE) redirect('security/login');					
 		$this->load->model('/security/sys_menu_model');
-		$this->load->model('/lke/kke1_2_model');
-		$this->load->model('/pengaturan/iku_e1_model');
-		$this->load->model('/lke/lke_konversi_model');
+		$this->load->model('/lke/kke3b_model');
 		$this->load->model('/rujukan/eselon1_model');
 		$this->load->library("utility");
 		
 	}
 	
 	function index(){
-		$data['title'] = 'Kertas Kerja Evaluasi II';	
-		$data['objectId'] = $this->objectId;
+		$data['title'] = 'Kertas Kerja Evaluasi 2B Sasaran';	
+		$data['objectId'] = 'kke3b';
 		//$data['formLookupTarif'] = $this->tarif_model->lookup('#winLookTarif'.$data['objectId'],"#medrek_id".$data['objectId']);
-		$data['sasarantepat_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke1_2','unit_kerja'=>'e1'),true,"sasarantepat");
-		$data['iktepat_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke1_2','unit_kerja'=>'e1'),true,"iktepat");
-		$data['targettercapai_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke1_2','unit_kerja'=>'e1'),true,"targettercapai");
-		$data['kinerjabaik_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke1_2','unit_kerja'=>'e1'),true,"kinerjabaik");
-		$data['dataandal_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke1_2','unit_kerja'=>'e1'),true,"dataandal");
-	  	$this->load->view('lke/kke1_2_v',$data);
+	  	$this->load->view('lke/kke3b_v',$data);
 	}
 	
-	private function get_form_values() {
-		$dt['tahun'] = $this->input->post("tahun", TRUE); 
-		$dt['lkepusat_id'] = $this->input->post("lkepusat_id", TRUE); 
-		$dt['id_komponen'] = $this->input->post("id_komponen", TRUE); 
-		$dt['index_mutu'] = $this->input->post("index_mutu", TRUE); 
-		$dt['ref'] = $this->input->post("ref", TRUE); 
-		
-		return $dt;
-    }
-	
-	
-	function save(){
-		$this->load->library('form_validation');
-		$data = $this->get_form_values();
-		$return_id = 0;
-		$result = "";
-		$data['pesan_error'] = '';
-		$pesan = '';
-		
-		// validation
-		# rules
-		$this->form_validation->set_rules("tahun", 'Tahun', 'trim|required|numeric|exact_length[4]|xss_clean');
-		$this->form_validation->set_rules("id_komponen", 'Komponen/Subkomponen', 'trim|required|xss_clean');
-		$this->form_validation->set_rules("index_mutu", 'Index Mutu', 'trim|required|xss_clean');
-		
-		# message rules
-		$this->form_validation->set_message('required', 'Field %s harus diisi.');
-		$this->form_validation->set_message('numeric', 'Isi field %s dengan angka');
-		$this->form_validation->set_message('exact_length', 'Isi field %s dengan 4 karakter angka');
-		
-		if ($this->form_validation->run() == FALSE){ // jika tidak valid
-			$data['pesan_error'].=(trim(form_error('tahun',' ',' '))==''?'':form_error('tahun',' ','<br>'));
-			$data['pesan_error'].=(trim(form_error('id_komponen',' ',' '))==''?'':form_error('id_komponen',' ','<br>'));
-			$data['pesan_error'].=(trim(form_error('index_mutu',' ',' '))==''?'':form_error('index_mutu',' ','<br>'));
-			
-		}else{
-			// validasi detail
-				$data['nilai'] = $this->lke_konversi_model->getKonversi('kke1_2',$data['index_mutu'],'e1');
-				if (!$this->kke1_2_model->isExistNilai($data['tahun'],$data['id_komponen'])){
-					$result = $this->kke1_2_model->InsertOnDb($data,$data['pesan_error']);
-				}
-				else
-					$data['pesan_error'] .= 'Komponen ini untuk tahun '.$data['tahun'].' sudah diinput.';
-		}
-		
-		if ($result){
-			echo json_encode(array('success'=>true, 'status'=>$return_id));
-		} else {
-			echo json_encode(array('msg'=>$data['pesan_error']));
-		}
-	}
-	
-	function delete($id=''){
-		if($id != ''){
-			$result = $this->kke1_2_model->DeleteOnDb($id);
-			if ($result){
-				echo json_encode(array('success'=>true, 'haha'=>''));
-			} else {
-				echo json_encode(array('msg'=>'Some errors occured uy.', 'data'=> ''));
-			}
-		}
-	}
 	
 	function grid($filtahun=null,$file1=null,$filsasaran=null,$filiku=null){
 		if ($file1==null)
 			$file1 = $this->session->userdata('unit_kerja_e1');
-		echo $this->kke1_2_model->easyGrid($filtahun,$file1,$filsasaran,$filiku);
+		echo $this->kke3b_model->easyGrid($filtahun,$file1,$filsasaran,$filiku);
 	}
 	
 	public function excel($filtahun=null,$file1=null,$filsasaran=null,$filiku=null,$page=null,$rows=null){
-		echo  $this->kke1_2_model->easyGrid($filtahun,$file1,$filsasaran,$filiku,3,$page,$rows);
+		echo  $this->kke3b_model->easyGrid($filtahun,$file1,$filsasaran,$filiku,3,$page,$rows);
 	}
 	
 	public function pdf($filtahun=null,$file1=null,$filsasaran=null,$filiku=null,$page=null,$rows=null){
 		$this->load->library('our_pdf','our_pdf');
 		$this->our_pdf->FPDF('L', 'mm', 'A4');             
-		$pdfdata = $this->kke1_2_model->easyGrid($filtahun,$file1,$filsasaran,$filiku,2,$page,$rows);
+		$pdfdata = $this->kke3b_model->easyGrid($filtahun,$file1,$filsasaran,$filiku,2,$page,$rows);
 		define('FPDF_FONTPATH',APPPATH."libraries/fpdf/font/");
 		$this->our_pdf->Open();
 		$this->our_pdf->addPage();
@@ -294,7 +225,7 @@ class Kke1_2 extends CI_Controller {
 	
 	
 	function getSatuan($id){
-		echo $this->kke1_2_model->getSatuan($id);
+		echo $this->kke3b_model->getSatuan($id);
 	}
 	
 }

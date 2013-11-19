@@ -370,7 +370,7 @@
 				); 
 				//alert("here");
 				
-			}
+			}//end sasaran
 			
 		 });
 	</script>

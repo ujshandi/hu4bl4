@@ -8,8 +8,8 @@
 				$("#filter_e1<?=$objectId;?>").val('');			
 				$("#filter_sasaran<?=$objectId;?>").val('');			
 				$("#filter_iku<?=$objectId;?>").val('');			
-				//$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>lke/kke1_2/grid/"+filtahun+"/"+filnama+"/"+filalamat});
-					//$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>lke/kke1_2/grid/"+filtahun+"/"+filnama+"/"+filalamat});
+				//$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>lke/kke2a/grid/"+filtahun+"/"+filnama+"/"+filalamat});
+					//$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>lke/kke2a/grid/"+filtahun+"/"+filnama+"/"+filalamat});
 			}
 			
 				//tipe 1=grid, 2=pdf, 3=excel
@@ -40,12 +40,12 @@
 				var filiku = "-1";
 				
 				if (tipe==1){
-					return "<?=base_url()?>lke/kke1_2/grid/"+filtahun+"/"+file1;
+					return "<?=base_url()?>lke/kke2a/grid/"+filtahun+"/"+file1;
 				}
 				else if (tipe==2){
-					return "<?=base_url()?>lke/kke1_2/pdf/"+filtahun+"/"+file1+"/"+filsasaran+"/"+filiku+paging;
+					return "<?=base_url()?>lke/kke2a/pdf/"+filtahun+"/"+file1+"/"+filsasaran+"/"+filiku+paging;
 				}else if (tipe==3){
-					return "<?=base_url()?>lke/kke1_2/excel/"+filtahun+"/"+file1+"/"+filsasaran+"/"+filiku+paging;
+					return "<?=base_url()?>lke/kke2a/excel/"+filtahun+"/"+file1+"/"+filsasaran+"/"+filiku+paging;
 				}
 				
 			}
@@ -154,7 +154,7 @@
 			
 			setTimeout(function(){
 				/* $('#dg<?=$objectId;?>').datagrid({
-				url:"<?=base_url()?>lke/kke1_2/grid",
+				url:"<?=base_url()?>lke/kke2a/grid",
 				queryParams:{lastNo:'0'},		
 					onLoadSuccess:function(data){
 						$('#dg<?=$objectId;?>').datagrid('options').queryParams.lastNo = data.lastNo;
@@ -238,7 +238,7 @@
 			<tr>
 				<td>Tahun :</td>
 				<td>
-				<?=$this->kke1_2_model->getListTahun($objectId)?>
+				<?=$this->kke2a_model->getListTahun($objectId)?>
 				</td>
 			</tr>
 			<tr>
@@ -294,37 +294,30 @@
 	  </div>
 	</div>
 	
-	<table id="dg<?=$objectId;?>" class="easyui-datagrid" style="height:auto;width:auto" title="Laporan KKE1-II Sasaran" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="false" pagination="true"  nowrap="false">
+	<table id="dg<?=$objectId;?>" class="easyui-datagrid" style="height:auto;width:auto" title="Laporan KKE2A Sasaran" toolbar="#tb<?=$objectId;?>" fitColumns="fakse" singleSelect="true" rownumbers="false" pagination="true"  nowrap="false">
 	  <thead>
 	  <tr>
 		
-		<th field="no" rowspan="3" sortable="false" width="25px">No.</th>
-		<th field="sasaran_strategis"  rowspan="3"  sortable="false" width="250px">Sasaran Strategis</th>
-		<th  sortable="false" colspan="2" width="250px">Indikator Kinerja Utama</th>
-		
-		<th colspan="9" sortable="false" align="center" >Outcome IP</th>
-		
-	  </tr>
-	  <tr>		
-		<th field="no_indikator" sortable="false" width="30px" rowspan="2">No.</th>
-		<th field="indikator_kinerja" sortable="false" width="220px" rowspan="2">Deskripsi</th>
-		<th sortable="false"colspan="3">Target Tercapai</th>
-		<th sortable="false" colspan="3">Kinerja Lebih Baik</th>
-		<th sortable="false" colspan="3">Data Andal</th>
+		<th field="no" rowspan="3" sortable="false"  halign="center" align="center"  width="25px">No.</th>
+		<th field="sasaran_strategis"  rowspan="3"   halign="center" align="center" sortable="false" width="450px">Sasaran Strategis</th>		
+		<th colspan="6" sortable="false" align="center"  halign="center" align="center" width="1000px" >Orientasi Hasil</th>
 		
 	  </tr>
 	  <tr>		
 		
-		<th field="target_tercapai" sortable="false" width="50px">Index</th>
-		<th field="konversi" sortable="false" width="80px">Konversi</th>		
-		<th field="nilai" sortable="false" width="100px">Nilai(%)</th>	
-		<th field="kinerja_baik" sortable="false" width="50px">Index</th>
-		<th field="konversi" sortable="false" width="80px">Konversi</th>		
-		<th field="nilai" sortable="false" width="100px">Nilai(%)</th>		
-		<th field="data_andal" sortable="false" width="50px">Index</th>
-		<th field="konversi" sortable="false" width="80px">Konversi</th>		
-		<th field="nilai" sortable="false" width="100px">Nilai(%)</th>		
+		<th sortable="false"  halign="center" align="center" colspan="2" width="250px">Renstra IP</th>
+		<th sortable="false"  halign="center" align="center" colspan="2" width="250px">RKT IP</th>
+		<th sortable="false"  halign="center" align="center" colspan="2" width="250px">PK IP</th>
 		
+	  </tr>
+	  <tr>		
+		
+		<th field="target_tercapai" sortable="false" halign="center" align="center" width="100px">Index</th>		
+		<th field="nilai" sortable="false" halign="center" align="center"  width="100px">Nilai</th>
+		<th field="target_tercapai" sortable="false" halign="center" align="center" width="100px">Index</th>		
+		<th field="nilai" sortable="false" halign="center" align="center"  width="100px">Nilai</th>	
+		<th field="target_tercapai" sortable="false" halign="center" align="center" width="100px">Index</th>		
+		<th field="nilai" sortable="false" halign="center" align="center"  width="100px">Nilai</th>			
 	  </tr>
 	  </thead>  
 	</table>
