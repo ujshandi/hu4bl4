@@ -50,6 +50,68 @@
 				
 			}
 			
+			
+			function initCombo<?=$objectId?>(){
+				// setListE2<?=$objectId?>();
+				 setSasaranE1<?=$objectId;?>($("#tahun<?=$objectId?>").val(),"","");
+				 setIKU<?=$objectId;?>($("#tahun<?=$objectId?>").val(),$("#kode_e1<?=$objectId?>").val());
+			 }
+			 
+			 function setIKU<?=$objectId;?>(tahun,key,val){
+				if ((tahun==null)||(tahun=="")) tahun = "-1";
+				$("#divIKUKL<?=$objectId?>").load(
+					base_url+"pengaturan/iku_e1/getListIKU_KL/"+"<?=$objectId;?>"+"/"+tahun,
+					//on complete
+					function(){
+						$("textarea").autogrow();
+						if($("#drop<?=$objectId;?>").is(":visible")){
+							$("#drop<?=$objectId;?>").slideUp("slow");
+						}
+						
+						$("#txtkode_iku_kl<?=$objectId;?>").click(function(){
+							$("#drop<?=$objectId;?>").slideDown("slow");
+						});
+						
+						$("#drop<?=$objectId;?> li").click(function(e){
+							var chose = $(this).text();
+							$("#txtkode_iku_kl<?=$objectId;?>").val(chose);
+							$("#drop<?=$objectId;?>").slideUp("slow");
+						});
+						
+						if (key!=null)
+							$('#kode_iku_kl<?=$objectId;?>').val(key);
+						if (val!=null)
+							$('#txtkode_iku_kl<?=$objectId;?>').val(val);
+					}
+				);
+			}  
+			 
+			var url;
+			newData<?=$objectId;?> = function (){  
+				/* var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
+				if (row){
+					if (row.has_child) {
+						alert("Pilih data subkomponen terlebih dahulu");
+						return false;
+					} */
+					$('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Add KKE1-II Capaian');  
+					$('#fm<?=$objectId;?>').form('clear');  
+					initCombo<?=$objectId?>();
+					url = base_url+'lke/kke1_2/save';  
+					
+				
+				
+				
+					$("#kke1_2_id<?=$objectId?>").val("");
+					
+					
+				/* }	
+				else {
+					alert("Pilih data subkomponen terlebih dahulu");
+				} */
+				//addTab("Add PK Kementerian", "lke/kke1_2/add");
+			}
+			
 			searchData<?=$objectId;?> = function (){
 				$('#dg<?=$objectId;?>').datagrid({
 					url:getUrl<?=$objectId;?>(1),
@@ -150,7 +212,45 @@
 					return val;
 				} */
 			}
+			
+			$("#tahun<?=$objectId;?>").change(function(){
+				//alert($(this).val());
+				setSasaranE1<?=$objectId;?>($(this).val(),$("#kode_e1<?=$objectId?>").val(),'','')
+				 setIKU<?=$objectId;?>($(this).val(),"","");
+				  //setKodeOtomatis<?=$objectId?>();
+			});
 
+			function setSasaranE1<?=$objectId;?>(tahun,e1,key,val){
+				<? if ($this->session->userdata('unit_kerja_e1')!='-1') {?>
+				 e1 = '<?=$this->session->userdata('unit_kerja_e1');?>';
+				 $("#kode_e1<?=$objectId;?>").val(e1);
+				<?}?>
+				if (tahun=="") tahun = "-1";
+				 $("#divSasaran<?=$objectId?>").load(
+					base_url+"pengaturan/sasaran_eselon2/getListSasaranE1/ListSasaran"+"<?=$objectId;?>"+"/"+e1+"/"+tahun,
+					function(){
+						$("textarea").autogrow();
+						
+						$("#txtkode_sasaran_e1ListSasaran<?=$objectId;?>").click(function(){
+							$("#dropListSasaran<?=$objectId;?>").slideDown("slow");
+						});
+						
+						$("#dropListSasaran<?=$objectId;?> li").click(function(e){
+							var chose = $(this).text();
+							$("#txtkode_sasaran_e1ListSasaran<?=$objectId;?>").val(chose);
+							$("#dropListSasaran<?=$objectId;?>").slideUp("slow");
+						});
+						
+						if (key!=null)
+							$('#kode_sasaran_e1ListSasaran<?=$objectId;?>').val(key);
+						if (val!=null)
+							$('#txtkode_sasaran_e1ListSasaran<?=$objectId;?>').val(val);
+					}
+				); 
+				//alert("here");
+				
+			}//end sasaran
+			
 			
 			setTimeout(function(){
 				/* $('#dg<?=$objectId;?>').datagrid({
@@ -238,16 +338,17 @@
 			<tr>
 				<td>Tahun :</td>
 				<td>
-				<?=$this->kke1_2_model->getListTahun($objectId)?>
+				<?=$this->iku_e1_model->getListTahun($objectId,"filter_tahun","false",false);?>
+				</td>
+			</tr>
+			
+			<tr>
+		<!--		<td>Eselon 1 :</td>
+				<td>
+					<?='';//$this->eselon1_model->getListFilterEselon1($objectId,$this->session->userdata('unit_kerja_e1'))?>
 				</td>
 			</tr>
 			<tr>
-				<td>Eselon 1 :</td>
-				<td>
-					<?=$this->eselon1_model->getListFilterEselon1($objectId,$this->session->userdata('unit_kerja_e1'))?>
-				</td>
-			</tr>
-		<!--	<tr>
 				<td>Kode Sasaran E1:</td>
 				<td><input class="easyui-textbox" id="filter_sasaran<?=$objectId;?>"></td>
 			</tr>
@@ -329,3 +430,58 @@
 	  </thead>  
 	</table>
 	
+	<!-- Area untuk Form Add/Edit >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  -->
+	
+	<div id="dlg<?=$objectId;?>" class="easyui-dialog" style="width:720px;height:400px;padding:10px 20px" closed="true"  buttons="#dlg-buttons">
+		<!----------------Edit title-->
+		
+		<form id="fm<?=$objectId;?>" method="post" >			
+			
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">Tahun :</label>
+				<?=$this->iku_e1_model->getListTahun($objectId,"tahun","true",false);?>
+				<input type="hidden" id="kke1_2_id<?=$objectId?>" name="kke1_2_id"/>				
+			</div>
+			<div class="fitem">
+				<label style="width:120px">Sasaran Eselon I :</label>					
+					<span id="divSasaran<?=$objectId?>">
+				</span>
+			</div>
+			<div class="fitem">
+				<label style="width:120px;vertical-align:top">IKU Eselon I :</label>
+				<?//=$this->iku_kl_model->getListIKU_KL($objectId,"",false)?>
+				<span id="divIKU<?=$objectId?>">
+				</span>
+			</div>
+			
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">Sasaran Tepat :</label>
+				 <?=$sasarantepat_radio?>
+			</div>
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">IK Tepat :</label>
+				 <?=$iktepat_radio?>
+			</div>
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">Target Tercapai :</label>
+				 <?=$targettercapai_radio?>
+			</div>
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">Kinerja Lebih Baik :</label>
+				 <?=$kinerjabaik_radio?>
+			</div>
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">Data Andal :</label>
+				 <?=$dataandal_radio?>
+			</div>
+			
+			
+			
+			
+		</form>
+		<div id="dlg-buttons">
+			<!----------------Edit title-->
+			<a href="#" id="saveBtn<?=$objectId;?>" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveData<?=$objectId;?>()">Save</a>
+			<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg<?=$objectId;?>').dialog('close')">Cancel</a>
+		</div>
+	</div>

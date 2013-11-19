@@ -1,6 +1,6 @@
 <?php
 
-class Kke1_3 extends CI_Controller {
+class Kke2a extends CI_Controller {
 
 	function __construct()
 	{
@@ -12,34 +12,34 @@ class Kke1_3 extends CI_Controller {
 				
 		//if ($this->session->userdata('logged_in') != TRUE) redirect('security/login');					
 		$this->load->model('/security/sys_menu_model');
-		$this->load->model('/lke/kke1_2_model');
+		$this->load->model('/lke/kke2a_model');
 		$this->load->model('/rujukan/eselon1_model');
 		$this->load->library("utility");
 		
 	}
 	
 	function index(){
-		$data['title'] = 'Kertas Kerja Evaluasi II';	
-		$data['objectId'] = 'kke1_2';
+		$data['title'] = 'Kertas Kerja Evaluasi 2A Sasaran';	
+		$data['objectId'] = 'kke2a';
 		//$data['formLookupTarif'] = $this->tarif_model->lookup('#winLookTarif'.$data['objectId'],"#medrek_id".$data['objectId']);
-	  	$this->load->view('lke/kke1_2_v',$data);
+	  	$this->load->view('lke/kke2a_v',$data);
 	}
 	
 	
 	function grid($filtahun=null,$file1=null,$filsasaran=null,$filiku=null){
 		if ($file1==null)
 			$file1 = $this->session->userdata('unit_kerja_e1');
-		echo $this->kke1_2_model->easyGrid($filtahun,$file1,$filsasaran,$filiku);
+		echo $this->kke2a_model->easyGrid($filtahun,$file1,$filsasaran,$filiku);
 	}
 	
 	public function excel($filtahun=null,$file1=null,$filsasaran=null,$filiku=null,$page=null,$rows=null){
-		echo  $this->kke1_2_model->easyGrid($filtahun,$file1,$filsasaran,$filiku,3,$page,$rows);
+		echo  $this->kke2a_model->easyGrid($filtahun,$file1,$filsasaran,$filiku,3,$page,$rows);
 	}
 	
 	public function pdf($filtahun=null,$file1=null,$filsasaran=null,$filiku=null,$page=null,$rows=null){
 		$this->load->library('our_pdf','our_pdf');
 		$this->our_pdf->FPDF('L', 'mm', 'A4');             
-		$pdfdata = $this->kke1_2_model->easyGrid($filtahun,$file1,$filsasaran,$filiku,2,$page,$rows);
+		$pdfdata = $this->kke2a_model->easyGrid($filtahun,$file1,$filsasaran,$filiku,2,$page,$rows);
 		define('FPDF_FONTPATH',APPPATH."libraries/fpdf/font/");
 		$this->our_pdf->Open();
 		$this->our_pdf->addPage();
@@ -225,7 +225,7 @@ class Kke1_3 extends CI_Controller {
 	
 	
 	function getSatuan($id){
-		echo $this->kke1_2_model->getSatuan($id);
+		echo $this->kke2a_model->getSatuan($id);
 	}
 	
 }
