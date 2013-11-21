@@ -33,6 +33,9 @@ class Sys_login_model extends CI_Model{
 			$this->fullName = $row['full_name'];
 			$this->level_id= $row['level_id'];
 			//var_dump($this->groupId);die;
+			if (FILTER_E1_SINGLE){
+				$row['unit_kerja_e1']=FILTER_E1;
+			}
 			$this->create_session($row['user_id'], $row['user_name'], (($row['user_name']=='superadmin')?'':$row['app_type']), $row['full_name'],true,$row['unit_kerja_e1'],$row['unit_kerja_e2'],$row['level'],$row['group_id'],$row['level_id']);
 			$query->free_result();
 			return TRUE;

@@ -43,5 +43,11 @@ define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 // Define Ajax Request
 define('IS_AJAX', isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
 
+//format multi E1
 define('FILTER_E1_LOCKING',true);
 define('FILTER_E1_LIST',"'022.04'");//kalau lebih dari 1 tinggal tambah pake comma
+
+//format single E1
+define('FILTER_E1_SINGLE',true);
+define('FILTER_E1','022.04');//kalau lebih dari 1 tinggal tambah pake comma
+// Untuk kasus aplikasi hubla JANGAN DIRUBAH... FILTER_E1_LIST hanya untuk kode Eselon 1 LAUT

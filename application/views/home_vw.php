@@ -68,6 +68,33 @@
 			padding: 0 3px;
 		}
 		
+		ul.dropdown{
+			display: none;
+			position: fixed;
+			width: 548px;
+			padding: 0px;
+			border: 1px solid #a0a0a0;
+			list-style: none;
+			font-size: 10pt;
+			margin-top: 2px;
+			overflow: scroll;
+			overflow-x: hidden;
+			max-height: 200px;
+		}
+		
+		ul.dropdown li{
+			background: #ffffff;
+			padding: 5px;
+			border-bottom: 1px solid #a0a0a0;
+			text-transform:none;
+			font-weight:normal;
+			color:#000000;
+		}
+		
+		ul.dropdown li:hover{
+			background: #fafafa;
+			cursor: pointer;
+		}
 	
 		#tcContainer{
 			display:inline-block;
