@@ -227,24 +227,24 @@
 				<?}?>
 				if (tahun=="") tahun = "-1";
 				 $("#divSasaran<?=$objectId?>").load(
-					base_url+"pengaturan/sasaran_eselon2/getListSasaranE1/ListSasaran"+"<?=$objectId;?>"+"/"+e1+"/"+tahun,
+					base_url+"pengaturan/sasaran_eselon2/getListSasaranE1/"+"<?=$objectId;?>"+"/"+e1+"/"+tahun,
 					function(){
 						$("textarea").autogrow();
 						
-						$("#txtkode_sasaran_e1ListSasaran<?=$objectId;?>").click(function(){
-							$("#dropListSasaran<?=$objectId;?>").slideDown("slow");
+						$("#txtkode_sasaran_e1<?=$objectId;?>").click(function(){
+							$("#drop<?=$objectId;?>").slideDown("slow");
 						});
 						
-						$("#dropListSasaran<?=$objectId;?> li").click(function(e){
+						$("#drop<?=$objectId;?> li").click(function(e){
 							var chose = $(this).text();
-							$("#txtkode_sasaran_e1ListSasaran<?=$objectId;?>").val(chose);
-							$("#dropListSasaran<?=$objectId;?>").slideUp("slow");
+							$("#txtkode_sasaran_e1<?=$objectId;?>").val(chose);
+							$("#drop<?=$objectId;?>").slideUp("slow");
 						});
 						
 						if (key!=null)
-							$('#kode_sasaran_e1ListSasaran<?=$objectId;?>').val(key);
+							$('#kode_sasaran_e1<?=$objectId;?>').val(key);
 						if (val!=null)
-							$('#txtkode_sasaran_e1ListSasaran<?=$objectId;?>').val(val);
+							$('#txtkode_sasaran_e1<?=$objectId;?>').val(val);
 					}
 				); 
 				//alert("here");
@@ -263,6 +263,12 @@
 					searchData<?=$objectId?>();
 			},50);
 		 });
+		 
+		 
+		 function setSasaran<?=$objectId;?>(valu){
+			$('#kode_sasaran_e1<?=$objectId;?>').val(valu);
+			//getDetail();
+		}
 	</script>
 	<style type="text/css">
 		#fm<?=$objectId;?>{
@@ -443,12 +449,12 @@
 				<input type="hidden" id="kke1_2_id<?=$objectId?>" name="kke1_2_id"/>				
 			</div>
 			<div class="fitem">
-				<label style="width:120px">Sasaran Eselon I :</label>					
+				<label style="width:130px;vertical-align:top">Sasaran Eselon I :</label>					
 					<span id="divSasaran<?=$objectId?>">
 				</span>
 			</div>
 			<div class="fitem">
-				<label style="width:120px;vertical-align:top">IKU Eselon I :</label>
+				<label style="width:130px;vertical-align:top">IKU Eselon I :</label>
 				<?//=$this->iku_kl_model->getListIKU_KL($objectId,"",false)?>
 				<span id="divIKU<?=$objectId?>">
 				</span>
