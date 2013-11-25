@@ -14,6 +14,7 @@ class Kke1_3 extends CI_Controller {
 		$this->load->model('/security/sys_menu_model');
 		$this->load->model('/lke/kke1_3_model');
 		$this->load->model('/rujukan/eselon1_model');
+		$this->load->model('/rencana/rkteselon1_model');
 		$this->load->library("utility");
 		
 	}

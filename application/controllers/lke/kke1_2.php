@@ -24,21 +24,29 @@ class Kke1_2 extends CI_Controller {
 		$data['title'] = 'Kertas Kerja Evaluasi II';	
 		$data['objectId'] = $this->objectId;
 		//$data['formLookupTarif'] = $this->tarif_model->lookup('#winLookTarif'.$data['objectId'],"#medrek_id".$data['objectId']);
-		$data['sasarantepat_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke1_2','unit_kerja'=>'e1'),true,"sasarantepat");
-		$data['iktepat_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke1_2','unit_kerja'=>'e1'),true,"iktepat");
-		$data['targettercapai_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke1_2','unit_kerja'=>'e1'),true,"targettercapai");
-		$data['kinerjabaik_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke1_2','unit_kerja'=>'e1'),true,"kinerjabaik");
-		$data['dataandal_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke1_2','unit_kerja'=>'e1'),true,"dataandal");
+		$data['sasarantepat_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke1_2','unit_kerja'=>'e1'),true,"sasaran_tepat");
+		$data['iktepat_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke1_2','unit_kerja'=>'e1'),true,"ik_tepat");
+		$data['targettercapai_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke1_2','unit_kerja'=>'e1'),true,"target_tercapai");
+		$data['kinerjabaik_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke1_2','unit_kerja'=>'e1'),true,"kinerja_baik");
+		$data['dataandal_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke1_2','unit_kerja'=>'e1'),true,"data_andal");
 	  	$this->load->view('lke/kke1_2_v',$data);
 	}
 	
 	private function get_form_values() {
 		$dt['tahun'] = $this->input->post("tahun", TRUE); 
-		$dt['lkepusat_id'] = $this->input->post("lkepusat_id", TRUE); 
-		$dt['id_komponen'] = $this->input->post("id_komponen", TRUE); 
-		$dt['index_mutu'] = $this->input->post("index_mutu", TRUE); 
-		$dt['ref'] = $this->input->post("ref", TRUE); 
-		
+		$dt['kke12_e1_id'] = $this->input->post("kke12_e1_id", TRUE); 
+		$dt['kode_sasaran_e1'] = $this->input->post("kode_sasaran_e1", TRUE); 
+		$dt['kode_iku_e1'] = $this->input->post("kode_iku_e1", TRUE); 
+		$dt['sasaran_tepat'] = $this->input->post("sasaran_tepat", TRUE); 
+		$dt['sasaran_tepat_nilai'] = $this->lke_konversi_model->getKonversi('kke1_2',$dt['sasaran_tepat'],'e1');
+		$dt['ik_tepat'] = $this->input->post("ik_tepat", TRUE); 
+		$dt['ik_tepat_nilai'] = $this->lke_konversi_model->getKonversi('kke1_2',$dt['ik_tepat'],'e1');
+		$dt['target_tercapai'] = $this->input->post("target_tercapai", TRUE); 
+		$dt['target_tercapai_nilai'] = $this->lke_konversi_model->getKonversi('kke1_2',$dt['target_tercapai'],'e1');
+		$dt['kinerja_baik'] = $this->input->post("kinerja_baik", TRUE); 
+		$dt['kinerja_baik_nilai'] = $this->lke_konversi_model->getKonversi('kke1_2',$dt['kinerja_baik'],'e1');
+		$dt['data_andal'] = $this->input->post("data_andal", TRUE); 
+		$dt['data_andal_nilai'] = $this->lke_konversi_model->getKonversi('kke1_2',$dt['data_andal'],'e1');
 		return $dt;
     }
 	
@@ -54,8 +62,8 @@ class Kke1_2 extends CI_Controller {
 		// validation
 		# rules
 		$this->form_validation->set_rules("tahun", 'Tahun', 'trim|required|numeric|exact_length[4]|xss_clean');
-		$this->form_validation->set_rules("id_komponen", 'Komponen/Subkomponen', 'trim|required|xss_clean');
-		$this->form_validation->set_rules("index_mutu", 'Index Mutu', 'trim|required|xss_clean');
+		//$this->form_validation->set_rules("id_komponen", 'Komponen/Subkomponen', 'trim|required|xss_clean');
+	//	$this->form_validation->set_rules("index_mutu", 'Index Mutu', 'trim|required|xss_clean');
 		
 		# message rules
 		$this->form_validation->set_message('required', 'Field %s harus diisi.');
@@ -64,17 +72,21 @@ class Kke1_2 extends CI_Controller {
 		
 		if ($this->form_validation->run() == FALSE){ // jika tidak valid
 			$data['pesan_error'].=(trim(form_error('tahun',' ',' '))==''?'':form_error('tahun',' ','<br>'));
-			$data['pesan_error'].=(trim(form_error('id_komponen',' ',' '))==''?'':form_error('id_komponen',' ','<br>'));
-			$data['pesan_error'].=(trim(form_error('index_mutu',' ',' '))==''?'':form_error('index_mutu',' ','<br>'));
+			//$data['pesan_error'].=(trim(form_error('id_komponen',' ',' '))==''?'':form_error('id_komponen',' ','<br>'));
+			//$data['pesan_error'].=(trim(form_error('index_mutu',' ',' '))==''?'':form_error('index_mutu',' ','<br>'));
 			
 		}else{
 			// validasi detail
-				$data['nilai'] = $this->lke_konversi_model->getKonversi('kke1_2',$data['index_mutu'],'e1');
-				if (!$this->kke1_2_model->isExistNilai($data['tahun'],$data['id_komponen'])){
+				
+			
+				if ($data['kke12_e1_id']==''){	
 					$result = $this->kke1_2_model->InsertOnDb($data,$data['pesan_error']);
 				}
-				else
-					$data['pesan_error'] .= 'Komponen ini untuk tahun '.$data['tahun'].' sudah diinput.';
+				else {
+					$result = $this->kke1_2_model->UpdateOnDb($data,$data['kke12_e1_id']);
+				}
+				
+					//$data['pesan_error'] .= 'Komponen ini untuk tahun '.$data['tahun'].' sudah diinput.';
 		}
 		
 		if ($result){

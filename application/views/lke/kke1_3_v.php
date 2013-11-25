@@ -243,16 +243,16 @@
 			<tr>
 				<td>Tahun :</td>
 				<td>
-				<?=$this->kke1_3_model->getListTahun($objectId)?>
-				</td>
-			</tr>
-			<tr>
-				<td>Eselon 1 :</td>
-				<td>
-					<?=$this->eselon1_model->getListFilterEselon1($objectId,$this->session->userdata('unit_kerja_e1'))?>
+				<?=$this->rkteselon1_model->getListTahun($objectId)?>
 				</td>
 			</tr>
 		<!--	<tr>
+				<td>Eselon 1 :</td>
+				<td>
+					<?='';//$this->eselon1_model->getListFilterEselon1($objectId,$this->session->userdata('unit_kerja_e1'))?>
+				</td>
+			</tr>
+			<tr>
 				<td>Kode Sasaran E1:</td>
 				<td><input class="easyui-textbox" id="filter_sasaran<?=$objectId;?>"></td>
 			</tr>
@@ -303,32 +303,40 @@
 	  <thead>
 	  <tr>
 		
-		<th field="no" rowspan="3" sortable="false" width="25px">No.</th>
-		<th field="sasaran_strategis" rowspan="3"  halign="center" sortable="false" width="250px">Sasaran Strategis</th>
-		<th  sortable="false" rowspan="3"  halign="center" field="iku_e1" width="250px">Indikator Kinerja Utama</th>
+		<th field="no" rowspan="4" sortable="false" width="25px">No.</th>
+		<th field="kke13_e1_id" rowspan="4" sortable="false" hidden="true" width="25px">kke13_e1_id</th>
+		<th field="tahun" rowspan="4" sortable="false" hidden="true" width="25px">tahun</th>
+		<th field="kode_sasaran_e1" rowspan="4" sortable="false" hidden="true" width="25px">kode_sasaran_e1</th>
+		<th field="kode_iku_e1" rowspan="4" sortable="false" hidden="true" width="25px"kode_iku_e1</th>
+		<th field="sasaran_strategis" rowspan="4"  halign="center" sortable="false" width="250px">Sasaran Strategis</th>
+		<th field="indikator_kinerja" sortable="false" rowspan="4"  halign="center" field="iku_e1" width="250px">Indikator Kinerja Utama</th>
 		<th sortable="false" colspan="10" align="center" halign="center">Acuan Kinerja</th>
 		
 	  </tr>
 	  <tr>
-		<th sortable="false" halign="center" colspan="2" >Pencatatan Keuangan & Integritas</th>
-		<th sortable="false" halign="center" colspan="2" >Masyarakat/Publik</th>
-		<th sortable="false" halign="center" colspan="2" >Instansi Pemerintah Lainnya</th>
-		<th sortable="false" halign="center" colspan="2" >Transparansi</th>
-		<th sortable="false" halign="center" colspan="2" >Penghargaan Lainnya</th>	
+		<th sortable="false" halign="center" rowspan="1" colspan="2" width="130px">Pencatatan </th>
+		<th sortable="false" halign="center" rowspan="2" colspan="2" width="130px" >Masyarakat/Publik</th>
+		<th sortable="false" halign="center" rowspan="1" colspan="2" width="130px" >Instansi</th>
+		<th sortable="false" halign="center" rowspan="2" colspan="2" width="130px" >Transparansi</th>
+		<th sortable="false" halign="center" rowspan="2" colspan="2" width="130px" >Penghargaan Lainnya</th>	
+	  </tr>
+	  <tr>
+		<th sortable="false" halign="center" rowspan="1" colspan="2" width="130px">Keuangan & Integritas</th>
+		<th sortable="false" halign="center" rowspan="1" colspan="2" width="130px"> Pemerintah Lainnya</th>
 	  </tr>
 	  <tr>
 		
 		
-		<th sortable="false" halign="center" align="center" field="">Index</th>
-		<th sortable="false" halign="center" align="center" field="">Nilai</th>
-		<th sortable="false" halign="center" align="center" field="">Index</th>
-		<th sortable="false" halign="center" align="center" field="">Nilai</th>
-		<th sortable="false" halign="center" align="center" field="">Index</th>
-		<th sortable="false" halign="center" align="center" field="">Nilai</th>
-		<th sortable="false" halign="center" align="center" field="">Index</th>
-		<th sortable="false" halign="center" align="center" field="">Nilai</th>
-		<th sortable="false" halign="center" align="center" field="">Index</th>
-		<th sortable="false" halign="center" align="center" field="">Nilai</th>
+		<th field="catatan_keuangan" sortable="false" halign="center" align="center" width="50px">Index</th>
+		<th field="catatan_keuangan_nilai" sortable="false" halign="center" align="center" width="80px">Nilai</th>
+		<th field="masyarakat" sortable="false" halign="center" align="center" width="50px">Index</th>
+		<th field="masyarakat_nilai" sortable="false" halign="center" align="center" width="80px">Nilai</th>
+		<th field="instansi_lainnya" sortable="false" halign="center" align="center" width="50px">Index</th>
+		<th field="instansi_lainnya_nilai" sortable="false" halign="center" align="center" width="80px">Nilai</th>
+		<th field="transparansi" sortable="false" halign="center" align="center" width="50px">Index</th>
+		<th field="transparansi_nilai" sortable="false" halign="center" align="center" width="80px">Nilai</th>
+		<th field="penghargaan" sortable="false" halign="center" align="center" width="50px">Index</th>
+		<th field="penghargaan_nilai" sortable="false" halign="center" align="center" width="80px">Nilai</th>
 	  </tr>
 	 
 	  </thead>  
