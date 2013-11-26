@@ -1,7 +1,7 @@
 <?php
 
 class Kke2a extends CI_Controller {
-
+	var $objectId = 'kke2a';
 	function __construct()
 	{
 		parent::__construct();			
@@ -14,17 +14,82 @@ class Kke2a extends CI_Controller {
 		$this->load->model('/security/sys_menu_model');
 		$this->load->model('/lke/kke2a_model');
 		$this->load->model('/rujukan/eselon1_model');
+		$this->load->model('/pengaturan/sasaran_eselon1_model');
+		$this->load->model('/lke/lke_konversi_model');
 		$this->load->library("utility");
 		
 	}
 	
 	function index(){
 		$data['title'] = 'Kertas Kerja Evaluasi 2A Sasaran';	
-		$data['objectId'] = 'kke2a';
+		$data['objectId'] = $this->objectId;
+		$data['renstra_ip_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke2a','unit_kerja'=>'e1'),true,"renstra_ip");
+		$data['rkt_ip_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke2a','unit_kerja'=>'e1'),true,"rkt_ip");
+		$data['pk_ip_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke2a','unit_kerja'=>'e1'),true,"pk_ip");
 		//$data['formLookupTarif'] = $this->tarif_model->lookup('#winLookTarif'.$data['objectId'],"#medrek_id".$data['objectId']);
 	  	$this->load->view('lke/kke2a_v',$data);
 	}
 	
+	
+	private function get_form_values() {
+		$dt['tahun'] = $this->input->post("tahun", TRUE); 
+		$dt['kke2a_e1_id'] = $this->input->post("kke2a_e1_id", TRUE); 
+		$dt['kode_sasaran_e1'] = $this->input->post("kode_sasaran_e1", TRUE); 
+		
+		$dt['renstra_ip'] = $this->input->post("renstra_ip", TRUE); 
+		$dt['renstra_ip_nilai'] = $this->lke_konversi_model->getKonversi('kke2a',$dt['renstra_ip'],'e1');
+		$dt['rkt_ip'] = $this->input->post("rkt_ip", TRUE); 
+		$dt['rkt_ip_nilai'] = $this->lke_konversi_model->getKonversi('kke2a',$dt['rkt_ip'],'e1');
+		$dt['pk_ip'] = $this->input->post("pk_ip", TRUE); 
+		$dt['pk_ip_nilai'] = $this->lke_konversi_model->getKonversi('kke2a',$dt['pk_ip'],'e1');
+		
+		return $dt;
+    }
+	
+	function save(){
+		$this->load->library('form_validation');
+		$data = $this->get_form_values();
+		$return_id = 0;
+		$result = "";
+		$data['pesan_error'] = '';
+		$pesan = '';
+		
+		// validation
+		# rules
+		$this->form_validation->set_rules("tahun", 'Tahun', 'trim|required|numeric|exact_length[4]|xss_clean');
+		//$this->form_validation->set_rules("id_komponen", 'Komponen/Subkomponen', 'trim|required|xss_clean');
+	//	$this->form_validation->set_rules("index_mutu", 'Index Mutu', 'trim|required|xss_clean');
+		
+		# message rules
+		$this->form_validation->set_message('required', 'Field %s harus diisi.');
+		$this->form_validation->set_message('numeric', 'Isi field %s dengan angka');
+		$this->form_validation->set_message('exact_length', 'Isi field %s dengan 4 karakter angka');
+		
+		if ($this->form_validation->run() == FALSE){ // jika tidak valid
+			$data['pesan_error'].=(trim(form_error('tahun',' ',' '))==''?'':form_error('tahun',' ','<br>'));
+			//$data['pesan_error'].=(trim(form_error('id_komponen',' ',' '))==''?'':form_error('id_komponen',' ','<br>'));
+			//$data['pesan_error'].=(trim(form_error('index_mutu',' ',' '))==''?'':form_error('index_mutu',' ','<br>'));
+			
+		}else{
+			// validasi detail
+				
+			
+				if ($data['kke2a_e1_id']==''){	
+					$result = $this->kke2a_model->InsertOnDb($data,$data['pesan_error']);
+				}
+				else {
+					$result = $this->kke2a_model->UpdateOnDb($data,$data['kke2a_e1_id']);
+				}
+				
+					//$data['pesan_error'] .= 'Komponen ini untuk tahun '.$data['tahun'].' sudah diinput.';
+		}
+		
+		if ($result){
+			echo json_encode(array('success'=>true, 'status'=>$return_id));
+		} else {
+			echo json_encode(array('msg'=>$data['pesan_error']));
+		}
+	}
 	
 	function grid($filtahun=null,$file1=null,$filsasaran=null,$filiku=null){
 		if ($file1==null)

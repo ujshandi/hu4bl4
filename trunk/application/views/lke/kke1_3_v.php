@@ -12,6 +12,97 @@
 					//$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>lke/kke1_3/grid/"+filtahun+"/"+filnama+"/"+filalamat});
 			}
 			
+				var url;
+			newData<?=$objectId;?> = function (){  
+				/* var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
+				if (row){
+					if (row.has_child) {
+						alert("Pilih data subkomponen terlebih dahulu");
+						return false;
+					} */
+					
+					var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
+					if (row){
+						$('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Add KKE1-III Capaian');  
+						$('#fm<?=$objectId;?>').form('clear');  						
+						//initCombo<?=$objectId?>();
+						url = base_url+'lke/kke1_3/save';  
+						$("#kke13_e1_id<?=$objectId?>").val(row.kke13_e1_id);
+						$("#tahun<?=$objectId?>").val(row.tahun);
+						$("#spanTahun<?=$objectId?>").text(row.tahun);
+						$("#kode_sasaran_e1<?=$objectId?>").val(row.kode_sasaran_e1);
+						$("#spanSasaran<?=$objectId?>").text(row.sasaran_strategis);
+						$("#kode_iku_e1<?=$objectId?>").val(row.kode_iku_e1);
+						$("#spanIku<?=$objectId?>").text(row.indikator_kinerja);
+						
+						$('input:radio[name=catatan_keuangan]:nth(0)').prop('checked',(row.catatan_keuangan=='A'));
+						$('input:radio[name=catatan_keuangan]:nth(1)').prop('checked',(row.catatan_keuangan=='B'));
+						$('input:radio[name=catatan_keuangan]:nth(2)').prop('checked',(row.catatan_keuangan=='C'));
+						$('input:radio[name=catatan_keuangan]:nth(3)').prop('checked',(row.catatan_keuangan=='D'));
+						$('input:radio[name=catatan_keuangan]:nth(4)').prop('checked',(row.catatan_keuangan=='E'));
+						
+						$('input:radio[name=masyarakat]:nth(0)').prop('checked',(row.masyarakat=='A'));
+						$('input:radio[name=masyarakat]:nth(1)').prop('checked',(row.masyarakat=='B'));
+						$('input:radio[name=masyarakat]:nth(2)').prop('checked',(row.masyarakat=='C'));
+						$('input:radio[name=masyarakat]:nth(3)').prop('checked',(row.masyarakat=='D'));
+						$('input:radio[name=masyarakat]:nth(4)').prop('checked',(row.masyarakat=='E'));
+						
+						$('input:radio[name=instansi_lainnya]:nth(0)').prop('checked',(row.instansi_lainnya=='A'));
+						$('input:radio[name=instansi_lainnya]:nth(1)').prop('checked',(row.instansi_lainnya=='B'));
+						$('input:radio[name=instansi_lainnya]:nth(2)').prop('checked',(row.instansi_lainnya=='C'));
+						$('input:radio[name=instansi_lainnya]:nth(3)').prop('checked',(row.instansi_lainnya=='D'));
+						$('input:radio[name=instansi_lainnya]:nth(4)').prop('checked',(row.instansi_lainnya=='E'));
+						
+						$('input:radio[name=transparansi]:nth(0)').prop('checked',(row.transparansi=='A'));
+						$('input:radio[name=transparansi]:nth(1)').prop('checked',(row.transparansi=='B'));
+						$('input:radio[name=transparansi]:nth(2)').prop('checked',(row.transparansi=='C'));
+						$('input:radio[name=transparansi]:nth(3)').prop('checked',(row.transparansi=='D'));
+						$('input:radio[name=transparansi]:nth(4)').prop('checked',(row.transparansi=='E'));
+						
+						$('input:radio[name=penghargaan]:nth(0)').prop('checked',(row.penghargaan=='A'));
+						$('input:radio[name=penghargaan]:nth(1)').prop('checked',(row.penghargaan=='B'));
+						$('input:radio[name=penghargaan]:nth(2)').prop('checked',(row.penghargaan=='C'));
+						$('input:radio[name=penghargaan]:nth(3)').prop('checked',(row.penghargaan=='D'));
+						$('input:radio[name=penghargaan]:nth(4)').prop('checked',(row.penghargaan=='E'));
+					}
+						
+					else {
+						alert('Data IKU belum dipilih!');
+					}
+				/* }	
+				else {
+					alert("Pilih data subkomponen terlebih dahulu");
+				} */
+				//addTab("Add PK Kementerian", "lke/kke1_2/add");
+			}
+			
+			saveData<?=$objectId;?>=function(){
+				$('#fm<?=$objectId;?>').form('submit',{
+					url: url,
+					onSubmit: function(){
+						return $(this).form('validate');
+					},
+					success: function(result){
+						//alert(result);
+						var result = eval('('+result+')');
+						if (result.success){
+							/* $.messager.show({
+								title: 'Sucsees',
+								msg: result.msg
+							}); */
+							$('#dlg<?=$objectId;?>').dialog('close');		// close the dialog
+							$('#dg<?=$objectId;?>').datagrid('reload');	// reload the user data
+						} else {
+							$.messager.show({
+								title: 'Error',
+								msg: result.msg
+							});
+						}
+					}
+				});
+			}
+			//end saveData
+			
 				//tipe 1=grid, 2=pdf, 3=excel
 			getUrl<?=$objectId;?> = function (tipe){
 				//jika tipe pdf&excel kirim jg paging datanya agar sesuai dengan grid				
@@ -86,7 +177,7 @@
 					
 					if (sasaran!=rows[i].sasaran_strategis){
 						sasaran =rows[i].sasaran_strategis;
-					//	alert(sasaran);
+						//alert(sasaran);
 						if (i>0){
 					//	alert("kadieu og gening");
 							merges[idx] = new Array();
@@ -243,7 +334,7 @@
 			<tr>
 				<td>Tahun :</td>
 				<td>
-				<?=$this->rkteselon1_model->getListTahun($objectId)?>
+				<?=$this->rkteselon1_model->getListFilterTahun($objectId,false)?>
 				</td>
 			</tr>
 		<!--	<tr>
@@ -277,19 +368,10 @@
 	  </table>
 	  <div style="margin-bottom:5px">  
 	  <? if($this->sys_menu_model->cekAkses('ADD;',302,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
-			<a href="#" onclick="newData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-add" plain="true">Add</a>  
+			<a href="#" onclick="newData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-ok" plain="true">Set Kinerja</a>  
 		<?}?>
 	
-		<!------------Edit View-->
-		<? if($this->sys_menu_model->cekAkses('EDIT;',302,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
-			<a href="#" onclick="editData<?=$objectId;?>(true);" class="easyui-linkbutton" iconCls="icon-edit" plain="true">Edit</a>
-		<?}?>
-		<? if($this->sys_menu_model->cekAkses('VIEW;',302,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
-			<a href="#" onclick="editData<?=$objectId;?>(false);" class="easyui-linkbutton" iconCls="icon-view" plain="true">View</a>
-		<?}?>
-		<? if($this->sys_menu_model->cekAkses('DELETE;',302,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
-			<a href="#" onclick="deleteData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-remove" plain="true">Delete</a>
-		<?}?>
+		
 			<? if($this->sys_menu_model->cekAkses('PRINT;',253,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 				<a 	href="#" onclick="printData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-print" plain="true">Print</a>
 			<?}?>
@@ -309,11 +391,12 @@
 		<th field="kode_sasaran_e1" rowspan="4" sortable="false" hidden="true" width="25px">kode_sasaran_e1</th>
 		<th field="kode_iku_e1" rowspan="4" sortable="false" hidden="true" width="25px"kode_iku_e1</th>
 		<th field="sasaran_strategis" rowspan="4"  halign="center" sortable="false" width="250px">Sasaran Strategis</th>
-		<th field="indikator_kinerja" sortable="false" rowspan="4"  halign="center" field="iku_e1" width="250px">Indikator Kinerja Utama</th>
+		<th  sortable="false" rowspan="2" colspan="2"  halign="center" width="250px">Indikator Kinerja Utama</th>
 		<th sortable="false" colspan="10" align="center" halign="center">Acuan Kinerja</th>
 		
 	  </tr>
 	  <tr>
+		
 		<th sortable="false" halign="center" rowspan="1" colspan="2" width="130px">Pencatatan </th>
 		<th sortable="false" halign="center" rowspan="2" colspan="2" width="130px" >Masyarakat/Publik</th>
 		<th sortable="false" halign="center" rowspan="1" colspan="2" width="130px" >Instansi</th>
@@ -321,12 +404,12 @@
 		<th sortable="false" halign="center" rowspan="2" colspan="2" width="130px" >Penghargaan Lainnya</th>	
 	  </tr>
 	  <tr>
+		<th field="no_indikator" sortable="false" width="30px" rowspan="2">No.</th>
+		<th field="indikator_kinerja" sortable="false" width="220px" rowspan="2">Deskripsi</th>
 		<th sortable="false" halign="center" rowspan="1" colspan="2" width="130px">Keuangan & Integritas</th>
 		<th sortable="false" halign="center" rowspan="1" colspan="2" width="130px"> Pemerintah Lainnya</th>
 	  </tr>
-	  <tr>
-		
-		
+	  <tr>		
 		<th field="catatan_keuangan" sortable="false" halign="center" align="center" width="50px">Index</th>
 		<th field="catatan_keuangan_nilai" sortable="false" halign="center" align="center" width="80px">Nilai</th>
 		<th field="masyarakat" sortable="false" halign="center" align="center" width="50px">Index</th>
@@ -342,3 +425,64 @@
 	  </thead>  
 	</table>
 	
+
+	<!-- Area untuk Form Add/Edit >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  -->
+	
+	<div id="dlg<?=$objectId;?>" class="easyui-dialog" style="width:720px;height:400px;padding:10px 20px" closed="true"  buttons="#dlg-buttons">
+		<!----------------Edit title-->
+		
+		<form id="fm<?=$objectId;?>" method="post" >			
+			
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">Tahun :</label>
+				<span id="spanTahun<?=$objectId?>"></span>
+				<input type="hidden" id="tahun<?=$objectId?>" name="tahun">
+				<input type="hidden" id="kke13_e1_id<?=$objectId?>" name="kke13_e1_id"/>				
+			</div>
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">Sasaran Eselon I :</label>					
+					<span id="spanSasaran<?=$objectId?>"></span>
+					<input type="hidden" id="kode_sasaran_e1<?=$objectId?>" name="kode_sasaran_e1">
+			</div>
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">IKU Eselon I :</label>
+				<?//=$this->iku_kl_model->getListIKU_KL($objectId,"",false)?>
+				<input type="hidden" id="kode_iku_e1<?=$objectId?>" name="kode_iku_e1">
+				<span id="spanIku<?=$objectId?>">
+				</span>
+			</div>
+			<div class="fitem">
+				
+				<hr>
+			</div>
+			<div class="fitem" style="height:20px;margin-bottom:20px">
+				<label style="width:150px;vertical-align:top">Kinerja Pencatatan Keuangan & Integritas :</label>
+				 <?=$catatan_keuangan_radio?>
+			</div>
+			<div class="fitem" style="height:20px;margin-bottom:20px">
+				<label style="width:150px;vertical-align:top">Kinerja Dari Masyarakat Lainnya :</label>
+				 <?=$masyarakat_radio?>
+			</div>
+			<div class="fitem" style="height:20px;margin-bottom:20px">
+				<label style="width:150px;vertical-align:top">Kinerja Dari Instansi Pemerintah Lainnya :</label>
+				 <?=$instansi_lainnya_radio?>
+			</div>
+			<div class="fitem" style="height:20px;margin-bottom:20px">
+				<label style="width:150px;vertical-align:top">Kinerja Transparansi :</label>
+				 <?=$transparansi_radio?>
+			</div>
+			<div class="fitem" style="height:20px;margin-bottom:20px">
+				<label style="width:150px;vertical-align:top">Kinerja Penghargaan Lainnya :</label>
+				 <?=$penghargaan_radio?>
+			</div>
+			
+			
+			
+			
+		</form>
+		<div id="dlg-buttons">
+			<!----------------Edit title-->
+			<a href="#" id="saveBtn<?=$objectId;?>" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveData<?=$objectId;?>()">Save</a>
+			<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg<?=$objectId;?>').dialog('close')">Cancel</a>
+		</div>
+	</div>

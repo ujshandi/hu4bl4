@@ -50,6 +50,75 @@
 				
 			}
 			
+			var url;
+			newData<?=$objectId;?> = function (){  
+				/* var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
+				if (row){
+					if (row.has_child) {
+						alert("Pilih data subkomponen terlebih dahulu");
+						return false;
+					} */
+					
+					var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
+					if (row){
+						$('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Add KKE2A-Sasaran');  
+						$('#fm<?=$objectId;?>').form('clear');  						
+						//initCombo<?=$objectId?>();
+						url = base_url+'lke/kke2a/save';  
+						$("#kke2a_e1_id<?=$objectId?>").val(row.kke2a_e1_id);
+						$("#tahun<?=$objectId?>").val(row.tahun);
+						$("#spanTahun<?=$objectId?>").text(row.tahun);
+						$("#kode_sasaran_e1<?=$objectId?>").val(row.kode_sasaran_e1);
+						$("#spanSasaran<?=$objectId?>").text(row.sasaran_strategis);						
+						
+						$('input:radio[name=renstra_ip]:nth(0)').prop('checked',(row.renstra_ip=='Y'));
+						$('input:radio[name=renstra_ip]:nth(1)').prop('checked',(row.renstra_ip=='T'));
+												
+						$('input:radio[name=rkt_ip]:nth(0)').prop('checked',(row.rkt_ip=='Y'));
+						$('input:radio[name=rkt_ip]:nth(1)').prop('checked',(row.rkt_ip=='T'));
+						
+						$('input:radio[name=pk_ip]:nth(0)').prop('checked',(row.pk_ip=='Y'));
+						$('input:radio[name=pk_ip]:nth(1)').prop('checked',(row.pk_ip=='T'));
+					}	
+					else {
+						alert('Data sasaran belum dipilih!');
+					}
+					
+				/* }	
+				else {
+					alert("Pilih data subkomponen terlebih dahulu");
+				} */
+				//addTab("Add PK Kementerian", "lke/kke2a/add");
+			}
+			
+			saveData<?=$objectId;?>=function(){
+				$('#fm<?=$objectId;?>').form('submit',{
+					url: url,
+					onSubmit: function(){
+						return $(this).form('validate');
+					},
+					success: function(result){
+						//alert(result);
+						var result = eval('('+result+')');
+						if (result.success){
+							/* $.messager.show({
+								title: 'Sucsees',
+								msg: result.msg
+							}); */
+							$('#dlg<?=$objectId;?>').dialog('close');		// close the dialog
+							$('#dg<?=$objectId;?>').datagrid('reload');	// reload the user data
+						} else {
+							$.messager.show({
+								title: 'Error',
+								msg: result.msg
+							});
+						}
+					}
+				});
+			}
+			//end saveData
+			
+			
 			searchData<?=$objectId;?> = function (){
 				$('#dg<?=$objectId;?>').datagrid({
 					url:getUrl<?=$objectId;?>(1),
@@ -238,16 +307,16 @@
 			<tr>
 				<td>Tahun :</td>
 				<td>
-				<?=$this->kke2a_model->getListTahun($objectId)?>
+				<?=$this->sasaran_eselon1_model->getListFilterTahun($objectId,false)?>
 				</td>
 			</tr>
-			<tr>
+		<!--	<tr>
 				<td>Eselon 1 :</td>
 				<td>
 					<?=$this->eselon1_model->getListFilterEselon1($objectId,$this->session->userdata('unit_kerja_e1'))?>
 				</td>
 			</tr>
-		<!--	<tr>
+			<tr>
 				<td>Kode Sasaran E1:</td>
 				<td><input class="easyui-textbox" id="filter_sasaran<?=$objectId;?>"></td>
 			</tr>
@@ -272,19 +341,11 @@
 	  </table>
 	  <div style="margin-bottom:5px">  
 	  <? if($this->sys_menu_model->cekAkses('ADD;',302,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
-			<a href="#" onclick="newData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-add" plain="true">Add</a>  
+			<a href="#" onclick="newData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-ok" plain="true">Set Kinerja</a>  
 		<?}?>
 	
-		<!------------Edit View-->
-		<? if($this->sys_menu_model->cekAkses('EDIT;',302,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
-			<a href="#" onclick="editData<?=$objectId;?>(true);" class="easyui-linkbutton" iconCls="icon-edit" plain="true">Edit</a>
-		<?}?>
-		<? if($this->sys_menu_model->cekAkses('VIEW;',302,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
-			<a href="#" onclick="editData<?=$objectId;?>(false);" class="easyui-linkbutton" iconCls="icon-view" plain="true">View</a>
-		<?}?>
-		<? if($this->sys_menu_model->cekAkses('DELETE;',302,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
-			<a href="#" onclick="deleteData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-remove" plain="true">Delete</a>
-		<?}?>
+		
+		
 			<? if($this->sys_menu_model->cekAkses('PRINT;',253,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 				<a 	href="#" onclick="printData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-print" plain="true">Print</a>
 			<?}?>
@@ -299,7 +360,10 @@
 	  <tr>
 		
 		<th field="no" rowspan="3" sortable="false"  halign="center" align="center"  width="25px">No.</th>
-		<th field="sasaran_strategis"  rowspan="3"   halign="center" align="center" sortable="false" width="450px">Sasaran Strategis</th>		
+		<th field="kke2a_e1_id" rowspan="3" sortable="false" hidden="true" width="25px">kke2a_e1_id</th>
+		<th field="tahun" rowspan="3" sortable="false" hidden="true" width="25px">tahun</th>
+		<th field="kode_sasaran_e1" rowspan="3" sortable="false" hidden="true" width="25px">kode_sasaran_e1</th>
+		<th field="sasaran_strategis"  rowspan="3"   halign="center" align="left" sortable="false" width="450px">Sasaran Strategis</th>		
 		<th colspan="6" sortable="false" align="center"  halign="center" align="center" width="1000px" >Orientasi Hasil</th>
 		
 	  </tr>
@@ -312,13 +376,56 @@
 	  </tr>
 	  <tr>		
 		
-		<th field="target_tercapai" sortable="false" halign="center" align="center" width="100px">Index</th>		
-		<th field="nilai" sortable="false" halign="center" align="center"  width="100px">Nilai</th>
-		<th field="target_tercapai" sortable="false" halign="center" align="center" width="100px">Index</th>		
-		<th field="nilai" sortable="false" halign="center" align="center"  width="100px">Nilai</th>	
-		<th field="target_tercapai" sortable="false" halign="center" align="center" width="100px">Index</th>		
-		<th field="nilai" sortable="false" halign="center" align="center"  width="100px">Nilai</th>			
+		<th field="renstra_ip" sortable="false" halign="center" align="center" width="100px">Index</th>		
+		<th field="renstra_ip_nilai" sortable="false" halign="center" align="center"  width="100px">Nilai</th>
+		<th field="rkt_ip" sortable="false" halign="center" align="center" width="100px">Index</th>		
+		<th field="rkt_ip_nilai" sortable="false" halign="center" align="center"  width="100px">Nilai</th>	
+		<th field="pk_ip" sortable="false" halign="center" align="center" width="100px">Index</th>		
+		<th field="pk_ip_nilai" sortable="false" halign="center" align="center"  width="100px">Nilai</th>			
 	  </tr>
 	  </thead>  
 	</table>
+	
+	<!-- Area untuk Form Add/Edit >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  -->
+	
+	<div id="dlg<?=$objectId;?>" class="easyui-dialog" style="width:720px;height:300px;padding:10px 20px" closed="true"  buttons="#dlg-buttons">
+		<!----------------Edit title-->
+		
+		<form id="fm<?=$objectId;?>" method="post" >			
+			
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">Tahun :</label>
+				<span id="spanTahun<?=$objectId?>"></span>
+				<input type="hidden" id="tahun<?=$objectId?>" name="tahun">
+				<input type="hidden" id="kke2a_e1_id<?=$objectId?>" name="kke2a_e1_id"/>				
+			</div>
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">Sasaran Eselon I :</label>					
+					<span id="spanSasaran<?=$objectId?>"></span>
+					<input type="hidden" id="kode_sasaran_e1<?=$objectId?>" name="kode_sasaran_e1">
+			</div>
+			
+			<div class="fitem">
+				
+				<hr>
+			</div>
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">Renstra IP :</label>
+				 <?=$renstra_ip_radio?>
+			</div>
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">RKT IP :</label>
+				 <?=$rkt_ip_radio?>
+			</div>
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">PK IP :</label>
+				 <?=$pk_ip_radio?>
+			</div>
+		</form>
+		<div id="dlg-buttons">
+			<!----------------Edit title-->
+			<a href="#" id="saveBtn<?=$objectId;?>" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveData<?=$objectId;?>()">Save</a>
+			<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg<?=$objectId;?>').dialog('close')">Cancel</a>
+		</div>
+	</div>
 	

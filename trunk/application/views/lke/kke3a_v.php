@@ -50,6 +50,96 @@
 				
 			}
 			
+			
+			var url;
+			newData<?=$objectId;?> = function (){  
+				/* var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
+				if (row){
+					if (row.has_child) {
+						alert("Pilih data subkomponen terlebih dahulu");
+						return false;
+					} */
+					
+					var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
+					if (row){
+						$('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Add KKE3A IK');  
+						$('#fm<?=$objectId;?>').form('clear');  						
+						//initCombo<?=$objectId?>();
+						url = base_url+'lke/kke3a/save';  
+						$("#kke3a_e1_id<?=$objectId?>").val(row.kke3a_e1_id);
+						$("#tahun<?=$objectId?>").val(row.tahun);
+						$("#spanTahun<?=$objectId?>").text(row.tahun);
+						$("#kode_sasaran_e1<?=$objectId?>").val(row.kode_sasaran_e1);
+						$("#spanSasaran<?=$objectId?>").text(row.sasaran_strategis);
+						$("#kode_iku_e1<?=$objectId?>").val(row.kode_iku_e1);
+						$("#spanIku<?=$objectId?>").text(row.indikator_kinerja);
+						
+						$('input:radio[name=renstra_ip]:nth(0)').prop('checked',(row.renstra_ip=='T'));
+						$('input:radio[name=renstra_ip]:nth(1)').prop('checked',(row.renstra_ip=='Y'));					
+						$('input:radio[name=rkt_ip]:nth(0)').prop('checked',(row.rkt_ip=='T'));
+						$('input:radio[name=rkt_ip]:nth(1)').prop('checked',(row.rkt_ip=='Y'));						
+						$('input:radio[name=pk_ip]:nth(0)').prop('checked',(row.pk_ip=='T'));
+						$('input:radio[name=pk_ip]:nth(1)').prop('checked',(row.pk_ip=='Y'));
+						
+						$('input:radio[name=iku_measurable]:nth(0)').prop('checked',(row.iku_measurable=='T'));
+						$('input:radio[name=iku_measurable]:nth(1)').prop('checked',(row.iku_measurable=='Y'));					
+						$('input:radio[name=iku_hasil]:nth(0)').prop('checked',(row.iku_hasil=='T'));
+						$('input:radio[name=iku_hasil]:nth(1)').prop('checked',(row.iku_hasil=='Y'));
+						$('input:radio[name=iku_relevan]:nth(0)').prop('checked',(row.iku_relevan=='T'));
+						$('input:radio[name=iku_relevan]:nth(1)').prop('checked',(row.iku_relevan=='Y'));					
+						$('input:radio[name=iku_diukur]:nth(0)').prop('checked',(row.iku_diukur=='T'));
+						$('input:radio[name=iku_diukur]:nth(1)').prop('checked',(row.iku_diukur=='Y'));
+						
+						$('input:radio[name=kriteria_measurable]:nth(0)').prop('checked',(row.kriteria_measurable=='T'));
+						$('input:radio[name=kriteria_measurable]:nth(1)').prop('checked',(row.kriteria_measurable=='Y'));
+						$('input:radio[name=kriteria_hasil]:nth(0)').prop('checked',(row.kriteria_hasil=='T'));
+						$('input:radio[name=kriteria_hasil]:nth(1)').prop('checked',(row.kriteria_hasil=='Y'));
+						$('input:radio[name=kriteria_relevan]:nth(0)').prop('checked',(row.kriteria_relevan=='T'));
+						$('input:radio[name=kriteria_relevan]:nth(1)').prop('checked',(row.kriteria_relevan=='Y'));	
+						$('input:radio[name=kriteria_diukur]:nth(0)').prop('checked',(row.kriteria_diukur=='T'));
+						$('input:radio[name=kriteria_diukur]:nth(1)').prop('checked',(row.kriteria_diukur=='Y'));
+						$('input:radio[name=pengukuran]:nth(0)').prop('checked',(row.pengukuran=='T'));
+						$('input:radio[name=pengukuran]:nth(1)').prop('checked',(row.pengukuran=='Y'));
+					
+					}
+						
+					else {
+						alert('Data IKU belum dipilih!');
+					}
+				/* }	
+				else {
+					alert("Pilih data subkomponen terlebih dahulu");
+				} */
+				//addTab("Add PK Kementerian", "lke/kke3a/add");
+			}
+			
+			saveData<?=$objectId;?>=function(){
+				$('#fm<?=$objectId;?>').form('submit',{
+					url: url,
+					onSubmit: function(){
+						return $(this).form('validate');
+					},
+					success: function(result){
+						//alert(result);
+						var result = eval('('+result+')');
+						if (result.success){
+							/* $.messager.show({
+								title: 'Sucsees',
+								msg: result.msg
+							}); */
+							$('#dlg<?=$objectId;?>').dialog('close');		// close the dialog
+							$('#dg<?=$objectId;?>').datagrid('reload');	// reload the user data
+						} else {
+							$.messager.show({
+								title: 'Error',
+								msg: result.msg
+							});
+						}
+					}
+				});
+			}
+			//end saveData
+			
 			searchData<?=$objectId;?> = function (){
 				$('#dg<?=$objectId;?>').datagrid({
 					url:getUrl<?=$objectId;?>(1),
@@ -238,16 +328,16 @@
 			<tr>
 				<td>Tahun :</td>
 				<td>
-				<?=$this->kke3a_model->getListTahun($objectId)?>
-				</td>
-			</tr>
-			<tr>
-				<td>Eselon 1 :</td>
-				<td>
-					<?=$this->eselon1_model->getListFilterEselon1($objectId,$this->session->userdata('unit_kerja_e1'))?>
+				<?=$this->iku_e1_model->getListTahun($objectId,"filter_tahun","false",false);?>
 				</td>
 			</tr>
 		<!--	<tr>
+				<td>Eselon 1 :</td>
+				<td>
+					<?='';//$this->eselon1_model->getListFilterEselon1($objectId,$this->session->userdata('unit_kerja_e1'))?>
+				</td>
+			</tr>
+			<tr>
 				<td>Kode Sasaran E1:</td>
 				<td><input class="easyui-textbox" id="filter_sasaran<?=$objectId;?>"></td>
 			</tr>
@@ -272,19 +362,10 @@
 	  </table>
 	  <div style="margin-bottom:5px">  
 	  <? if($this->sys_menu_model->cekAkses('ADD;',302,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
-			<a href="#" onclick="newData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-add" plain="true">Add</a>  
+			<a href="#" onclick="newData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-ok" plain="true">Set Kinerja</a>  
 		<?}?>
 	
-		<!------------Edit View-->
-		<? if($this->sys_menu_model->cekAkses('EDIT;',302,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
-			<a href="#" onclick="editData<?=$objectId;?>(true);" class="easyui-linkbutton" iconCls="icon-edit" plain="true">Edit</a>
-		<?}?>
-		<? if($this->sys_menu_model->cekAkses('VIEW;',302,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
-			<a href="#" onclick="editData<?=$objectId;?>(false);" class="easyui-linkbutton" iconCls="icon-view" plain="true">View</a>
-		<?}?>
-		<? if($this->sys_menu_model->cekAkses('DELETE;',302,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
-			<a href="#" onclick="deleteData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-remove" plain="true">Delete</a>
-		<?}?>
+		
 			<? if($this->sys_menu_model->cekAkses('PRINT;',253,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 				<a 	href="#" onclick="printData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-print" plain="true">Print</a>
 			<?}?>
@@ -294,7 +375,7 @@
 	  </div>
 	</div>
 	
-	<table id="dg<?=$objectId;?>" class="easyui-datagrid" style="height:auto;width:auto" title="Laporan KKE3A IK" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="false" pagination="true"  nowrap="false">
+	<table id="dg<?=$objectId;?>" class="easyui-datagrid" style="height:auto;width:auto" title="Laporan KKE3A IK" toolbar="#tb<?=$objectId;?>" fitColumns="false" singleSelect="true" rownumbers="false" pagination="true"  nowrap="false">
 	  <thead>
 	  <tr>
 		
@@ -325,35 +406,117 @@
 		<th sortable="false" colspan="2">Diukur</th>		
 	  </tr>
 	  <tr>		
-		<th field="no_indikator" sortable="false" width="30px" >No.</th>
-		<th field="indikator_kinerja" sortable="false" width="220px" >Deskripsi</th>
-		<th field="" sortable="false" >Index</th>
-		<th field="" sortable="false" >Nilai</th>
-		<th field="" sortable="false" >Index</th>
-		<th field="" sortable="false" >Nilai</th>
-		<th field="" sortable="false" >Index</th>
-		<th field="" sortable="false" >Nilai</th>
-		<th field="" sortable="false" >Index</th>
-		<th field="" sortable="false" >Nilai</th>
-		<th field="" sortable="false" >Index</th>
-		<th field="" sortable="false" >Nilai</th>
-		<th field="" sortable="false" >Index</th>
-		<th field="" sortable="false" >Nilai</th>
-		<th field="" sortable="false" >Index</th>
-		<th field="" sortable="false" >Nilai</th>
-		<th field="" sortable="false" >Index</th>
-		<th field="" sortable="false" >Nilai</th>
-		<th field="" sortable="false" >Index</th>
-		<th field="" sortable="false" >Nilai</th>
-		<th field="" sortable="false" >Index</th>
-		<th field="" sortable="false" >Nilai</th>
-		<th field="" sortable="false" >Index</th>
-		<th field="" sortable="false" >Nilai</th>
-		<th field="" sortable="false" >Index</th>
-		<th field="" sortable="false" >Nilai</th>
+		<th field="no_indikator" align="center" halign="center" sortable="false" width="30px" >No.</th>
+		<th field="indikator_kinerja" align="center" halign="center" sortable="false" width="220px" >Deskripsi</th>
+		<th field="renstra_ip" align="center" halign="center" sortable="false" >Index</th>
+		<th field="renstra_ip_nilai" align="center" halign="center" sortable="false" >Nilai</th>
+		<th field="rkt_ip" align="center" halign="center" sortable="false" >Index</th>
+		<th field="rkt_ip_nilai" align="center" halign="center" sortable="false" >Nilai</th>
+		<th field="pk_ip" align="center" halign="center" sortable="false" >Index</th>
+		<th field="pk_ip_nilai" align="center" halign="center" sortable="false" >Nilai</th>
+		<th field="iku_measurable" align="center" halign="center" sortable="false" >Index</th>
+		<th field="iku_measurable_nilai" align="center" halign="center" sortable="false" >Nilai</th>
+		<th field="iku_hasil" align="center" halign="center" sortable="false" >Index</th>
+		<th field="iku_hasil_nilai" align="center" halign="center" sortable="false" >Nilai</th>
+		<th field="iku_relevan" align="center" halign="center" sortable="false" >Index</th>
+		<th field="iku_relevan_nilai" align="center" halign="center" sortable="false" >Nilai</th>
+		<th field="iku_diukur" align="center" halign="center" sortable="false" >Index</th>
+		<th field="iku_diukur_nilai" align="center" halign="center" sortable="false" >Nilai</th>
+		<th field="kriteria_measurable" align="center" halign="center" sortable="false" >Index</th>
+		<th field="kriteria_measurable_nilai" align="center" halign="center" sortable="false" >Nilai</th>
+		<th field="kriteria_hasil" align="center" halign="center" sortable="false" >Index</th>
+		<th field="kriteria_hasil_nilai" align="center" halign="center" sortable="false" >Nilai</th>
+		<th field="kriteria_relevan" align="center" halign="center" sortable="false" >Index</th>
+		<th field="kriteria_relevan_nilai" align="center" halign="center" sortable="false" >Nilai</th>
+		<th field="kriteria_diukur" align="center" halign="center" sortable="false" >Index</th>
+		<th field="kriteria_diukur_nilai" align="center" halign="center" sortable="false" >Nilai</th>
+		<th field="pengukuran" align="center" halign="center" sortable="false" >Index</th>
+		<th field="pengukuran_nilai" align="center" halign="center" sortable="false" >Nilai</th>
+		
 		
 	  </tr>
 	 
 	  </thead>  
 	</table>
 	
+	<!-- Area untuk Form Add/Edit >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  -->
+	
+	<div id="dlg<?=$objectId;?>" class="easyui-dialog" style="width:720px;height:400px;padding:10px 20px" closed="true"  buttons="#dlg-buttons">
+		<!----------------Edit title-->
+		
+		<form id="fm<?=$objectId;?>" method="post" >			
+			
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">Tahun :</label>
+				<span id="spanTahun<?=$objectId?>"></span>
+				<input type="hidden" id="tahun<?=$objectId?>" name="tahun">
+				<input type="hidden" id="kke3a_e1_id<?=$objectId?>" name="kke3a_e1_id"/>				
+			</div>
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">Sasaran Eselon I :</label>					
+					<span id="spanSasaran<?=$objectId?>"></span>
+					<input type="hidden" id="kode_sasaran_e1<?=$objectId?>" name="kode_sasaran_e1">
+			</div>
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">IKU Eselon I :</label>
+				<?//=$this->iku_kl_model->getListIKU_KL($objectId,"",false)?>
+				<input type="hidden" id="kode_iku_e1<?=$objectId?>" name="kode_iku_e1">
+				<span id="spanIku<?=$objectId?>">
+				</span>
+			</div>
+			<div class="fitem">
+				
+				<hr>
+			</div>
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">Renstra IP :</label>
+				 <?=$renstra_ip_radio?>
+			</div>
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">RKT IP :</label>
+				 <?=$rkt_ip_radio?>
+			</div>
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">PK IP :</label>
+				 <?=$pk_ip_radio?>
+			</div>
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">IKU Measurable :</label>
+				 <?=$iku_measurable_radio?>
+			</div>
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">IKU Orientasi Hasil :</label>
+				 <?=$iku_hasil_radio?>
+			</div>
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">IKU Relevan :</label>
+				 <?=$iku_relevan_radio?>
+			</div>
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">IKU Diukur :</label>
+				 <?=$iku_diukur_radio?>
+			</div>
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">Kriteria Measurable :</label>
+				 <?=$kriteria_measurable_radio?>
+			</div>
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">Kriteria Orientasi Hasil :</label>
+				 <?=$kriteria_hasil_radio?>
+			</div>
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">Kriteria Relevan :</label>
+				 <?=$kriteria_relevan_radio?>
+			</div>
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">Kriteria Diukur :</label>
+				 <?=$kriteria_diukur_radio?>
+			</div>
+			
+		</form>
+		<div id="dlg-buttons">
+			<!----------------Edit title-->
+			<a href="#" id="saveBtn<?=$objectId;?>" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveData<?=$objectId;?>()">Save</a>
+			<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg<?=$objectId;?>').dialog('close')">Cancel</a>
+		</div>
+	</div>
