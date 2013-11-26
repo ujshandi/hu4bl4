@@ -50,6 +50,80 @@
 				
 			}
 			
+			var url;
+			newData<?=$objectId;?> = function (){  
+				/* var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
+				if (row){
+					if (row.has_child) {
+						alert("Pilih data subkomponen terlebih dahulu");
+						return false;
+					} */
+					
+					var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
+					if (row){
+						$('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Add KKE2B-Sasaran');  
+						$('#fm<?=$objectId;?>').form('clear');  						
+						//initCombo<?=$objectId?>();
+						url = base_url+'lke/kke2b/save';  
+						$("#kke2b_e1_id<?=$objectId?>").val(row.kke2b_e1_id);
+						$("#tahun<?=$objectId?>").val(row.tahun);
+						$("#spanTahun<?=$objectId?>").text(row.tahun);
+						$("#kode_sasaran_e1<?=$objectId?>").val(row.kode_sasaran_e1);
+						$("#spanSasaran<?=$objectId?>").text(row.sasaran_strategis);						
+						
+						$('input:radio[name=renstra_a]:nth(0)').prop('checked',(row.renstra_a=='Y'));
+						$('input:radio[name=renstra_a]:nth(1)').prop('checked',(row.renstra_a=='T'));
+						$('input:radio[name=rkt_a]:nth(0)').prop('checked',(row.rkt_a=='Y'));
+						$('input:radio[name=rkt_a]:nth(1)').prop('checked',(row.rkt_a=='T'));						
+						$('input:radio[name=pk_a]:nth(0)').prop('checked',(row.pk_a=='Y'));
+						$('input:radio[name=pk_a]:nth(1)').prop('checked',(row.pk_a=='T'));
+						
+						$('input:radio[name=renstra_b]:nth(0)').prop('checked',(row.renstra_b=='Y'));
+						$('input:radio[name=renstra_b]:nth(1)').prop('checked',(row.renstra_b=='T'));
+						$('input:radio[name=rkt_b]:nth(0)').prop('checked',(row.rkt_b=='Y'));
+						$('input:radio[name=rkt_b]:nth(1)').prop('checked',(row.rkt_b=='T'));						
+						$('input:radio[name=pk_b]:nth(0)').prop('checked',(row.pk_b=='Y'));
+						$('input:radio[name=pk_b]:nth(1)').prop('checked',(row.pk_b=='T'));
+					}	
+					else {
+						alert('Data sasaran belum dipilih!');
+					}
+					
+				/* }	
+				else {
+					alert("Pilih data subkomponen terlebih dahulu");
+				} */
+				//addTab("Add PK Kementerian", "lke/kke2b/add");
+			}
+			
+			saveData<?=$objectId;?>=function(){
+				$('#fm<?=$objectId;?>').form('submit',{
+					url: url,
+					onSubmit: function(){
+						return $(this).form('validate');
+					},
+					success: function(result){
+						//alert(result);
+						var result = eval('('+result+')');
+						if (result.success){
+							/* $.messager.show({
+								title: 'Sucsees',
+								msg: result.msg
+							}); */
+							$('#dlg<?=$objectId;?>').dialog('close');		// close the dialog
+							$('#dg<?=$objectId;?>').datagrid('reload');	// reload the user data
+						} else {
+							$.messager.show({
+								title: 'Error',
+								msg: result.msg
+							});
+						}
+					}
+				});
+			}
+			//end saveData
+			
+			
 			searchData<?=$objectId;?> = function (){
 				$('#dg<?=$objectId;?>').datagrid({
 					url:getUrl<?=$objectId;?>(1),
@@ -238,16 +312,16 @@
 			<tr>
 				<td>Tahun :</td>
 				<td>
-				<?=$this->kke2b_model->getListTahun($objectId)?>
+				<?=$this->sasaran_eselon1_model->getListFilterTahun($objectId,false)?>
 				</td>
 			</tr>
-			<tr>
+		<!--	<tr>
 				<td>Eselon 1 :</td>
 				<td>
 					<?=$this->eselon1_model->getListFilterEselon1($objectId,$this->session->userdata('unit_kerja_e1'))?>
 				</td>
 			</tr>
-		<!--	<tr>
+			<tr>
 				<td>Kode Sasaran E1:</td>
 				<td><input class="easyui-textbox" id="filter_sasaran<?=$objectId;?>"></td>
 			</tr>
@@ -272,19 +346,11 @@
 	  </table>
 	  <div style="margin-bottom:5px">  
 	  <? if($this->sys_menu_model->cekAkses('ADD;',302,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
-			<a href="#" onclick="newData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-add" plain="true">Add</a>  
+			<a href="#" onclick="newData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-ok" plain="true">Set Kinerja</a>  
 		<?}?>
 	
-		<!------------Edit View-->
-		<? if($this->sys_menu_model->cekAkses('EDIT;',302,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
-			<a href="#" onclick="editData<?=$objectId;?>(true);" class="easyui-linkbutton" iconCls="icon-edit" plain="true">Edit</a>
-		<?}?>
-		<? if($this->sys_menu_model->cekAkses('VIEW;',302,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
-			<a href="#" onclick="editData<?=$objectId;?>(false);" class="easyui-linkbutton" iconCls="icon-view" plain="true">View</a>
-		<?}?>
-		<? if($this->sys_menu_model->cekAkses('DELETE;',302,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
-			<a href="#" onclick="deleteData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-remove" plain="true">Delete</a>
-		<?}?>
+		
+		
 			<? if($this->sys_menu_model->cekAkses('PRINT;',253,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 				<a 	href="#" onclick="printData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-print" plain="true">Print</a>
 			<?}?>
@@ -294,44 +360,108 @@
 	  </div>
 	</div>
 	
-	<table id="dg<?=$objectId;?>" class="easyui-datagrid" style="height:auto;width:auto" title="Laporan KKE2B Sasaran" toolbar="#tb<?=$objectId;?>" fitColumns="fakse" singleSelect="true" rownumbers="false" pagination="true"  nowrap="false">
+	<table id="dg<?=$objectId;?>" class="easyui-datagrid" style="height:auto;width:auto" title="Laporan kke2b Sasaran" toolbar="#tb<?=$objectId;?>" fitColumns="false" singleSelect="true" rownumbers="false" pagination="true"  nowrap="false">
 	  <thead>
 	  <tr>
 		
 		<th field="no" rowspan="4" sortable="false"  halign="center" align="center"  width="25px">No.</th>
-		<th field="sasaran_strategis"  rowspan="4"   halign="center" align="center" sortable="false" width="350px">Sasaran Strategis</th>		
-		<th colspan="12" sortable="false" align="center"  halign="center" align="center" width="1000px" >Orientasi Hasil</th>
+		<th field="kke2b_e1_id" rowspan="4" sortable="false" hidden="true" width="25px">kke2b_e1_id</th>
+		<th field="tahun" rowspan="4" sortable="false" hidden="true" width="25px">tahun</th>
+		<th field="kode_sasaran_e1" rowspan="4" sortable="false" hidden="true" width="25px">kode_sasaran_e1</th>
+		<th field="sasaran_strategis"  rowspan="4"   halign="center" align="left" sortable="false" width="450px">Sasaran Strategis</th>		
+		<th colspan="12" sortable="false" align="center"  halign="center" align="center" width="680px" >Orientasi Hasil</th>
 		
 	  </tr>
 	  <tr>				
-		<th sortable="false"  halign="center" align="center" colspan="4" width="250px">Renstra IP</th>
-		<th sortable="false"  halign="center" align="center" colspan="4" width="250px">RKT IP</th>
-		<th sortable="false"  halign="center" align="center" colspan="4" width="250px">PK IP</th>		
+		<th sortable="false"  halign="center" align="center" colspan="4" width="220px">Renstra IP</th>
+		<th sortable="false"  halign="center" align="center" colspan="4" width="220px">RKT IP</th>
+		<th sortable="false"  halign="center" align="center" colspan="4" width="220px">PK IP</th>		
 	  </tr>
 	  <tr>				
-		<th sortable="false"  halign="center" align="center" colspan="2" width="250px">Unit Kerja A</th>
-		<th sortable="false"  halign="center" align="center" colspan="2" width="250px">Unit Kerja B</th>
-		<th sortable="false"  halign="center" align="center" colspan="2" width="250px">Unit Kerja A</th>
-		<th sortable="false"  halign="center" align="center" colspan="2" width="250px">Unit Kerja B</th>
-		<th sortable="false"  halign="center" align="center" colspan="2" width="250px">Unit Kerja A</th>
-		<th sortable="false"  halign="center" align="center" colspan="2" width="250px">Unit Kerja B</th>
+		<th sortable="false"  halign="center" align="center" colspan="2" width="110px">Unit Kerja A</th>
+		<th sortable="false"  halign="center" align="center" colspan="2" width="110px">Unit Kerja B</th>
+		<th sortable="false"  halign="center" align="center" colspan="2" width="110px">Unit Kerja A</th>
+		<th sortable="false"  halign="center" align="center" colspan="2" width="110px">Unit Kerja B</th>
+		<th sortable="false"  halign="center" align="center" colspan="2" width="110px">Unit Kerja A</th>
+		<th sortable="false"  halign="center" align="center" colspan="2" width="110px">Unit Kerja B</th>
+		
 	  </tr>
 	  <tr>		
 		
-		<th field="target_tercapai" sortable="false" halign="center" align="center" width="70px">Index</th>		
-		<th field="nilai" sortable="false" halign="center" align="center"  width="70px">Nilai</th>
-		<th field="target_tercapai" sortable="false" halign="center" align="center" width="70px">Index</th>		
-		<th field="nilai" sortable="false" halign="center" align="center"  width="70px">Nilai</th>
-		<th field="target_tercapai" sortable="false" halign="center" align="center" width="70px">Index</th>		
-		<th field="nilai" sortable="false" halign="center" align="center"  width="70px">Nilai</th>
-		<th field="target_tercapai" sortable="false" halign="center" align="center" width="70px">Index</th>		
-		<th field="nilai" sortable="false" halign="center" align="center"  width="70px">Nilai</th>
-		<th field="target_tercapai" sortable="false" halign="center" align="center" width="70px">Index</th>		
-		<th field="nilai" sortable="false" halign="center" align="center"  width="70px">Nilai</th>
-		<th field="target_tercapai" sortable="false" halign="center" align="center" width="70px">Index</th>		
-		<th field="nilai" sortable="false" halign="center" align="center"  width="70px">Nilai</th>
-		
+		<th field="renstra_a" sortable="false" halign="center" align="center" width="50px">Index</th>		
+		<th field="renstra_a_nilai" sortable="false" halign="center" align="center"  width="60px">Nilai</th>
+		<th field="renstra_b" sortable="false" halign="center" align="center" width="50px">Index</th>		
+		<th field="renstra_b_nilai" sortable="false" halign="center" align="center"  width="60px">Nilai</th>
+		<th field="rkt_a" sortable="false" halign="center" align="center" width="50px">Index</th>		
+		<th field="rkt_a_nilai" sortable="false" halign="center" align="center"  width="60px">Nilai</th>	
+		<th field="rkt_b" sortable="false" halign="center" align="center" width="50px">Index</th>		
+		<th field="rkt_b_nilai" sortable="false" halign="center" align="center"  width="60px">Nilai</th>	
+		<th field="pk_a" sortable="false" halign="center" align="center" width="50px">Index</th>		
+		<th field="pk_a_nilai" sortable="false" halign="center" align="center"  width="60px">Nilai</th>			
+		<th field="pk_b" sortable="false" halign="center" align="center" width="50px">Index</th>		
+		<th field="pk_b_nilai" sortable="false" halign="center" align="center"  width="60px">Nilai</th>			
 	  </tr>
 	  </thead>  
 	</table>
+	
+	<!-- Area untuk Form Add/Edit >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  -->
+	
+	<div id="dlg<?=$objectId;?>" class="easyui-dialog" style="width:720px;height:350px;padding:10px 20px" closed="true"  buttons="#dlg-buttons">
+		<!----------------Edit title-->
+		
+		<form id="fm<?=$objectId;?>" method="post" >			
+			
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">Tahun :</label>
+				<span id="spanTahun<?=$objectId?>"></span>
+				<input type="hidden" id="tahun<?=$objectId?>" name="tahun">
+				<input type="hidden" id="kke2b_e1_id<?=$objectId?>" name="kke2b_e1_id"/>				
+			</div>
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">Sasaran Eselon I :</label>					
+					<span id="spanSasaran<?=$objectId?>"></span>
+					<input type="hidden" id="kode_sasaran_e1<?=$objectId?>" name="kode_sasaran_e1">
+			</div>
+			
+			<div class="fitem">
+				
+				<hr>
+			</div>
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">Unit Kerja A :</label> <br>
+			</div>
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">Renstra IP :</label>
+				 <?=$renstra_a_radio?>
+			</div>
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">RKT IP :</label>
+				 <?=$rkt_a_radio?>
+			</div>
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">PK IP :</label>
+				 <?=$pk_a_radio?>
+			</div>
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">Unit Kerja B :</label><br>
+			</div>
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">Renstra IP :</label>
+				 <?=$renstra_b_radio?>
+			</div>
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">RKT IP :</label>
+				 <?=$rkt_b_radio?>
+			</div>
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">PK IP :</label>
+				 <?=$pk_b_radio?>
+			</div>
+		</form>
+		<div id="dlg-buttons">
+			<!----------------Edit title-->
+			<a href="#" id="saveBtn<?=$objectId;?>" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveData<?=$objectId;?>()">Save</a>
+			<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg<?=$objectId;?>').dialog('close')">Cancel</a>
+		</div>
+	</div>
 	

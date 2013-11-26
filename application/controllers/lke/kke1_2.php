@@ -22,8 +22,7 @@ class Kke1_2 extends CI_Controller {
 	
 	function index(){
 		$data['title'] = 'Kertas Kerja Evaluasi II';	
-		$data['objectId'] = $this->objectId;
-		//$data['formLookupTarif'] = $this->tarif_model->lookup('#winLookTarif'.$data['objectId'],"#medrek_id".$data['objectId']);
+		$data['objectId'] = $this->objectId;		
 		$data['sasarantepat_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke1_2','unit_kerja'=>'e1'),true,"sasaran_tepat");
 		$data['iktepat_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke1_2','unit_kerja'=>'e1'),true,"ik_tepat");
 		$data['targettercapai_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke1_2','unit_kerja'=>'e1'),true,"target_tercapai");

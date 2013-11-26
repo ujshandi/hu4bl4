@@ -29,64 +29,55 @@ class Kke2b_model extends CI_Model
 		if ($count>0){
 			//filter
 			if($filtahun != '' && $filtahun != '-1' && $filtahun != null) {
-				$this->db->where("rkt.tahun",$filtahun);
+				$this->db->where("sasaran.tahun",$filtahun);
 			}		
-			if($file1 != '' && $file1 != '-1' && $file1 != null) {
+			/* if($file1 != '' && $file1 != '-1' && $file1 != null) {
 						$this->db->where("rkt.kode_e1",$file1);
-			}
+			} */
 			if($filsasaran != '' && $filsasaran != '-1' && $filsasaran != null) {
-					$this->db->where("rkt.kode_sasaran_e1",$filsasaran);
+					$this->db->where("sasaran.kode_sasaran_e1",$filsasaran);
 			}
-			if($filiku != '' && $filiku != '-1' && $filiku != null) {
+			/* if($filiku != '' && $filiku != '-1' && $filiku != null) {
 					$this->db->where("rkt.kode_iku_e1",$filiku);
 			}
-			
+			 */
 			//$this->db->order_by($sort." ".$order );
-			$this->db->order_by("sasaran.kode_sasaran_e1,iku.kode_iku_e1,sasaran.tahun");
+			$this->db->order_by("sasaran.kode_sasaran_e1,sasaran.tahun");
 			if ($purpose==1) $this->db->limit($limit,$offset);
-			$this->db->select("sasaran.deskripsi as sasaran_strategis, iku.deskripsi as indikator_kinerja",false);
-			$this->db->from('tbl_iku_eselon1 iku inner join tbl_sasaran_eselon1 sasaran on sasaran.kode_sasaran_e1 = iku.kode_sasaran_e1 and sasaran.tahun=rkt.tahun', false);
+			$this->db->select("sasaran.deskripsi as sasaran_strategis,sasaran.tahun, sasaran.kode_sasaran_e1,lke.kke2b_e1_id,lke.renstra_a,lke.renstra_a_nilai,lke.rkt_a, lke.rkt_a_nilai, lke.pk_a, lke.pk_a_nilai,lke.renstra_b,lke.renstra_b_nilai,lke.rkt_b, lke.rkt_b_nilai, lke.pk_b, lke.pk_b_nilai",false);
+			$this->db->from('tbl_sasaran_eselon1 sasaran left join tbl_kke2b_e1 lke on sasaran.kode_sasaran_e1 = lke.kode_sasaran_e1 and sasaran.tahun=lke.tahun', false);
 			$query = $this->db->get();
 			
 			$i=0;
 			$sasaran_strategis ="";
 			$indikator_kinerja ="";
-			$no =($page-1)*$limit;//$lastNo;
+			$no =$lastNo;//($page-1)*$limit;//$lastNo;
 			$noIndikator =0;
 			foreach ($query->result() as $row)
 			{
-				//$response->rows[$i]['id_rkt_kl']=$row->id_rkt_kl;
-				if ($sasaran_strategis!=$row->sasaran_strategis){
-					$no++;
-					$noIndikator =0;
-					$response->rows[$i]['no']= $no;
-					
-					$response->rows[$i]['sasaran_strategis']=$row->sasaran_strategis;
-					$sasaran_strategis=$row->sasaran_strategis;
-				}
-				else{
-					$response->rows[$i]['sasaran_strategis']=$row->sasaran_strategis;//"";
-					$response->rows[$i]['no']= "";
-				}
-				
-				if ($indikator_kinerja!=$row->indikator_kinerja){	
-					$noIndikator++;
-					$response->rows[$i]['no_indikator']= $no.".".$noIndikator;
-					$response->rows[$i]['indikator_kinerja']=$row->indikator_kinerja;
-					$indikator_kinerja=$row->indikator_kinerja;
-				}else {	
-					$response->rows[$i]['indikator_kinerja']="";
-					$response->rows[$i]['no_indikator']="";
-				}
-				
-				$response->rows[$i]['target_tercapai']=$this->getIndex('target_tercapai',$row->tahun,$row->kode_sasaran_e1,$row->kode_iku_e1);//$this->utility->cekNumericFmt($row->target);
-				$response->rows[$i]['kinerja_baik']=$this->getIndex('kinerja_baik',$row->tahun,$row->kode_sasaran_e1,$row->kode_iku_e1);
-				$response->rows[$i]['data_andal']=$this->getIndex('data_andal',$row->tahun,$row->kode_sasaran_e1,$row->kode_iku_e1);
+				$no++;
+				$response->rows[$i]['no']= $no;
+				$response->rows[$i]['sasaran_strategis']=$row->sasaran_strategis;
+				$response->rows[$i]['kke2b_e1_id']=$row->kke2b_e1_id;
+				$response->rows[$i]['tahun']=$row->tahun;
+				$response->rows[$i]['kode_sasaran_e1']=$row->kode_sasaran_e1;
+				$response->rows[$i]['renstra_a']=$row->renstra_a;
+				$response->rows[$i]['renstra_a_nilai']=$this->utility->cekNumericFmt($row->renstra_a_nilai,2);
+				$response->rows[$i]['renstra_b']=$row->renstra_b;
+				$response->rows[$i]['renstra_b_nilai']=$this->utility->cekNumericFmt($row->renstra_b_nilai,2);
+				$response->rows[$i]['rkt_a']=$row->rkt_a;
+				$response->rows[$i]['rkt_a_nilai']=$this->utility->cekNumericFmt($row->rkt_a_nilai,2);
+				$response->rows[$i]['rkt_b']=$row->rkt_b;
+				$response->rows[$i]['rkt_b_nilai']=$this->utility->cekNumericFmt($row->rkt_b_nilai,2);
+				$response->rows[$i]['pk_a']=$row->pk_a;
+				$response->rows[$i]['pk_a_nilai']=$this->utility->cekNumericFmt($row->pk_a_nilai,2);
+				$response->rows[$i]['pk_b']=$row->pk_b;
+				$response->rows[$i]['pk_b_nilai']=$this->utility->cekNumericFmt($row->pk_b_nilai,2);
 //utk kepentingan export excel ==========================
 				//$row->program = $program[0].", ".$program[1];
 			//============================================================
 			//utk kepentingan export pdf===================
-				$pdfdata[] = array($no,$response->rows[$i]['sasaran_strategis'],$response->rows[$i]['no_indikator'],$response->rows[$i]['indikator_kinerja'],$response->rows[$i]['target_tercapai'],$response->rows[$i]['kinerja_baik'],$response->rows[$i]['data_andal']);
+				$pdfdata[] = array($no,$response->rows[$i]['sasaran_strategis'],$response->rows[$i]['renstra_a'],$response->rows[$i]['renstra_a_nilai']);
 			//============================================================
 
 				$i++;
@@ -99,7 +90,7 @@ class Kke2b_model extends CI_Model
 				$response->rows[$count]['no_indikator']= "";
 				$response->rows[$count]['indikator_kinerja']='';
 				$response->rows[$count]['sasaran_strategis']='';
-				$response->rows[$count]['target_tercapai']='';
+				$response->rows[$count]['pk_a']='';
 				$response->rows[$count]['kinerja_baik']='';
 				$response->rows[$count]['data_andal']='';
 				$response->rows[$count]['satuan']='';
@@ -119,6 +110,78 @@ class Kke2b_model extends CI_Model
 			to_excel($query,"KKE1-2-E1",$colHeaders);
 		}
 		
+	}
+	
+	public function InsertOnDb($data,& $error) {
+		//query insert data		
+		$this->db->set('tahun',$data['tahun']);
+		$this->db->set('kode_sasaran_e1',$data['kode_sasaran_e1']);
+		
+		
+		$this->db->set('renstra_a',$data['renstra_a']);
+		$this->db->set('renstra_a_nilai',$data['renstra_a_nilai']);
+		$this->db->set('rkt_a',$data['rkt_a']);
+		$this->db->set('rkt_a_nilai',$data['rkt_a_nilai']);
+		$this->db->set('pk_a',$data['pk_a']);	
+		$this->db->set('pk_a_nilai',$data['pk_a_nilai']);			
+		$this->db->set('renstra_b',$data['renstra_b']);
+		$this->db->set('renstra_b_nilai',$data['renstra_b_nilai']);
+		$this->db->set('rkt_b',$data['rkt_b']);
+		$this->db->set('rkt_b_nilai',$data['rkt_b_nilai']);
+		$this->db->set('pk_b',$data['pk_b']);	
+		$this->db->set('pk_b_nilai',$data['pk_b_nilai']);	
+		
+		$this->db->set('log_insert', 		$this->session->userdata('user_id').';'.date('Y-m-d H:i:s'));
+		
+		$result = $this->db->insert('tbl_kke2b_e1');
+		$errNo   = $this->db->_error_number();
+	    $errMess = $this->db->_error_message();
+		$error = $errMess;
+		//var_dump($errMess);die;
+	    log_message("error", "Problem Inserting to : ".$errMess." (".$errNo.")"); 
+		//return
+		if($result) {
+			return TRUE;
+		}else {
+			return FALSE;
+		}
+	}
+
+	//update data
+	public function UpdateOnDb($data, $kode) {
+		
+		$this->db->where('kke2b_e1_id',$kode);
+		
+		$this->db->set('tahun',$data['tahun']);
+		$this->db->set('kode_sasaran_e1',$data['kode_sasaran_e1']);		
+		
+		$this->db->set('renstra_a',$data['renstra_a']);
+		$this->db->set('renstra_a_nilai',$data['renstra_a_nilai']);
+		$this->db->set('rkt_a',$data['rkt_a']);
+		$this->db->set('rkt_a_nilai',$data['rkt_a_nilai']);
+		$this->db->set('pk_a',$data['pk_a']);	
+		$this->db->set('pk_a_nilai',$data['pk_a_nilai']);	
+		
+		$this->db->set('renstra_b',$data['renstra_b']);
+		$this->db->set('renstra_b_nilai',$data['renstra_b_nilai']);
+		$this->db->set('rkt_b',$data['rkt_b']);
+		$this->db->set('rkt_b_nilai',$data['rkt_b_nilai']);
+		$this->db->set('pk_b',$data['pk_b']);	
+		$this->db->set('pk_b_nilai',$data['pk_b_nilai']);	
+		
+		$this->db->set('log_update', 		$this->session->userdata('user_id').';'.date('Y-m-d H:i:s'));
+		
+		$result=$this->db->update('tbl_kke2b_e1');
+		
+		$errNo   = $this->db->_error_number();
+	    $errMess = $this->db->_error_message();
+		//var_dump($errMess);die;
+		//return
+		if($result) {
+			return TRUE;
+		}else {
+			return FALSE;
+		}
 	}
 	
 	
@@ -155,20 +218,20 @@ class Kke2b_model extends CI_Model
 	
 	public function GetRecordCount($filtahun=null,$file1=null,$filsasaran=null,$filiku=null){
 		if($filtahun != '' && $filtahun != '-1' && $filtahun != null) {
-			$this->db->where("rkt.tahun",$filtahun);
+			$this->db->where("sasaran.tahun",$filtahun);
 		}		
 		if($file1 != '' && $file1 != '-1' && $file1 != null) {
-					$this->db->where("rkt.kode_e1",$file1);
+					$this->db->where("sasaran.kode_e1",$file1);
 		}
 		if($filsasaran != '' && $filsasaran != '-1' && $filsasaran != null) {
-				$this->db->where("rkt.kode_sasaran_e1",$filsasaran);
+				$this->db->where("sasaran.kode_sasaran_e1",$filsasaran);
 		}
 		if($filiku != '' && $filiku != '-1' && $filiku != null) {
-				$this->db->where("rkt.kode_iku_e1",$filiku);
+				$this->db->where("sasaran.kode_iku_e1",$filiku);
 		}
 		//$this->db->from('tbl_kke2b_e1');
 		//$this->db->select("select sasaran.deskripsi as sasaran_srategis, iku.deskripsi as indikator_kinerja, rkt.target",false);
-			$this->db->from('tbl_iku_eselon1 iku left join tbl_sasaran_eselon1 sasaran on sasaran.kode_sasaran_e1 = iku.kode_sasaran_e1 and sasaran.tahun=iku.tahun', false);
+			$this->db->from('tbl_sasaran_eselon1 sasaran left join tbl_kke2b_e1 lke on sasaran.kode_sasaran_e1 = lke.kode_sasaran_e1 and sasaran.tahun=lke.tahun', false);
 		
 		return $this->db->count_all_results();
 		$this->db->free_result();

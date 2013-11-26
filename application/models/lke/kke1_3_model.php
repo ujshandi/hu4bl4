@@ -95,6 +95,8 @@ inner join tbl_sasaran_eselon1 sasaran_strategis on sasaran_strategis.kode_sasar
 				$response->rows[$i]['transparansi_nilai']=$this->utility->cekNumericFmt($row->transparansi_nilai,2);				
 				$response->rows[$i]['penghargaan']=$row->penghargaan;
 				$response->rows[$i]['penghargaan_nilai']=$this->utility->cekNumericFmt($row->penghargaan_nilai,2);
+				//$this->getIndex('instansi_lainnya',$row->tahun,$row->kode_sasaran_e1,$row->kode_iku_e1);//$this->utility->cekNumericFmt($row->target);
+				
 //utk kepentingan export excel ==========================
 				//$row->program = $program[0].", ".$program[1];
 			//============================================================
@@ -134,6 +136,71 @@ inner join tbl_sasaran_eselon1 sasaran_strategis on sasaran_strategis.kode_sasar
 		
 	}
 	
+	public function InsertOnDb($data,& $error) {
+		//query insert data		
+		$this->db->set('tahun',$data['tahun']);
+		$this->db->set('kode_sasaran_e1',$data['kode_sasaran_e1']);
+		$this->db->set('kode_iku_e1',$data['kode_iku_e1']);
+		
+		$this->db->set('catatan_keuangan',$data['catatan_keuangan']);
+		$this->db->set('catatan_keuangan_nilai',$data['catatan_keuangan_nilai']);
+		$this->db->set('masyarakat',$data['masyarakat']);
+		$this->db->set('masyarakat_nilai',$data['masyarakat_nilai']);
+		$this->db->set('instansi_lainnya',$data['instansi_lainnya']);	
+		$this->db->set('instansi_lainnya_nilai',$data['instansi_lainnya_nilai']);	
+		$this->db->set('transparansi',$data['transparansi']);	
+		$this->db->set('transparansi_nilai',$data['transparansi_nilai']);	
+		$this->db->set('penghargaan',$data['penghargaan']);	
+		$this->db->set('penghargaan_nilai',$data['penghargaan_nilai']);	
+		$this->db->set('log_insert', 		$this->session->userdata('user_id').';'.date('Y-m-d H:i:s'));
+		
+		$result = $this->db->insert('tbl_kke1_3_e1');
+		$errNo   = $this->db->_error_number();
+	    $errMess = $this->db->_error_message();
+		$error = $errMess;
+		//var_dump($errMess);die;
+	    log_message("error", "Problem Inserting to : ".$errMess." (".$errNo.")"); 
+		//return
+		if($result) {
+			return TRUE;
+		}else {
+			return FALSE;
+		}
+	}
+
+	//update data
+	public function UpdateOnDb($data, $kode) {
+		
+		$this->db->where('kke13_e1_id',$kode);
+		
+		$this->db->set('tahun',$data['tahun']);
+		$this->db->set('kode_sasaran_e1',$data['kode_sasaran_e1']);
+		$this->db->set('kode_iku_e1',$data['kode_iku_e1']);
+		
+		$this->db->set('catatan_keuangan',$data['catatan_keuangan']);
+		$this->db->set('catatan_keuangan_nilai',$data['catatan_keuangan_nilai']);
+		$this->db->set('masyarakat',$data['masyarakat']);
+		$this->db->set('masyarakat_nilai',$data['masyarakat_nilai']);
+		$this->db->set('instansi_lainnya',$data['instansi_lainnya']);	
+		$this->db->set('instansi_lainnya_nilai',$data['instansi_lainnya_nilai']);	
+		$this->db->set('transparansi',$data['transparansi']);	
+		$this->db->set('transparansi_nilai',$data['transparansi_nilai']);	
+		$this->db->set('penghargaan',$data['penghargaan']);	
+		$this->db->set('penghargaan_nilai',$data['penghargaan_nilai']);	
+		$this->db->set('log_update', 		$this->session->userdata('user_id').';'.date('Y-m-d H:i:s'));
+		
+		$result=$this->db->update('tbl_kke1_3_e1');
+		
+		$errNo   = $this->db->_error_number();
+	    $errMess = $this->db->_error_message();
+		//var_dump($errMess);die;
+		//return
+		if($result) {
+			return TRUE;
+		}else {
+			return FALSE;
+		}
+	}
 	
 	public function getListTahun($objectId){
 		
@@ -170,9 +237,9 @@ inner join tbl_sasaran_eselon1 sasaran_strategis on sasaran_strategis.kode_sasar
 		if($filtahun != '' && $filtahun != '-1' && $filtahun != null) {
 			$this->db->where("rkt.tahun",$filtahun);
 		}		
-		if($file1 != '' && $file1 != '-1' && $file1 != null) {
+		/* if($file1 != '' && $file1 != '-1' && $file1 != null) {
 					$this->db->where("rkt.kode_e1",$file1);
-		}
+		} */
 		if($filsasaran != '' && $filsasaran != '-1' && $filsasaran != null) {
 				$this->db->where("rkt.kode_sasaran_e1",$filsasaran);
 		}
@@ -181,9 +248,9 @@ inner join tbl_sasaran_eselon1 sasaran_strategis on sasaran_strategis.kode_sasar
 		}
 		//$this->db->from('tbl_kke1_3_e1');
 		//$this->db->select("select sasaran.deskripsi as sasaran_srategis, iku.deskripsi as indikator_kinerja, rkt.target",false);
+	//	$this->db->from('tbl_kke1_3_e1 kke inner join tbl_iku_eselon1 iku on kke.kode_iku_e1 = iku.kode_iku_e1 and kke.tahun=iku.tahun inner join tbl_sasaran_eselon1 sasaran on sasaran.kode_sasaran_e1 = iku.kode_sasaran_e1 and sasaran.tahun=iku.tahun', false);
 		$this->db->from('tbl_rkt_eselon1 rkt inner join tbl_iku_eselon1 iku on iku.kode_iku_e1 = rkt.kode_iku_e1 and rkt.tahun = iku.tahun
 inner join tbl_sasaran_eselon1 sasaran on sasaran.kode_sasaran_e1 = rkt.kode_sasaran_e1 and sasaran.tahun=rkt.tahun left join tbl_kke1_3_e1 lke on rkt.kode_sasaran_e1=lke.kode_sasaran_e1 and rkt.tahun=lke.tahun and rkt.kode_iku_e1=lke.kode_iku_e1', false);
-		
 		return $this->db->count_all_results();
 		$this->db->free_result();
 	}
