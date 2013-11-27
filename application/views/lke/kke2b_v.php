@@ -141,12 +141,12 @@
 			
 			printData<?=$objectId;?>=function(){			
 				//$.jqURL.loc(getUrl<?=$objectId;?>(2),{w:800,h:600,wintype:"_blank"});
-				window.open(getUrl<?=$objectId;?>(2));;
-				//alert("Fasilitas Pdf belum tersedia");
+				//window.open(getUrl<?=$objectId;?>(2));;
+				alert("Fasilitas Pdf belum tersedia");
 			}
 			toExcel<?=$objectId;?>=function(){
-				//alert("Fasilitas Excel belum tersedia");
-				window.open(getUrl<?=$objectId;?>(3));;
+				alert("Fasilitas Excel belum tersedia");
+				//window.open(getUrl<?=$objectId;?>(3));;
 			}
 			
 			prepareMerge<?=$objectId;?> = function(data){
@@ -306,36 +306,15 @@
 	  <table border="0" cellpadding="1" cellspacing="1" width="100%">
 	  <tr>
 		<td>
-		  <div class="fsearch" >
-			
+		  <div class="fsearch" >			
 			<table border="0" cellpadding="1" cellspacing="1">
 			<tr>
 				<td>Tahun :</td>
 				<td>
 				<?=$this->sasaran_eselon1_model->getListFilterTahun($objectId,false)?>
 				</td>
-			</tr>
-		<!--	<tr>
-				<td>Eselon 1 :</td>
-				<td>
-					<?=$this->eselon1_model->getListFilterEselon1($objectId,$this->session->userdata('unit_kerja_e1'))?>
-				</td>
-			</tr>
-			<tr>
-				<td>Kode Sasaran E1:</td>
-				<td><input class="easyui-textbox" id="filter_sasaran<?=$objectId;?>"></td>
-			</tr>
-			<tr>
-				<td>Kode IKU :</td>
-				<td><input class="easyui-textbox" id="filter_iku<?=$objectId;?>"></td>
-			</tr>-->
-			<tr style="height:10px">
-			  <td style="">
-			  </td>
-			</tr>
-			<tr>			  
-			  <td colspan="2" align="right">
-				<a href="#" class="easyui-linkbutton" onclick="clearFilter<?=$objectId;?>();" iconCls="icon-reset">Reset</a>
+				<td width="10px">&nbsp;</td>
+			  <td>				
 				<a href="#" class="easyui-linkbutton" onclick="searchData<?=$objectId;?>();" iconCls="icon-search">Search</a>
 			  </td>
 			</tr>
@@ -360,7 +339,7 @@
 	  </div>
 	</div>
 	
-	<table id="dg<?=$objectId;?>" class="easyui-datagrid" style="height:auto;width:auto" title="Laporan kke2b Sasaran" toolbar="#tb<?=$objectId;?>" fitColumns="false" singleSelect="true" rownumbers="false" pagination="true"  nowrap="false">
+	<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Laporan kke2b Sasaran" toolbar="#tb<?=$objectId;?>" fitColumns="false" singleSelect="true" rownumbers="false" pagination="true"  nowrap="false" showFooter="true">
 	  <thead>
 	  <tr>
 		

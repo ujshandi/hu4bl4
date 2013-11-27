@@ -26,6 +26,16 @@ class Kke1_2_model extends CI_Model
 		$order = isset($_POST['order']) ? strval($_POST['order']) : 'asc';  
 		$offset = ($page-1)*$limit;  
 		$pdfdata = array();
+		$rataSasaran=0;
+		$sumSasaran=0;
+		$rataIk=0;
+		$sumIk=0;
+		$rataTarget=0;
+		$sumTarget=0;
+		$rataKinerja=0;
+		$sumKinerja=0;
+		$rataAndal=0;
+		$sumAndal=0;
 		if ($count>0){
 			//filter
 			if($filtahun != '' && $filtahun != '-1' && $filtahun != null) {
@@ -52,33 +62,73 @@ inner join tbl_sasaran_eselon1 sasaran_strategis on sasaran_strategis.kode_sasar
 			$i=0;
 			$sasaran_strategis ="";
 			$indikator_kinerja ="";
-			$no =($page-1)*$limit;//$lastNo;
+			$targetPersen=0; $kinerjaPersen=0; $andalPersen=0;
+			$targetSum=0; $kinerjaSum=0; $andalSum=0;
+			$no =$lastNo;  //($page-1)*$limit;
 			$noIndikator =0;
+			$rowIdxPersen=0;
 			foreach ($query->result() as $row)
 			{
 				//$response->rows[$i]['id_rkt_kl']=$row->id_rkt_kl;
+					
+					$targetSum +=$row->target_tercapai_nilai; 
+					$kinerjaSum +=$row->kinerja_baik_nilai; 
+					$andalSum += $row->data_andal_nilai;
+					
+					
 				if ($sasaran_strategis!=$row->sasaran_strategis){
 					$no++;
-					$noIndikator =0;
-					$response->rows[$i]['no']= $no;
 					
+					
+					
+					$response->rows[$i]['no']= $no;					
 					$response->rows[$i]['sasaran_strategis']=$row->sasaran_strategis;
 					$sasaran_strategis=$row->sasaran_strategis;
+					
+					if ($i>0){
+						$targetPersen=$targetSum/($noIndikator); 
+						$kinerjaPersen=$kinerjaSum/($noIndikator); 
+						$andalPersen=$andalSum/($noIndikator);
+						$response->rows[$rowIdxPersen]['target_tercapai_persen']=$this->utility->cekNumericFmt($targetPersen*100,2);
+						$response->rows[$rowIdxPersen]['kinerja_baik_persen']=$this->utility->cekNumericFmt($kinerjaPersen*100,2);
+						$response->rows[$rowIdxPersen]['data_andal_persen']=$this->utility->cekNumericFmt($andalPersen*100,2);
+						$targetPersen=0; $kinerjaPersen=0; $andalPersen=0;
+					$targetSum=0; $kinerjaSum=0; $andalSum=0;
+					}
+					$noIndikator =0;
+					$rowIdxPersen=$i;
+					
+					//if(
+					/* $targetPersen=0; $kinerjaPersen=0; $andalPersen=0;
+					$targetSum =0; $kinerjaSum=0; $andalSum=0; */
 				}
 				else{
 					$response->rows[$i]['sasaran_strategis']=$row->sasaran_strategis;//"";
 					$response->rows[$i]['no']= "";
+					
 				}
 				
+					
+					
+					
+					
 				if ($indikator_kinerja!=$row->indikator_kinerja){	
 					$noIndikator++;
+					
+					
 					$response->rows[$i]['no_indikator']= $no.".".$noIndikator;
 					$response->rows[$i]['indikator_kinerja']=$row->indikator_kinerja;
 					$indikator_kinerja=$row->indikator_kinerja;
+				
+					
 				}else {	
+					
 					$response->rows[$i]['indikator_kinerja']="";
 					$response->rows[$i]['no_indikator']="";
+					
 				}
+				
+					
 				
 				$response->rows[$i]['kke12_e1_id']=$row->kke12_e1_id;
 				$response->rows[$i]['kode_sasaran_e1']=$row->kode_sasaran_e1;
@@ -92,21 +142,38 @@ inner join tbl_sasaran_eselon1 sasaran_strategis on sasaran_strategis.kode_sasar
 				$response->rows[$i]['target_tercapai']=$row->target_tercapai;
 				$response->rows[$i]['target_tercapai_nilai']=$this->utility->cekNumericFmt($row->target_tercapai_nilai,2);
 				$response->rows[$i]['kinerja_baik']=$row->kinerja_baik;				
-				$response->rows[$i]['kinerja_baik_nilai']=$this->utility->cekNumericFmt($row->kinerja_baik_nilai,2);				
+				$response->rows[$i]['kinerja_baik_nilai']=$this->utility->cekNumericFmt($row->kinerja_baik_nilai,2);
 				$response->rows[$i]['data_andal']=$row->data_andal;
 				$response->rows[$i]['data_andal_nilai']=$this->utility->cekNumericFmt($row->data_andal_nilai,2);
 				//$this->getIndex('target_tercapai',$row->tahun,$row->kode_sasaran_e1,$row->kode_iku_e1);//$this->utility->cekNumericFmt($row->target);
+				
+				$sumSasaran += $row->sasaran_tepat_nilai;	
+				$sumIk += $row->ik_tepat_nilai;	
+				$sumTarget += $row->target_tercapai_nilai;	
+				$sumKinerja+= $row->kinerja_baik_nilai;	
+				$sumAndal += $row->data_andal_nilai;	
 				
 //utk kepentingan export excel ==========================
 				//$row->program = $program[0].", ".$program[1];
 			//============================================================
 			//utk kepentingan export pdf===================
-				$pdfdata[] = array($no,$response->rows[$i]['sasaran_strategis'],$response->rows[$i]['no_indikator'],$response->rows[$i]['indikator_kinerja'],$response->rows[$i]['target_tercapai'],$response->rows[$i]['kinerja_baik'],$response->rows[$i]['data_andal']);
+				$pdfdata[] = array($no,$response->rows[$i]['sasaran_strategis'],$response->rows[$i]['no_indikator'],$response->rows[$i]['indikator_kinerja'],$response->rows[$i]['sasaran_tepat'],$response->rows[$i]['sasaran_tepat_nilai'],$response->rows[$i]['ik_tepat'],$response->rows[$i]['ik_tepat_nilai'],$response->rows[$i]['target_tercapai'],$response->rows[$i]['target_tercapai_nilai'],$response->rows[$i]['kinerja_baik'],$response->rows[$i]['kinerja_baik_nilai'],$response->rows[$i]['data_andal'],$response->rows[$i]['data_andal_nilai']);
 			//============================================================
-
+	
 				$i++;
 			} 
+			
+			//utk baris terakhir ga ke print makanya taro diluar looping 
+			$response->rows[$rowIdxPersen]['target_tercapai_persen']=$this->utility->cekNumericFmt($targetPersen*100,2);
+			$response->rows[$rowIdxPersen]['kinerja_baik_persen']=$this->utility->cekNumericFmt($kinerjaPersen*100,2);
+			$response->rows[$rowIdxPersen]['data_andal_persen']=$this->utility->cekNumericFmt($andalPersen*100,2);
+			
 			$response->lastNo = $no;
+			$rataSasaran=$sumSasaran/$i;
+			$rataIk=$sumIk/$i;
+			$rataTarget=$sumTarget/$i;
+			$rataKinerja=$sumKinerja/$i;
+			$rataAndal=$sumAndal/$i;
 		//	$query->free_result();
 		}else {
 				//$response->rows[$count]['id_rkt_kl']=$row->id_rkt_kl;
@@ -114,14 +181,30 @@ inner join tbl_sasaran_eselon1 sasaran_strategis on sasaran_strategis.kode_sasar
 				$response->rows[$count]['no_indikator']= "";
 				$response->rows[$count]['indikator_kinerja']='';
 				$response->rows[$count]['sasaran_strategis']='';
+				$response->rows[$count]['sasaran_tepat']='';
+				$response->rows[$count]['sasaran_tepat_nilai']='';
+				$response->rows[$count]['ik_tepat']='';
+				$response->rows[$count]['ik_tepat_nilai']='';
 				$response->rows[$count]['target_tercapai']='';
+				$response->rows[$count]['target_tercapai_nilai']='';
 				$response->rows[$count]['kinerja_baik']='';
+				$response->rows[$count]['kinerja_baik_nilai']='';
 				$response->rows[$count]['data_andal']='';
-				$response->rows[$count]['satuan']='';
-				$response->rows[$count]['target']='';
+				$response->rows[$count]['data_andal_nilai']='';				
 				$response->lastNo = 0;
 				
 		}
+
+		$response->footer[0]['indikator_kinerja']='<b>Persentase pemenuhan kriteria</b>';
+		$response->footer[0]['no']='';
+		$response->footer[0]['pejabat']='';		
+		$response->footer[0]['no_indikator']='';
+		//$response->footer[0]['sasaran_tepat_nilai']='<b>'.$this->utility->cekNumericFmt($rataSasaran,2).' %</b>';
+		//$response->footer[0]['ik_tepat_nilai']='<b>'.$this->utility->cekNumericFmt($rataIk,2).' %</b>';
+		$response->footer[0]['target_tercapai_persen']='<b>'.$this->utility->cekNumericFmt($rataTarget*100,2).' %</b>';
+		$response->footer[0]['kinerja_baik_persen']='<b>'.$this->utility->cekNumericFmt($rataKinerja*100,2).' %</b>';
+		$response->footer[0]['data_andal_persen']='<b>'.$this->utility->cekNumericFmt($rataAndal*100,2).' %</b>';
+
 		
 		if ($purpose==1) //grid normal
 			return json_encode($response);

@@ -157,12 +157,12 @@
 			
 			printData<?=$objectId;?>=function(){			
 				//$.jqURL.loc(getUrl<?=$objectId;?>(2),{w:800,h:600,wintype:"_blank"});
-				window.open(getUrl<?=$objectId;?>(2));;
-				//alert("Fasilitas Pdf belum tersedia");
+				//window.open(getUrl<?=$objectId;?>(2));;
+				alert("Fasilitas Pdf belum tersedia");
 			}
 			toExcel<?=$objectId;?>=function(){
-				//alert("Fasilitas Excel belum tersedia");
-				window.open(getUrl<?=$objectId;?>(3));;
+				alert("Fasilitas Excel belum tersedia");
+				//window.open(getUrl<?=$objectId;?>(3));;
 			}
 			
 			prepareMerge<?=$objectId;?> = function(data){
@@ -330,28 +330,9 @@
 				<td>
 				<?=$this->iku_e1_model->getListTahun($objectId,"filter_tahun","false",false);?>
 				</td>
-			</tr>
-		<!--	<tr>
-				<td>Eselon 1 :</td>
-				<td>
-					<?='';//$this->eselon1_model->getListFilterEselon1($objectId,$this->session->userdata('unit_kerja_e1'))?>
-				</td>
-			</tr>
-			<tr>
-				<td>Kode Sasaran E1:</td>
-				<td><input class="easyui-textbox" id="filter_sasaran<?=$objectId;?>"></td>
-			</tr>
-			<tr>
-				<td>Kode IKU :</td>
-				<td><input class="easyui-textbox" id="filter_iku<?=$objectId;?>"></td>
-			</tr>-->
-			<tr style="height:10px">
-			  <td style="">
-			  </td>
-			</tr>
-			<tr>			  
-			  <td colspan="2" align="right">
-				<a href="#" class="easyui-linkbutton" onclick="clearFilter<?=$objectId;?>();" iconCls="icon-reset">Reset</a>
+				<td width="10px">&nbsp;</td>
+			  <td >
+				
 				<a href="#" class="easyui-linkbutton" onclick="searchData<?=$objectId;?>();" iconCls="icon-search">Search</a>
 			  </td>
 			</tr>
@@ -375,7 +356,7 @@
 	  </div>
 	</div>
 	
-	<table id="dg<?=$objectId;?>" class="easyui-datagrid" style="height:auto;width:auto" title="Laporan KKE3A IK" toolbar="#tb<?=$objectId;?>" fitColumns="false" singleSelect="true" rownumbers="false" pagination="true"  nowrap="false">
+	<table id="dg<?=$objectId;?>" class="easyui-datagrid" style="height:auto;width:auto" title="Laporan KKE3A IK" toolbar="#tb<?=$objectId;?>" fitColumns="false" singleSelect="true" rownumbers="false" pagination="true"  nowrap="false" showFooter="true">
 	  <thead>
 	  <tr>
 		

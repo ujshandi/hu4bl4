@@ -1,7 +1,7 @@
 <?php
 
-class kke3b extends CI_Controller {
-
+class Kke3b extends CI_Controller {
+	var $objectId = 'kke3b';
 	function __construct()
 	{
 		parent::__construct();			
@@ -13,16 +13,156 @@ class kke3b extends CI_Controller {
 		//if ($this->session->userdata('logged_in') != TRUE) redirect('security/login');					
 		$this->load->model('/security/sys_menu_model');
 		$this->load->model('/lke/kke3b_model');
-		$this->load->model('/rujukan/eselon1_model');
+		$this->load->model('/pengaturan/iku_e1_model');
+		$this->load->model('/lke/lke_konversi_model');
 		$this->load->library("utility");
 		
 	}
 	
 	function index(){
-		$data['title'] = 'Kertas Kerja Evaluasi 2B Sasaran';	
-		$data['objectId'] = 'kke3b';
-		//$data['formLookupTarif'] = $this->tarif_model->lookup('#winLookTarif'.$data['objectId'],"#medrek_id".$data['objectId']);
+		$data['title'] = 'Kertas Kerja Evaluasi 3B IK';	
+		$data['objectId'] = $this->objectId;
+		
+		$data['renstra_a_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true,"renstra_a");
+		$data['rkt_a_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true,"rkt_a");
+		$data['pk_a_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true,"pk_a");
+		$data['iku_measurable_a_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true,"iku_measurable_a");
+		$data['iku_hasil_a_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true,"iku_hasil_a");
+		$data['iku_relevan_a_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true,"iku_relevan_a");
+		$data['iku_diukur_a_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true,"iku_diukur_a");
+		$data['kriteria_measurable_a_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true,"kriteria_measurable_a");
+		$data['kriteria_hasil_a_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true,"kriteria_hasil_a");
+		$data['kriteria_relevan_a_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true,"kriteria_relevan_a");
+		$data['kriteria_diukur_a_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true,"kriteria_diukur_a");
+		$data['pengukuran_a_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true,"pengukuran_a");
+		
+		
+		$data['renstra_b_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true,"renstra_b");
+		$data['rkt_b_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true,"rkt_b");
+		$data['pk_b_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true,"pk_b");
+		$data['iku_measurable_b_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true,"iku_measurable_b");
+		$data['iku_hasil_b_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true,"iku_hasil_b");
+		$data['iku_relevan_b_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true,"iku_relevan_b");
+		$data['iku_diukur_b_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true,"iku_diukur_b");
+		$data['kriteria_measurable_b_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true,"kriteria_measurable_b");
+		$data['kriteria_hasil_b_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true,"kriteria_hasil_b");
+		$data['kriteria_relevan_b_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true,"kriteria_relevan_b");
+		$data['kriteria_diukur_b_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true,"kriteria_diukur_b");
+		$data['pengukuran_b_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true,"pengukuran_b");
 	  	$this->load->view('lke/kke3b_v',$data);
+	}
+	
+	private function get_form_values() {
+		$dt['tahun'] = $this->input->post("tahun", TRUE); 
+		$dt['kke3b_e1_id'] = $this->input->post("kke3b_e1_id", TRUE); 
+		$dt['kode_sasaran_e1'] = $this->input->post("kode_sasaran_e1", TRUE); 
+		$dt['kode_iku_e1'] = $this->input->post("kode_iku_e1", TRUE); 
+		$dt['renstra_a'] = $this->input->post("renstra_a", TRUE); 
+		$dt['renstra_a_nilai'] = $this->lke_konversi_model->getKonversi('kke3b',$dt['renstra_a'],'e1');
+		$dt['rkt_a'] = $this->input->post("rkt_a", TRUE); 
+		$dt['rkt_a_nilai'] = $this->lke_konversi_model->getKonversi('kke3b',$dt['rkt_a'],'e1');
+		$dt['pk_a'] = $this->input->post("pk_a", TRUE); 
+		$dt['pk_a_nilai'] = $this->lke_konversi_model->getKonversi('kke3b',$dt['pk_a'],'e1');
+		$dt['iku_measurable_a'] = $this->input->post("iku_measurable_a", TRUE); 
+		$dt['iku_measurable_a_nilai'] = $this->lke_konversi_model->getKonversi('kke3b',$dt['iku_measurable_a'],'e1');
+		$dt['iku_hasil_a'] = $this->input->post("iku_hasil_a", TRUE); 
+		$dt['iku_hasil_a_nilai'] = $this->lke_konversi_model->getKonversi('kke3b',$dt['iku_hasil_a'],'e1');
+		$dt['iku_relevan_a'] = $this->input->post("iku_relevan_a", TRUE); 
+		$dt['iku_relevan_a_nilai'] = $this->lke_konversi_model->getKonversi('kke3b',$dt['iku_relevan_a'],'e1');
+		$dt['iku_diukur_a'] = $this->input->post("iku_diukur_a", TRUE); 
+		$dt['iku_diukur_a_nilai'] = $this->lke_konversi_model->getKonversi('kke3b',$dt['iku_diukur_a'],'e1');
+		$dt['kriteria_measurable_a'] = $this->input->post("kriteria_measurable_a", TRUE); 
+		$dt['kriteria_measurable_a_nilai'] = $this->lke_konversi_model->getKonversi('kke3b',$dt['kriteria_measurable_a'],'e1');
+		$dt['kriteria_hasil_a'] = $this->input->post("kriteria_hasil_a", TRUE); 
+		$dt['kriteria_hasil_a_nilai'] = $this->lke_konversi_model->getKonversi('kke3b',$dt['kriteria_hasil_a'],'e1');
+		$dt['kriteria_relevan_a'] = $this->input->post("kriteria_relevan_a", TRUE); 
+		$dt['kriteria_relevan_a_nilai'] = $this->lke_konversi_model->getKonversi('kke3b',$dt['kriteria_relevan_a'],'e1');
+		$dt['kriteria_diukur_a'] = $this->input->post("kriteria_diukur_a", TRUE); 
+		$dt['kriteria_diukur_a_nilai'] = $this->lke_konversi_model->getKonversi('kke3b',$dt['kriteria_diukur_a'],'e1');
+		
+		$dt['renstra_b'] = $this->input->post("renstra_b", TRUE); 
+		$dt['renstra_b_nilai'] = $this->lke_konversi_model->getKonversi('kke3b',$dt['renstra_b'],'e1');
+		$dt['rkt_b'] = $this->input->post("rkt_b", TRUE); 
+		$dt['rkt_b_nilai'] = $this->lke_konversi_model->getKonversi('kke3b',$dt['rkt_b'],'e1');
+		$dt['pk_b'] = $this->input->post("pk_b", TRUE); 
+		$dt['pk_b_nilai'] = $this->lke_konversi_model->getKonversi('kke3b',$dt['pk_b'],'e1');
+		$dt['iku_measurable_b'] = $this->input->post("iku_measurable_b", TRUE); 
+		$dt['iku_measurable_b_nilai'] = $this->lke_konversi_model->getKonversi('kke3b',$dt['iku_measurable_b'],'e1');
+		$dt['iku_hasil_b'] = $this->input->post("iku_hasil_b", TRUE); 
+		$dt['iku_hasil_b_nilai'] = $this->lke_konversi_model->getKonversi('kke3b',$dt['iku_hasil_b'],'e1');
+		$dt['iku_relevan_b'] = $this->input->post("iku_relevan_b", TRUE); 
+		$dt['iku_relevan_b_nilai'] = $this->lke_konversi_model->getKonversi('kke3b',$dt['iku_relevan_b'],'e1');
+		$dt['iku_diukur_b'] = $this->input->post("iku_diukur_b", TRUE); 
+		$dt['iku_diukur_b_nilai'] = $this->lke_konversi_model->getKonversi('kke3b',$dt['iku_diukur_b'],'e1');
+		$dt['kriteria_measurable_b'] = $this->input->post("kriteria_measurable_b", TRUE); 
+		$dt['kriteria_measurable_b_nilai'] = $this->lke_konversi_model->getKonversi('kke3b',$dt['kriteria_measurable_b'],'e1');
+		$dt['kriteria_hasil_b'] = $this->input->post("kriteria_hasil_b", TRUE); 
+		$dt['kriteria_hasil_b_nilai'] = $this->lke_konversi_model->getKonversi('kke3b',$dt['kriteria_hasil_b'],'e1');
+		$dt['kriteria_relevan_b'] = $this->input->post("kriteria_relevan_b", TRUE); 
+		$dt['kriteria_relevan_b_nilai'] = $this->lke_konversi_model->getKonversi('kke3b',$dt['kriteria_relevan_b'],'e1');
+		$dt['kriteria_diukur_b'] = $this->input->post("kriteria_diukur_b", TRUE); 
+		$dt['kriteria_diukur_b_nilai'] = $this->lke_konversi_model->getKonversi('kke3b',$dt['kriteria_diukur_b'],'e1');
+		
+		$pengukuran_a = 'T';
+		$nilaipengukuran_a = $dt['kriteria_measurable_a_nilai']+$dt['kriteria_hasil_a_nilai']+$dt['kriteria_relevan_a_nilai']+$dt['kriteria_diukur_a_nilai'];
+		if ($nilaipengukuran_a==4) $pengukuran_a = 'Y';
+		
+		$dt['pengukuran_a'] = $pengukuran_a; 
+		$dt['pengukuran_a_nilai'] = $this->lke_konversi_model->getKonversi('kke3b',$dt['pengukuran_a'],'e1');
+		
+		$pengukuran_b = 'T';
+		$nilaipengukuran_b = $dt['kriteria_measurable_b_nilai']+$dt['kriteria_hasil_b_nilai']+$dt['kriteria_relevan_b_nilai']+$dt['kriteria_diukur_b_nilai'];
+		if ($nilaipengukuran_b==4) $pengukuran_b = 'Y';
+		
+		$dt['pengukuran_b'] = $pengukuran_b; 
+		$dt['pengukuran_b_nilai'] = $this->lke_konversi_model->getKonversi('kke3b',$dt['pengukuran_b'],'e1');
+		return $dt;
+    }
+	
+	
+	function save(){
+		$this->load->library('form_validation');
+		$data = $this->get_form_values();
+		$return_id = 0;
+		$result = "";
+		$data['pesan_error'] = '';
+		$pesan = '';
+		
+		// validation
+		# rules
+		$this->form_validation->set_rules("tahun", 'Tahun', 'trim|required|numeric|exact_length[4]|xss_clean');
+		//$this->form_validation->set_rules("id_komponen", 'Komponen/Subkomponen', 'trim|required|xss_clean');
+	//	$this->form_validation->set_rules("index_mutu", 'Index Mutu', 'trim|required|xss_clean');
+		
+		# message rules
+		$this->form_validation->set_message('required', 'Field %s harus diisi.');
+		$this->form_validation->set_message('numeric', 'Isi field %s dengan angka');
+		$this->form_validation->set_message('exact_length', 'Isi field %s dengan 4 karakter angka');
+		
+		if ($this->form_validation->run() == FALSE){ // jika tidak valid
+			$data['pesan_error'].=(trim(form_error('tahun',' ',' '))==''?'':form_error('tahun',' ','<br>'));
+			//$data['pesan_error'].=(trim(form_error('id_komponen',' ',' '))==''?'':form_error('id_komponen',' ','<br>'));
+			//$data['pesan_error'].=(trim(form_error('index_mutu',' ',' '))==''?'':form_error('index_mutu',' ','<br>'));
+			
+		}else{
+			// validasi detail
+				
+			
+				if ($data['kke3b_e1_id']==''){	
+					$result = $this->kke3b_model->InsertOnDb($data,$data['pesan_error']);
+				}
+				else {
+					$result = $this->kke3b_model->UpdateOnDb($data,$data['kke3b_e1_id']);
+				}
+				
+					//$data['pesan_error'] .= 'Komponen ini untuk tahun '.$data['tahun'].' sudah diinput.';
+		}
+		
+		if ($result){
+			echo json_encode(array('success'=>true, 'status'=>$return_id));
+		} else {
+			echo json_encode(array('msg'=>$data['pesan_error']));
+		}
 	}
 	
 	

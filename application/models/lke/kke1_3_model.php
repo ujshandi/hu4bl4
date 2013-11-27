@@ -26,6 +26,16 @@ class Kke1_3_model extends CI_Model
 		$order = isset($_POST['order']) ? strval($_POST['order']) : 'asc';  
 		$offset = ($page-1)*$limit;  
 		$pdfdata = array();
+		$rataCatatan = 0;
+		$rataMasyarakat = 0;
+		$rataInstansi= 0;
+		$rataTransparansi = 0;
+		$rataPenghargaan = 0;
+		$sumCatatan = 0;
+		$sumMasyarakat = 0;
+		$sumInstansi= 0;
+		$sumTransparansi = 0;
+		$sumPenghargaan = 0;
 		if ($count>0){
 			//filter
 			if($filtahun != '' && $filtahun != '-1' && $filtahun != null) {
@@ -52,6 +62,7 @@ inner join tbl_sasaran_eselon1 sasaran_strategis on sasaran_strategis.kode_sasar
 			$i=0;
 			$sasaran_strategis ="";
 			$indikator_kinerja ="";
+			
 			$no =($page-1)*$limit;//$lastNo;
 			$noIndikator =0;
 			foreach ($query->result() as $row)
@@ -97,16 +108,31 @@ inner join tbl_sasaran_eselon1 sasaran_strategis on sasaran_strategis.kode_sasar
 				$response->rows[$i]['penghargaan_nilai']=$this->utility->cekNumericFmt($row->penghargaan_nilai,2);
 				//$this->getIndex('instansi_lainnya',$row->tahun,$row->kode_sasaran_e1,$row->kode_iku_e1);//$this->utility->cekNumericFmt($row->target);
 				
+				
+				
+				$sumCatatan += $row->catatan_keuangan_nilai;
+				$sumMasyarakat+= $row->masyarakat_nilai;
+				$sumInstansi += $row->instansi_lainnya_nilai;
+				$sumTransparansi += $row->transparansi_nilai;
+				$sumPenghargaan += $row->penghargaan_nilai;
 //utk kepentingan export excel ==========================
 				//$row->program = $program[0].", ".$program[1];
 			//============================================================
+			
+			
 			//utk kepentingan export pdf===================
-				$pdfdata[] = array($no,$response->rows[$i]['sasaran_strategis'],$response->rows[$i]['no_indikator'],$response->rows[$i]['indikator_kinerja'],$response->rows[$i]['instansi_lainnya'],$response->rows[$i]['transparansi'],$response->rows[$i]['penghargaan']);
+				$pdfdata[] = array($no,$response->rows[$i]['sasaran_strategis'],$response->rows[$i]['no_indikator'],$response->rows[$i]['indikator_kinerja'],$response->rows[$i]['catatan_keuangan'],$response->rows[$i]['catatan_keuangan_nilai'],$response->rows[$i]['masyarakat'],$response->rows[$i]['masyarakat_nilai'],$response->rows[$i]['instansi_lainnya'],$response->rows[$i]['instansi_lainnya_nilai'],$response->rows[$i]['transparansi'],$response->rows[$i]['transparansi_nilai'],$response->rows[$i]['penghargaan'],$response->rows[$i]['penghargaan_nilai']);
 			//============================================================
-
+				
 				$i++;
 			} 
 			$response->lastNo = $no;
+			$rataCatatan = $sumCatatan / $i;
+			$rataMasyarakat = $sumMasyarakat / $i;
+			$rataInstansi = $sumInstansi / $i;
+			$rataTransparansi = $sumTransparansi / $i;
+			$rataPenghargaan = $sumPenghargaan / $i;
+			
 		//	$query->free_result();
 		}else {
 				//$response->rows[$count]['id_rkt_kl']=$row->id_rkt_kl;
@@ -114,14 +140,29 @@ inner join tbl_sasaran_eselon1 sasaran_strategis on sasaran_strategis.kode_sasar
 				$response->rows[$count]['no_indikator']= "";
 				$response->rows[$count]['indikator_kinerja']='';
 				$response->rows[$count]['sasaran_strategis']='';
+				$response->rows[$count]['catatan_keuangan']='';
+				$response->rows[$count]['catatan_keuangan_nilai']='';
+				$response->rows[$count]['masyarakat']='';
+				$response->rows[$count]['masyarakat_nilai']='';
 				$response->rows[$count]['instansi_lainnya']='';
+				$response->rows[$count]['instansi_lainnya_nilai']='';
 				$response->rows[$count]['transparansi']='';
+				$response->rows[$count]['transparansi_nilai']='';
 				$response->rows[$count]['penghargaan']='';
-				$response->rows[$count]['satuan']='';
-				$response->rows[$count]['target']='';
+				$response->rows[$count]['penghargaan_nilai']='';				
 				$response->lastNo = 0;
 				
 		}
+		
+		$response->footer[0]['indikator_kinerja']='<b>Persentase pemenuhan kriteria</b>';
+		$response->footer[0]['no']='';
+		$response->footer[0]['pejabat']='';		
+		$response->footer[0]['no_indikator']='';
+		$response->footer[0]['catatan_keuangan_nilai']='<b>'.$this->utility->cekNumericFmt($rataCatatan*100,2).' %</b>';
+		$response->footer[0]['masyarakat_nilai']='<b>'.$this->utility->cekNumericFmt($rataMasyarakat*100,2).' %</b>';
+		$response->footer[0]['instansi_lainnya_nilai']='<b>'.$this->utility->cekNumericFmt($rataInstansi*100,2).' %</b>';
+		$response->footer[0]['transparansi_nilai']='<b>'.$this->utility->cekNumericFmt($rataTransparansi*100,2).' %</b>';
+		$response->footer[0]['penghargaan_nilai']='<b>'.$this->utility->cekNumericFmt($rataPenghargaan*100,2).' %</b>';
 		
 		if ($purpose==1) //grid normal
 			return json_encode($response);

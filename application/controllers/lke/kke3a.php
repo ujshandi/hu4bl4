@@ -20,7 +20,7 @@ class kke3a extends CI_Controller {
 	}
 	
 	function index(){
-		$data['title'] = 'Kertas Kerja Evaluasi 2B Sasaran';	
+		$data['title'] = 'Kertas Kerja Evaluasi 3A IK';	
 		$data['objectId'] = $this->objectId;
 		
 		$data['renstra_ip_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke3a','unit_kerja'=>'e1'),true,"renstra_ip");
