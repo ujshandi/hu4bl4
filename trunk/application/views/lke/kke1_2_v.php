@@ -49,43 +49,7 @@
 				}
 				
 			}
-			
-			
-			function initCombo<?=$objectId?>(){
-				// setListE2<?=$objectId?>();
-				 setSasaranE1<?=$objectId;?>($("#tahun<?=$objectId?>").val(),"","");
-				 setIKU<?=$objectId;?>($("#tahun<?=$objectId?>").val(),$("#kode_e1<?=$objectId?>").val());
-			 }
-			 
-			 function setIKU<?=$objectId;?>(tahun,key,val){
-				if ((tahun==null)||(tahun=="")) tahun = "-1";
-				$("#divIKUKL<?=$objectId?>").load(
-					base_url+"pengaturan/iku_e1/getListIKU_KL/"+"<?=$objectId;?>"+"/"+tahun,
-					//on complete
-					function(){
-						$("textarea").autogrow();
-						if($("#drop<?=$objectId;?>").is(":visible")){
-							$("#drop<?=$objectId;?>").slideUp("slow");
-						}
-						
-						$("#txtkode_iku_kl<?=$objectId;?>").click(function(){
-							$("#drop<?=$objectId;?>").slideDown("slow");
-						});
-						
-						$("#drop<?=$objectId;?> li").click(function(e){
-							var chose = $(this).text();
-							$("#txtkode_iku_kl<?=$objectId;?>").val(chose);
-							$("#drop<?=$objectId;?>").slideUp("slow");
-						});
-						
-						if (key!=null)
-							$('#kode_iku_kl<?=$objectId;?>').val(key);
-						if (val!=null)
-							$('#txtkode_iku_kl<?=$objectId;?>').val(val);
-					}
-				);
-			}  
-			 
+					
 			var url;
 			newData<?=$objectId;?> = function (){  
 				/* var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
@@ -194,12 +158,14 @@
 			
 			printData<?=$objectId;?>=function(){			
 				//$.jqURL.loc(getUrl<?=$objectId;?>(2),{w:800,h:600,wintype:"_blank"});
-				window.open(getUrl<?=$objectId;?>(2));;
-				//alert("Fasilitas Pdf belum tersedia");
+				
+				//window.open(getUrl<?=$objectId;?>(2));;
+				alert("Fasilitas Pdf belum tersedia");
 			}
 			toExcel<?=$objectId;?>=function(){
-				//alert("Fasilitas Excel belum tersedia");
-				window.open(getUrl<?=$objectId;?>(3));;
+				alert("Fasilitas Excel belum tersedia");
+				
+				//window.open(getUrl<?=$objectId;?>(3));;
 			}
 			
 			prepareMerge<?=$objectId;?> = function(data){
@@ -264,6 +230,21 @@
 							field:'no',
 							rowspan:merges[i][1]
 						}); 
+						$('#dg<?=$objectId;?>').datagrid('mergeCells',{
+							index:merges[i][0],
+							field:'target_tercapai_persen',
+							rowspan:merges[i][1]
+						}); 
+						$('#dg<?=$objectId;?>').datagrid('mergeCells',{
+							index:merges[i][0],
+							field:'kinerja_baik_persen',
+							rowspan:merges[i][1]
+						}); 
+						$('#dg<?=$objectId;?>').datagrid('mergeCells',{
+							index:merges[i][0],
+							field:'data_andal_persen',
+							rowspan:merges[i][1]
+						}); 
 				}
 				
 				
@@ -278,45 +259,7 @@
 				} */
 			}
 			
-			$("#tahun<?=$objectId;?>").change(function(){
-				//alert($(this).val());
-				setSasaranE1<?=$objectId;?>($(this).val(),$("#kode_e1<?=$objectId?>").val(),'','')
-				 setIKU<?=$objectId;?>($(this).val(),"","");
-				  //setKodeOtomatis<?=$objectId?>();
-			});
-
-			function setSasaranE1<?=$objectId;?>(tahun,e1,key,val){
-				<? if ($this->session->userdata('unit_kerja_e1')!='-1') {?>
-				 e1 = '<?=$this->session->userdata('unit_kerja_e1');?>';
-				 $("#kode_e1<?=$objectId;?>").val(e1);
-				<?}?>
-				if (tahun=="") tahun = "-1";
-				 $("#divSasaran<?=$objectId?>").load(
-					base_url+"pengaturan/sasaran_eselon2/getListSasaranE1/"+"<?=$objectId;?>"+"/"+e1+"/"+tahun,
-					function(){
-						$("textarea").autogrow();
 						
-						$("#txtkode_sasaran_e1<?=$objectId;?>").click(function(){
-							$("#drop<?=$objectId;?>").slideDown("slow");
-						});
-						
-						$("#drop<?=$objectId;?> li").click(function(e){
-							var chose = $(this).text();
-							$("#txtkode_sasaran_e1<?=$objectId;?>").val(chose);
-							$("#drop<?=$objectId;?>").slideUp("slow");
-						});
-						
-						if (key!=null)
-							$('#kode_sasaran_e1<?=$objectId;?>').val(key);
-						if (val!=null)
-							$('#txtkode_sasaran_e1<?=$objectId;?>').val(val);
-					}
-				); 
-				//alert("here");
-				
-			}//end sasaran
-			
-			
 			setTimeout(function(){
 				/* $('#dg<?=$objectId;?>').datagrid({
 				url:"<?=base_url()?>lke/kke1_2/grid",
@@ -328,12 +271,7 @@
 					searchData<?=$objectId?>();
 			},50);
 		 });
-		 
-		 
-		 function setSasaran<?=$objectId;?>(valu){
-			$('#kode_sasaran_e1<?=$objectId;?>').val(valu);
-			//getDetail();
-		}
+		 		 	
 	</script>
 	<style type="text/css">
 		#fm<?=$objectId;?>{
@@ -411,31 +349,9 @@
 				<td>
 				<?=$this->iku_e1_model->getListTahun($objectId,"filter_tahun","false",false);?>
 				</td>
-			</tr>
-			
-			<tr>
-		<!--		<td>Eselon 1 :</td>
-				<td>
-					<?='';//$this->eselon1_model->getListFilterEselon1($objectId,$this->session->userdata('unit_kerja_e1'))?>
+				<td width="10px">&nbsp;</td>
+				<td><a href="#" class="easyui-linkbutton" onclick="searchData<?=$objectId;?>();" iconCls="icon-search">Search</a>
 				</td>
-			</tr>
-			<tr>
-				<td>Kode Sasaran E1:</td>
-				<td><input class="easyui-textbox" id="filter_sasaran<?=$objectId;?>"></td>
-			</tr>
-			<tr>
-				<td>Kode IKU :</td>
-				<td><input class="easyui-textbox" id="filter_iku<?=$objectId;?>"></td>
-			</tr>-->
-			<tr style="height:10px">
-			  <td style="">
-			  </td>
-			</tr>
-			<tr>			  
-			  <td colspan="2" align="right">
-				<a href="#" class="easyui-linkbutton" onclick="clearFilter<?=$objectId;?>();" iconCls="icon-reset">Reset</a>
-				<a href="#" class="easyui-linkbutton" onclick="searchData<?=$objectId;?>();" iconCls="icon-search">Search</a>
-			  </td>
 			</tr>
 			</table>
 		  </div>
@@ -458,15 +374,15 @@
 	  </div>
 	</div>
 	
-	<table id="dg<?=$objectId;?>" class="easyui-datagrid" style="height:auto;width:auto" title="Laporan KKE1-II Capaian" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="false" pagination="true"  nowrap="false">
+	<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Laporan KKE1-II Capaian" toolbar="#tb<?=$objectId;?>" fitColumns="false" singleSelect="true" rownumbers="false" pagination="true"  nowrap="false" showFooter="true">
 	  <thead>
 	  <tr>
 		
 		<th field="no" rowspan="3" sortable="false" width="25px">No.</th>
-		<th field="kke12_e1_id" rowspan="3" sortable="false" hidden="true" width="25px">kke12_e1_id</th>
-		<th field="tahun" rowspan="3" sortable="false" hidden="true" width="25px">tahun</th>
-		<th field="kode_sasaran_e1" rowspan="3" sortable="false" hidden="true" width="25px">kode_sasaran_e1</th>
-		<th field="kode_iku_e1" rowspan="3" sortable="false" hidden="true" width="25px"kode_iku_e1</th>
+		<th field="kke12_e1_id" rowspan="3" sortable="false" hidden="true">kke12_e1_id</th>
+		<th field="tahun" rowspan="3" sortable="false" hidden="true" >tahun</th>
+		<th field="kode_sasaran_e1" rowspan="3" sortable="false" hidden="true" >kode_sasaran_e1</th>
+		<th field="kode_iku_e1" rowspan="3" sortable="false" hidden="true">kode_iku_e1</th>
 		<th field="sasaran_strategis"  rowspan="3"  sortable="false" width="250px">Sasaran Strategis</th>
 		<th  sortable="false" colspan="2" width="250px">Indikator Kinerja Utama</th>
 		
@@ -485,18 +401,18 @@
 	  </tr>
 	  <tr>		
 		<th field="sasaran_tepat" align="center" sortable="false" width="50px">Index</th>
-		<th field="sasaran_tepat_nilai" align="center" halign="right" sortable="false" width="80px">Konversi</th>		
+		<th field="sasaran_tepat_nilai" align="center" halign="right" sortable="false" width="60px">Konversi</th>		
 		<th field="ik_tepat" align="center" sortable="false" width="50px">Index</th>
-		<th field="ik_tepat_nilai" align="center" halign="right" sortable="false" width="80px">Konversi</th>		
+		<th field="ik_tepat_nilai" align="center" halign="right" sortable="false" width="60px">Konversi</th>		
 		<th field="target_tercapai" align="center" sortable="false" width="50px">Index</th>
-		<th field="target_tercapai_nilai" halign="right" align="center" sortable="false" width="80px">Konversi</th>		
-		<th field="nilai" align="center" halign="right" sortable="false" width="100px">Nilai(%)</th>	
+		<th field="target_tercapai_nilai" halign="right" align="center" sortable="false" width="60px">Konversi</th>		
+		<th field="target_tercapai_persen" align="center" halign="right" sortable="false" width="60px">Nilai(%)</th>	
 		<th field="kinerja_baik" align="center" sortable="false" width="50px">Index</th>
-		<th field="kinerja_baik_nilai" halign="right" align="center" sortable="false" width="80px">Konversi</th>		
-		<th field="nilai" align="center" halign="right" sortable="false" width="100px">Nilai(%)</th>		
+		<th field="kinerja_baik_nilai" halign="right" align="center" sortable="false" width="60px">Konversi</th>		
+		<th field="kinerja_baik_persen" align="center" halign="right" sortable="false" width="60px">Nilai(%)</th>		
 		<th field="data_andal" align="center" sortable="false" width="50px">Index</th>
-		<th field="data_andal_nilai" align="center" halign="right" sortable="false" width="80px">Konversi</th>		
-		<th field="nilai" align="center" halign="right" sortable="false" width="100px">Nilai(%)</th>		
+		<th field="data_andal_nilai" align="center" halign="right" sortable="false" width="60px">Konversi</th>		
+		<th field="data_andal_persen" align="center" halign="right" sortable="false" width="60px">Nilai(%)</th>		
 		
 	  </tr>
 	  </thead>  
