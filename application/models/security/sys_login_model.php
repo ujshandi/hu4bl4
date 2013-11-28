@@ -38,6 +38,11 @@ class Sys_login_model extends CI_Model{
 			}
 			$this->create_session($row['user_id'], $row['user_name'], (($row['user_name']=='superadmin')?'':$row['app_type']), $row['full_name'],true,$row['unit_kerja_e1'],$row['unit_kerja_e2'],$row['level'],$row['group_id'],$row['level_id']);
 			$query->free_result();
+			$data['user_id']=$row['user_id'];
+			$data['user_name']=$row['user_name'];
+			$data['unit_kerja_e1']=$row['unit_kerja_e1'];
+			$data['unit_kerja_e2']=$row['unit_kerja_e2'];
+			return $this->insertLoginLog($data);
 			return TRUE;
 			}else {
 				$query->free_result();
@@ -58,6 +63,27 @@ class Sys_login_model extends CI_Model{
 		$this->session->set_userdata('level',$level);		
 		$this->session->set_userdata('level_id',$level_id);		
 		$this->session->set_userdata('group_id',$group_id);		
+	}
+	
+	private function insertLoginLog($data){
+	
+		$data['ip'] = $this->input->ip_address();
+		$this->db->set('login_time',date('Y-m-d H:i:s'));
+		$this->db->set('ip',$data['ip']);
+		$this->db->set('user_info','id='.$data['user_id'].';name='.$data['user_name'].';e1='.$data['unit_kerja_e1'].';e2='.$data['unit_kerja_e2']);
+			
+		$result = $this->db->insert('login_log');
+		$errNo   = $this->db->_error_number();
+	    $errMess = $this->db->_error_message();
+		$error = $errMess;
+		//var_dump($errMess);die;
+	    log_message("error", "Problem Inserting to : ".$errMess." (".$errNo.")"); 
+		//return
+		if($result) {
+			return TRUE;
+		}else {
+			return FALSE;
+		}
 	}
 	
 	public function logout() {

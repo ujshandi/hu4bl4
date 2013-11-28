@@ -320,7 +320,7 @@ class Iku_e1_model extends CI_Model
 		
 	}
 	
-	public function getListIKU_E1($objectId="", $e1="",$tahun = "-1"){
+	public function getListIKU_E1($objectId="", $e1="",$tahun = "-1",$ul_id='drop'){
 		
 		$this->db->flush_cache();
 		$this->db->select('kode_iku_e1,deskripsi');
@@ -342,7 +342,7 @@ class Iku_e1_model extends CI_Model
 		
 		$out = '<div id="tcContainer"><input id="kode_iku_e1'.$objectId.'" name="kode_iku_e1" type="hidden" class="h_code" value="0">';
 		$out .= '<textarea name="txtkode_iku_e1'.$objectId.'" id="txtkode_iku_e1'.$objectId.'" class="textdown" required="true" readonly>-- Pilih --</textarea>';
-		$out .= '<ul id="drop'.$objectId.'" class="dropdown">';
+		$out .= '<ul id="'.$ul_id.$objectId.'" class="dropdown">';
 		$out .= '<li value="0"  onclick="setIku'.$objectId.'(\'\')">-- Pilih --</li>';
 		
 		foreach($que->result() as $r){
