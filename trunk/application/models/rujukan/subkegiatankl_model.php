@@ -27,12 +27,12 @@ class Subkegiatankl_model extends CI_Model
 		$offset = ($page-1)*$limit;  
 		$pdfdata = array();
 		if ($count>0){
-				if($file2 != '' && $file2 != '-1' && $file2 != null) {
+				/* if($file2 != '' && $file2 != '-1' && $file2 != null) {
 			$this->db->where("kl.kode_e2",$file2);
 		}
 		if($file1 != '' && $file1 != '-1' && $file1 != null) {
 			$this->db->where("e2.kode_e1",$file1);
-		}
+		} */
 			$this->db->order_by($sort." ".$order );
 			if($purpose==1){$this->db->limit($limit,$offset);}
 			$this->db->select('tbl_subkegiatan_kl.id_subkegiatan_kl, tbl_subkegiatan_kl.tahun, tbl_subkegiatan_kl.kode_subkegiatan, tbl_subkegiatan_kl.nama_subkegiatan, tbl_subkegiatan_kl.lokasi, tbl_subkegiatan_kl.volume, tbl_subkegiatan_kl.satuan, tbl_subkegiatan_kl.total, tbl_subkegiatan_kl.kode_kegiatan, tbl_subkegiatan_kl.kode_satker ');
@@ -131,12 +131,12 @@ class Subkegiatankl_model extends CI_Model
 	}
 	
 	public function GetRecordCount($file1=null,$file2=null){
-		if($file2 != '' && $file2 != '-1' && $file2 != null) {
+		/* if($file2 != '' && $file2 != '-1' && $file2 != null) {
 			$this->db->where("kl.kode_e2",$file2);
 		}
 		if($file1 != '' && $file1 != '-1' && $file1 != null) {
 			$this->db->where("e2.kode_e1",$file1);
-		}
+		} */
 		$this->db->flush_cache();
 		$this->db->select("*",false);
 		$this->db->from('tbl_subkegiatan_kl');
