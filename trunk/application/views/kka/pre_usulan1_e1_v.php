@@ -34,7 +34,7 @@
 							
 							// reload and close tab
 							$('#dg<?=$objectId;?>').datagrid('reload');
-							$('#tt').tabs('close', 'Add RKT Eselon I');
+							$('#tt').tabs('close', 'Add Pre Usulan 1 Eselon I');
 						} else {
 							$.messager.show({
 								title: 'Error',
@@ -52,7 +52,19 @@
 				var e1 = $("#kode_e1<?=$objectId;?>").val();
 				 setSasaranE1<?=$objectId;?>(e1,$(this).val());
 				setIkuE1<?=$objectId;?>(e1,$(this).val());
+				setKegiatanE1<?=$objectId;?>(e1,$(this).val());
 			});
+			
+			setKegiatanE1<?=$objectId?> = function(e1,tahun){
+				<? if ($this->session->userdata('unit_kerja_e1')!='-1') {?>
+				 e1 = '<?=$this->session->userdata('unit_kerja_e1');?>';
+				<?}?>
+				
+				tahun =  $('#tahun<?=$objectId;?>').val();
+				$("#tbodykegiatan<?=$objectId;?>").load(
+					base_url+"kka/pre_usulan1_e1/getKegiatan_e1/"+e1+"/"+tahun
+				);
+			}
 			
 			
 			setSasaranE1<?=$objectId;?> = function(e1, tahun){
@@ -277,10 +289,10 @@
 			var tahun = $('#tahun<?=$objectId;?>').val();
 			
 			if(tahun.length < 4){
-				$("#tbodyiku<?=$objectId;?>").html('<tr><td colspan="5">Isi Tahun dengan benar</td></tr>');
+				$("#tbodykegiatan<?=$objectId;?>").html('<tr><td colspan="5">Isi Tahun dengan benar</td></tr>');
 			}else{
 			//	setSasaranE1<?=$objectId;?>(kode_e1, tahun);
-				$("#tbodyiku<?=$objectId;?>").load(
+				$("#tbodykegiatan<?=$objectId;?>").load(
 					base_url+"kka/pre_usulan1_e1/getIKU_e1/"+kode_e1+"/"+tahun
 				);
 			} */
@@ -372,8 +384,8 @@
 			
 			<div class="easyui-layout" fit="true">  
 								
-				<div region="center" border="true" title="Tambah Data Rencana Kerja Tahunan (RKT) Eselon I">
-				<form id="fm<?=$objectId;?>" method="post" style="margin:10px 5px 5px 10px;">
+				<div region="center" border="true" title="Tambah Data Pre Usulan 1 Eselon I">
+				<form id="fm<?=$objectId;?>" method="post" style="margin:10px 5px 5px 10px;" onsubmit="return false">
 					<div class="fitem">
 						<label style="width:120px;vertical-align:top">Tahun :</label>
 						<input id="tahun<?=$objectId?>" name="tahun" class="easyui-validatebox" required="true" size="5" maxlength="4">
@@ -406,22 +418,23 @@
 						<br>
 						<table id="tbl<?=$objectId;?>" >
 							<thead>
-								<tr>
-									<th></th>
+								<tr>									
 									<th width="20px" bgcolor="#F4F4F4">No.</th>
-									<th width="100%" bgcolor="#F4F4F4">Indikator Kerja Utama</th>
-									<th bgcolor="#F4F4F4">Target</th>
-									<th bgcolor="#F4F4F4">Satuan</th>
+									<th bgcolor="#F4F4F4">#</th>
+									<th bgcolor="#F4F4F4" width="10%">Kode Kegiatan</th>
+									<th width="80%" bgcolor="#F4F4F4">Kegiatan</th>
+									<th bgcolor="#F4F4F4" align="right">Jumlah</th>
+									
 								</tr>
 							</thead>
-							<tbody id="tbodyiku<?=$objectId;?>">
+							<tbody id="tbodykegiatan<?=$objectId;?>">
 								
 							</tbody>
 						</table>
 						<br>
-						<a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="addRow<?=$objectId;?>('tbl<?=$objectId;?>')">Tambah IKU</a>
-						<a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="deleteRow<?=$objectId;?>('tbl<?=$objectId;?>')">Hapus IKU</a>
-						<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveData<?=$objectId;?>()">Simpan</a>
+						<!--<a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="addRow<?=$objectId;?>('tbl<?=$objectId;?>')">Tambah IKU</a>
+						<a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="deleteRow<?=$objectId;?>('tbl<?=$objectId;?>')">Hapus IKU</a> -->
+						<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveData<?=$objectId;?>()">Simpan</a> 
 					</div>
 				</form>
 				</div>
