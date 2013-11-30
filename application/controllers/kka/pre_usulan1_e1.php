@@ -33,7 +33,7 @@ class Pre_usulan1_e1 extends CI_Controller {
 	}
 	
 	public function add(){
-		$data['title'] = 'Add Rencana Kinerja Tahunan Eselon I';	
+		$data['title'] = 'Add Pre Usulan 1 Eselon I';	
 		$data['objectId'] = $this->objectId;
 		//$data['formLookupTarif'] = $this->tarif_model->lookup('#winLookTarif'.$data['objectId'],"#medrek_id".$data['objectId']);
 	  	$this->load->view('kka/pre_usulan1_e1_v',$data);
@@ -42,7 +42,7 @@ class Pre_usulan1_e1 extends CI_Controller {
 	public function edit($id, $editmode='true'){
 		$editmode = ($editmode=='true'?TRUE:FALSE);	
 		$data['editmode'] = $editmode;
-		$data['title'] = ($editmode==TRUE?'Edit':'View').' Rencana Kinerja Tahunan Eselon I';
+		$data['title'] = ($editmode==TRUE?'Edit':'View').' Pre Usulan 1 Eselon I';
 		$data['objectId'] = $this->objectId;
 		
 		$data['result'] = $this->pre_usulan1_e1_model->getDataEdit($id);
@@ -64,6 +64,7 @@ class Pre_usulan1_e1 extends CI_Controller {
 		else 
 			$dt['kode_e1'] = $this->session->userdata('unit_kerja_e1');
 		$dt['kode_sasaran_e1'] = $this->input->post("kode_sasaran_e1", TRUE); 
+		$dt['kode_iku_e1'] = $this->input->post("kode_iku_e1", TRUE); 
 		$dt['detail'] = $this->input->post("detail", TRUE); 
 		
 		return $dt;
@@ -98,6 +99,7 @@ class Pre_usulan1_e1 extends CI_Controller {
 		$this->form_validation->set_rules("tahun", 'Tahun', 'trim|required|numeric|exact_length[4]|xss_clean');
 		$this->form_validation->set_rules("kode_e1", 'Eselon 1', 'trim|required|xss_clean');
 		$this->form_validation->set_rules("kode_sasaran_e1", 'Sasaran Eselon 1', 'trim|required|xss_clean');
+		$this->form_validation->set_rules("kode_iku_e1", 'IKU Eselon 1', 'trim|required|xss_clean');
 		
 		# message rules
 		$this->form_validation->set_message('required', 'Field %s harus diisi.');
@@ -108,13 +110,23 @@ class Pre_usulan1_e1 extends CI_Controller {
 			$data['pesan_error'].=(trim(form_error('tahun',' ',' '))==''?'':form_error('tahun',' ','<br>'));
 			$data['pesan_error'].=(trim(form_error('kode_e1',' ',' '))==''?'':form_error('kode_e1',' ','<br>'));
 			$data['pesan_error'].=(trim(form_error('kode_sasaran_e1',' ',' '))==''?'':form_error('kode_sasaran_e1',' ','<br>'));
+			$data['pesan_error'].=(trim(form_error('kode_iku_e1',' ',' '))==''?'':form_error('kode_iku_e1',' ','<br>'));
 			
 		}else{
 			// validasi detail
-			if($this->check_detail($data, $pesan)){
-				$result = $this->pre_usulan1_e1_model->InsertOnDb($data);
-			}else{
-				$data['pesan_error'].= $pesan;
+			$result =false;
+			if ($data['kode_sasaran_e1']=='0') {
+				$data['pesan_error'].= 'Data Sasaran belum dipilih!';
+			} else if ($data['kode_iku_e1']=='0') {
+				$data['pesan_error'].= 'Data IKU belum dipilih!';
+			}
+			else {
+			
+				if($this->check_detail($data, $pesan)){
+					$result = $this->pre_usulan1_e1_model->InsertOnDb($data);
+				}else{
+					$data['pesan_error'].= $pesan;
+				}
 			}
 		}
 		
@@ -127,36 +139,45 @@ class Pre_usulan1_e1 extends CI_Controller {
 	
 	function check_detail($data, & $pesan){
 		$i=1;
+		//var_dump($data['detail']);die;
+		$terpilih = 0;
 		foreach($data['detail'] as $r){
-			if($r['kode_iku_e1'] == '0'){ // cek kode iku
-				$pesan = 'Kode IKU pada no. '.$i.' harus diisi.';
+			
+		    if(!isset($r['chk'])) continue;
+			$terpilih++;
+			if($r['kode_kegiatan'] == '0'){ // cek kode iku
+				$pesan = 'Kode Kegiatan pada no. '.$i.' harus diisi.';
 				return FALSE;
 			}
 			
-			if($r['target'] == ''){ // nilai target null
-				$pesan = 'Target pada no. '.$i.' harus diisi.';
+			if($r['jumlah'] == ''){ // nilai target null
+				$pesan = 'Jumlah pada no. '.$i.' harus diisi.';
 				return FALSE;
 			}
 			
-			// cek ke database
+		/* 	// cek ke database
 			if($this->pre_usulan1_e1_model->data_exist($data['tahun'], $data['kode_e1'], $data['kode_sasaran_e1'], $r['kode_iku_e1'])){ 
 				$pesan = 'Kode IKU pada no. '.$i.' sudah terdapat di dalam database.';
 				//$pesan = 'Kode IKU '.$r['kode_iku_kl'].' sudah terdapat di database';
 				return FALSE;
-			}
+			} */
 			
 			$i++;
 		}
+		 if ($terpilih==0) {
+			$pesan = 'Kegiatan belum ada yang dipilih!';
+			return false;
+		 }
 		
 		// cek kode iku di list (takut kalau ada yang sama ^-^)
-		for($x=0, $n=count($data['detail'])-1; $x<$n; $x++){
+		/* for($x=0, $n=count($data['detail'])-1; $x<$n; $x++){
 			for($y=$x+1; $y<=$n; $y++){
 				if($data['detail'][$x+1]['kode_iku_e1'] == $data['detail'][$y+1]['kode_iku_e1']){
 					$pesan = 'Kode IKU pada list tidak tidak boleh sama <br> Kode yang sama terdapat pada baris '.($x+1).' dan '.($y+1);
 					return FALSE;
 				}
 			}
-		}
+		} */
 		
 		return TRUE;
 	}
@@ -219,6 +240,12 @@ class Pre_usulan1_e1 extends CI_Controller {
 	function getIKU_e1($kode, $tahun=""){
 		if($kode != '0' && $tahun != ""){
 			echo $this->pre_usulan1_e1_model->getIKU_e1($this->objectId, $kode, $tahun);
+		}
+	}
+	
+	function getKegiatan_e1($kode, $tahun=""){
+		if($kode != '0' && $tahun != ""){
+			echo $this->pre_usulan1_e1_model->getKegiatan_e1($this->objectId, $kode, $tahun);
 		}
 	}
 	

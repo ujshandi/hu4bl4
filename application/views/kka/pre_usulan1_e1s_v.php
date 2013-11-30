@@ -2,7 +2,7 @@
 		$(function(){
 			var url;
 			newData<?=$objectId;?> = function (){  			
-				addTab("Add RKT Eselon I","kka/pre_usulan1_e1/add");
+				addTab("Add Pre Usulan 1 Eselon I","kka/pre_usulan1_e1/add");
 			}
 			//end newData 
 			
@@ -12,12 +12,12 @@
 				if (row){
 					if(editmode){
 						if(row.status == '0'){
-							addTab("Edit RKT Eselon I", "kka/pre_usulan1_e1/edit/"+row.id_rkt_e1);
+							addTab("Edit Pre Usulan 1 Eselon I", "kka/pre_usulan1_e1/edit/"+row.preusulan1_e1_id);
 						}else{
 							alert('Maaf data tidak bisa diedit, karena sudah ditetapkan di PK.');
 						}
 					}else{
-						addTab("View RKT Eselon I", "kka/pre_usulan1_e1/edit/"+row.id_rkt_e1+"/"+editmode);
+						addTab("View Pre Usulan 1 Eselon I", "kka/pre_usulan1_e1/edit/"+row.preusulan1_e1_id+"/"+editmode);
 					}
 					
 				}
@@ -30,7 +30,7 @@
 						if(confirm("Apakah yakin akan menghapus data '" + row.kode_iku_e1 + "'?")){
 							var response = '';
 							$.ajax({ type: "GET",
-									 url: base_url+'kka/pre_usulan1_e1/delete/' + row.id_rkt_e1,
+									 url: base_url+'kka/pre_usulan1_e1/delete/' + row.preusulan1_e1_id,
 									 async: false,
 									 success : function(response)
 									 {
@@ -194,6 +194,9 @@
 							break;
 						case "kode_e1":
 							showPopup('#popdesc<?=$objectId?>', row.nama_e1);
+							break;	
+						case "kode_kegiatan":
+							showPopup('#popdesc<?=$objectId?>', row.nama_kegiatan);
 							break;
 						default:
 							closePopup('#popdesc<?=$objectId?>');
@@ -283,16 +286,8 @@
 					<td>
 					<?=$this->sasaran_eselon1_model->getListFilterTahun($objectId)?>
 					</td>
-				</tr>
-				<tr>
-					<td>Unit Kerja Eselon I :&nbsp;</td>
+					<td width="10px"></td>
 					<td>
-						<?=$this->eselon1_model->getListFilterEselon1($objectId,$this->session->userdata('unit_kerja_e1'))?>
-					</td>
-				</tr>
-				<tr>
-					<td align="right" colspan="2" valign="top">
-						<a href="#" class="easyui-linkbutton" onclick="clearFilter<?=$objectId;?>();" iconCls="icon-reset">Reset</a>
 						<a href="#" class="easyui-linkbutton" onclick="searchData<?=$objectId;?>();" iconCls="icon-search">Search</a>
 					</td>
 				</tr>
@@ -324,17 +319,18 @@
 	<table id="dg<?=$objectId;?>" class="easyui-datagrid" style="height:auto;width:auto" title="Data Pre Usulan 1 Eselon I" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true">
 	  <thead>
 	  <tr>
-		<th field="id_rkt_e1" sortable="true" hidden="true" width="50px">id_rkt_e1</th>
+		<th field="preusulan1_e1_id" sortable="true" hidden="true" width="50px">preusulan1_e1_id</th>
 		<th field="tahun" sortable="true" width="50px">Tahun</th>
 		<th field="kode_e1" sortable="true" width="50px"<?=($this->session->userdata('unit_kerja_e1')=='-1'?'':'hidden="true"')?>>Kode Unit Kerja</th>
 		<th field="nama_e1" hidden="true">nama e1</th>
 		<th field="kode_sasaran_e1" sortable="true" width="50px">Kode Sasaran</th>
 		<th field="deskripsi_sasaran_e1" hidden="true">deskripsi_sasaran_e1</th>
 		<th field="kode_iku" sortable="true" width="50px">Kode IKU</th>
+		<th field="kode_kegiatan" sortable="true" width="50px">Kode Kegiatan</th>
 		<th field="deskripsi_iku_e1" hidden="true">deskripsi_iku_e1</th>
-		<th field="target" sortable="true" width="50px" align="right" formatter="formatPrice">Target</th>
-		<th field="satuan" sortable="true" width="50px">Satuan</th>
-		<th field="status" hidden="true">Status</th>
+		<th field="nama_kegiatan" hidden="true">nama_kegiatan</th>
+		<th field="jumlah" sortable="true" width="50px" align="right" formatter="formatPrice">Jumlah</th>
+		
 		
 	  </tr>
 	  </thead>  
