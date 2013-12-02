@@ -421,8 +421,8 @@
 								<tr>									
 									<th width="20px" bgcolor="#F4F4F4">No.</th>
 									<th bgcolor="#F4F4F4">#</th>
-									<th bgcolor="#F4F4F4" width="10%">Kode Kegiatan</th>
-									<th width="80%" bgcolor="#F4F4F4">Kegiatan</th>
+									<th bgcolor="#F4F4F4" width="10%">Kode</th>
+									<th width="80%" bgcolor="#F4F4F4">Kegiatan / Sub Kegiatan</th>
 									<th bgcolor="#F4F4F4" align="right">Jumlah</th>
 									
 								</tr>
