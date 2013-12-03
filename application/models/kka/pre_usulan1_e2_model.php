@@ -37,12 +37,12 @@ class Pre_usulan1_e2_model extends CI_Model
 			}
 			$this->db->order_by($sort." ".$order );
 			if($purpose==1){$this->db->limit($limit,$offset);}
-			$this->db->select('a.preusulan1_e1_id, a.tahun, a.kode_ikk, a.kode_sasaran_e2 as rkt_kode_sasaran_e2, a.kode_sasaran_e2 AS kode_sasaran_e22, b.deskripsi, a.jumlah,k.kode_kegiatan,k.nama_kegiatan');
+			$this->db->select('a.preusulan1_e1_id, a.tahun, a.kode_ikk, a.kode_e2 as rkt_kode_e2, a.kode_sasaran_e2 AS kode_sasaran_e2, b.deskripsi, a.jumlah,k.kode_kegiatan,k.nama_kegiatan');
 			$this->db->select("c.deskripsi as deskripsi_sasaran_e1, b.deskripsi AS deskripsi_iku_e1, d.nama_e2");
 			$this->db->from('tbl_pre_usulan1_e2 a');
 			$this->db->join('tbl_ikk b', 'b.kode_ikk = a.kode_ikk and b.tahun = a.tahun');
 			$this->db->join('tbl_sasaran_eselon2 c', 'c.kode_sasaran_e2 = a.kode_sasaran_e2 and c.tahun = a.tahun');
-			$this->db->join('tbl_eselon2 d', 'd.kode_sasaran_e2 = a.kode_sasaran_e2');
+			$this->db->join('tbl_eselon2 d', 'd.kode_e2 = a.kode_e2');
 			$this->db->join('tbl_kegiatan_kl k', 'k.kode_kegiatan = a.kode_kegiatan');
 			$this->db->order_by("a.tahun DESC, a.kode_sasaran_e2 ASC, a.kode_ikk ASC");
 			$query = $this->db->get();
@@ -55,9 +55,9 @@ class Pre_usulan1_e2_model extends CI_Model
 				$response->rows[$i]['no']= $no;
 				$response->rows[$i]['preusulan1_e1_id']=$row->preusulan1_e1_id;
 				$response->rows[$i]['tahun']=$row->tahun;
-				$response->rows[$i]['kode_sasaran_e2']=$row->rkt_kode_sasaran_e2;
+				$response->rows[$i]['kode_e2']=$row->rkt_kode_e2;
 				$response->rows[$i]['nama_e2']=$row->nama_e2;
-				$response->rows[$i]['kode_sasaran_e2']=$row->kode_sasaran_e22;
+				$response->rows[$i]['kode_sasaran_e2']=$row->kode_sasaran_e2;
 				$response->rows[$i]['deskripsi_sasaran_e1']=$row->deskripsi_sasaran_e1;
 				$response->rows[$i]['deskripsi']=$row->deskripsi;
 				$response->rows[$i]['kode_iku']=$row->kode_ikk;
@@ -143,7 +143,7 @@ class Pre_usulan1_e2_model extends CI_Model
 		$this->db->from('tbl_pre_usulan1_e2 a');
 		$this->db->join('tbl_ikk b', 'b.kode_ikk = a.kode_ikk and b.tahun = a.tahun');
 		$this->db->join('tbl_sasaran_eselon2 c', 'c.kode_sasaran_e2 = a.kode_sasaran_e2');
-		$this->db->join('tbl_eselon2 d', 'd.kode_sasaran_e2 = a.kode_sasaran_e2');
+		$this->db->join('tbl_eselon2 d', 'd.kode_e2 = a.kode_e2');
 		$this->db->order_by("a.tahun DESC, a.kode_sasaran_e2 ASC, a.kode_ikk ASC");
 			
 		return $this->db->count_all_results();
@@ -304,7 +304,7 @@ class Pre_usulan1_e2_model extends CI_Model
 		$this->db->select('*');
 		$this->db->from('tbl_kegiatan_kl');
 		$this->db->order_by('id_kegiatan_kl');
-		$this->db->where('kode_e2 in (select kode_e2 from tbl_eselon2 where kode_sasaran_e2 = '.$kode.')',null,false);
+		$this->db->where('kode_e2 in (select kode_e2 from tbl_eselon2 where kode_e2 = '.$kode.')',null,false);
 		//if($e2!=''){$this->db->where('kode_e2',$e2);}
 		$que = $this->db->get();
 		$i=0;

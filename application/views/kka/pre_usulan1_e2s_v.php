@@ -2,7 +2,7 @@
 		$(function(){
 			var url;
 			newData<?=$objectId;?> = function (){  			
-				addTab("Add Pre Usulan 1 Eselon I","kka/pre_usulan1_e1/add");
+				addTab("Add Pra Monev Eselon II Pagu Usulan","kka/pre_usulan1_e2/add");
 			}
 			//end newData 
 			
@@ -12,12 +12,12 @@
 				if (row){
 					if(editmode){
 						if(row.status == '0'){
-							addTab("Edit Pre Usulan 1 Eselon I", "kka/pre_usulan1_e1/edit/"+row.preusulan1_e1_id);
+							addTab("Edit Pra Monev Eselon II Pagu Usulan", "kka/pre_usulan1_e2/edit/"+row.preusulan1_e2_id);
 						}else{
 							alert('Maaf data tidak bisa diedit, karena sudah ditetapkan di PK.');
 						}
 					}else{
-						addTab("View Pre Usulan 1 Eselon I", "kka/pre_usulan1_e1/edit/"+row.preusulan1_e1_id+"/"+editmode);
+						addTab("View Pra Monev Eselon II Pagu Usulan", "kka/pre_usulan1_e2/edit/"+row.preusulan1_e2_id+"/"+editmode);
 					}
 					
 				}
@@ -27,10 +27,10 @@
 				<? if ($this->session->userdata('unit_kerja_e1')=='-1'){?>				
 					var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
 					if(row){
-						if(confirm("Apakah yakin akan menghapus data '" + row.kode_iku_e1 + "'?")){
+						if(confirm("Apakah yakin akan menghapus data '" + row.kode_ikk_e1 + "'?")){
 							var response = '';
 							$.ajax({ type: "GET",
-									 url: base_url+'kka/pre_usulan1_e1/delete/' + row.preusulan1_e1_id,
+									 url: base_url+'kka/pre_usulan1_e2/delete/' + row.preusulan1_e2_id,
 									 async: false,
 									 success : function(response)
 									 {
@@ -77,12 +77,12 @@
 				if (file1 == null) file1 = "-1";
 			
 				if (tipe==1){
-					return "<?=base_url()?>kka/pre_usulan1_e1/grid/"+filtahun+"/"+file1;
+					return "<?=base_url()?>kka/pre_usulan1_e2/grid/"+filtahun+"/"+file1;
 				}
 				else if (tipe==2){
-					return "<?=base_url()?>kka/pre_usulan1_e1/pdf/"+filtahun+"/"+file1;
+					return "<?=base_url()?>kka/pre_usulan1_e2/pdf/"+filtahun+"/"+file1;
 				}else if (tipe==3){
-					return "<?=base_url()?>kka/pre_usulan1_e1/excel/"+filtahun+"/"+file1;
+					return "<?=base_url()?>kka/pre_usulan1_e2/excel/"+filtahun+"/"+file1;
 				}
 			}
 			
@@ -175,7 +175,7 @@
 			
 			setTimeout(function(){
 				searchData<?=$objectId;?> ();
-				//$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>kka/pre_usulan1_e1/grid"});
+				//$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>kka/pre_usulan1_e2/grid"});
 			},50);
 			
 			
@@ -186,11 +186,11 @@
 					var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
 					
 					switch(field){
-						case "kode_sasaran_e1":
+						case "kode_sasaran_e2":
 							showPopup('#popdesc<?=$objectId?>', row.deskripsi_sasaran_e1);
 							break;
-						case "kode_iku":
-							showPopup('#popdesc<?=$objectId?>', row.deskripsi_iku_e1);
+						case "kode_ikk":
+							showPopup('#popdesc<?=$objectId?>', row.deskripsi_ikk);
 							break;
 						case "kode_e1":
 							showPopup('#popdesc<?=$objectId?>', row.nama_e1);
@@ -284,7 +284,7 @@
 				<tr>
 					<td>Tahun :</td>
 					<td>
-					<?=$this->sasaran_eselon1_model->getListFilterTahun($objectId)?>
+					<?=$this->sasaran_eselon2_model->getListFilterTahun($objectId)?>
 					</td>
 					<td width="10px"></td>
 					<td>
@@ -316,18 +316,18 @@
 	  </div>
 	</div>
 	
-	<table id="dg<?=$objectId;?>" class="easyui-datagrid" style="height:auto;width:auto" title="Data Pre Usulan 1 Eselon I" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true">
+	<table id="dg<?=$objectId;?>" class="easyui-datagrid" style="height:auto;width:auto" title="Data Pra Monev Pagu Usulan  Eselon II" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true">
 	  <thead>
 	  <tr>
-		<th field="preusulan1_e1_id" sortable="true" hidden="true" width="50px">preusulan1_e1_id</th>
+		<th field="preusulan1_e2_id" sortable="true" hidden="true" width="50px">preusulan1_e2_id</th>
 		<th field="tahun" sortable="true" width="50px">Tahun</th>
 		<th field="kode_e1" sortable="true" width="50px"<?=($this->session->userdata('unit_kerja_e1')=='-1'?'':'hidden="true"')?>>Kode Unit Kerja</th>
 		<th field="nama_e1" hidden="true">nama e1</th>
-		<th field="kode_sasaran_e1" sortable="true" width="50px">Kode Sasaran</th>
+		<th field="kode_sasaran_e2" sortable="true" width="50px">Kode Sasaran</th>
 		<th field="deskripsi_sasaran_e1" hidden="true">deskripsi_sasaran_e1</th>
-		<th field="kode_iku" sortable="true" width="50px">Kode IKU</th>
+		<th field="kode_ikk" sortable="true" width="50px">Kode IKK</th>
 		<th field="kode_kegiatan" sortable="true" width="50px">Kode Kegiatan</th>
-		<th field="deskripsi_iku_e1" hidden="true">deskripsi_iku_e1</th>
+		<th field="deskripsi_ikk" hidden="true">deskripsi_ikk</th>
 		<th field="nama_kegiatan" hidden="true">nama_kegiatan</th>
 		<th field="jumlah" sortable="true" width="50px" align="right" formatter="formatPrice">Jumlah</th>
 		
