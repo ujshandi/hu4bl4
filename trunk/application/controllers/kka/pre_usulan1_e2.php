@@ -19,6 +19,7 @@ class Pre_usulan1_e2 extends CI_Controller {
 		$this->load->model('/kka/pre_usulan1_e2_model');
 		
 		$this->load->model('/rujukan/eselon1_model');
+		$this->load->model('/rujukan/eselon2_model');
 		$this->load->model('/pengaturan/sasaran_eselon2_model');
 		$this->load->model('/pengaturan/ikk_model');
 		$this->load->library("utility");
@@ -26,14 +27,14 @@ class Pre_usulan1_e2 extends CI_Controller {
 	}
 	
 	function index(){
-		$data['title'] = 'Rencana Kinerja Tahunan Eselon II';	
+		$data['title'] = 'Data Pra Monev Eselon II Pagu Usulan';	
 		$data['objectId'] = $this->objectId;
 		//$data['formLookupTarif'] = $this->tarif_model->lookup('#winLookTarif'.$data['objectId'],"#medrek_id".$data['objectId']);
 	  	$this->load->view('kka/pre_usulan1_e2s_v',$data);
 	}
 	
 	public function add(){
-		$data['title'] = 'Add Data Pra Monev Eselon II Pagu Usulan;	
+		$data['title'] = 'Add Data Pra Monev Eselon II Pagu Usulan';	
 		$data['objectId'] = $this->objectId;
 		//$data['formLookupTarif'] = $this->tarif_model->lookup('#winLookTarif'.$data['objectId'],"#medrek_id".$data['objectId']);
 	  	$this->load->view('kka/pre_usulan1_e2_v',$data);
@@ -74,8 +75,8 @@ class Pre_usulan1_e2 extends CI_Controller {
 	function getListSasaranE1($objectId,$kode="",$tahun=""){
 		$data['tahun'] = $tahun;
 		$data['kode'] = $kode;
-		$data['deskripsi'] = ($kode=='')?'':$this->sasaran_eselon2_model->getDeskripsiSasaranE1($kode, $tahun);
-		echo $this->sasaran_eselon2_model->getListSasaranE1($objectId, $kode, $data);
+		$data['deskripsi'] = ($kode=='')?'':$this->sasaran_eselon2_model->getDeskripsiSasaranE2($kode, $tahun);
+		echo $this->sasaran_eselon2_model->getListSasaranE2($objectId, $kode, $data);
 	}
 	
 	//chan
