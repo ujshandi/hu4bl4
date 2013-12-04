@@ -14,12 +14,12 @@ class Subkegiatankl_model extends CI_Model
 		//$this->CI =& get_instance();
     }
 	
-	public function easyGrid($file1=null, $file2=null,$purpose=1){
+	public function easyGrid($file1=null, $file2=null,$filtahun=null,$purpose=1){
 		$lastNo = isset($_POST['lastNo']) ? intval($_POST['lastNo']) : 0;  
 		$page = isset($_POST['page']) ? intval($_POST['page']) : 1;  
 		$limit = isset($_POST['rows']) ? intval($_POST['rows']) : 10;  
 		
-		$count = $this->GetRecordCount($file1,$file2);
+		$count = $this->GetRecordCount($file1,$file2,$filtahun);
 		$response = new stdClass();
 		$response->total = $count;
 		$sort = isset($_POST['sort']) ? strval($_POST['sort']) : 'tahun';  
@@ -27,18 +27,22 @@ class Subkegiatankl_model extends CI_Model
 		$offset = ($page-1)*$limit;  
 		$pdfdata = array();
 		if ($count>0){
-				/* if($file2 != '' && $file2 != '-1' && $file2 != null) {
-			$this->db->where("kl.kode_e2",$file2);
+				if($file2 != '' && $file2 != '-1' && $file2 != null) {
+			$this->db->where("tbl_kegiatan_kl.kode_e2",$file2);
 		}
-		if($file1 != '' && $file1 != '-1' && $file1 != null) {
+		/* if($file1 != '' && $file1 != '-1' && $file1 != null) {
 			$this->db->where("e2.kode_e1",$file1);
-		} */
+		}  */
+		
+		if($filtahun != '' && $filtahun != '-1' && $filtahun != null) {
+				$this->db->where("tbl_subkegiatan_kl.tahun",$filtahun);
+			}
 			$this->db->order_by($sort." ".$order );
 			if($purpose==1){$this->db->limit($limit,$offset);}
 			$this->db->select('tbl_subkegiatan_kl.id_subkegiatan_kl, tbl_subkegiatan_kl.tahun, tbl_subkegiatan_kl.kode_subkegiatan, tbl_subkegiatan_kl.nama_subkegiatan, tbl_subkegiatan_kl.lokasi, tbl_subkegiatan_kl.volume, tbl_subkegiatan_kl.satuan, tbl_subkegiatan_kl.total, tbl_subkegiatan_kl.kode_kegiatan, tbl_subkegiatan_kl.kode_satker ');
-			$this->db->from('tbl_subkegiatan_kl');
+			//$this->db->from('tbl_subkegiatan_kl');
+			$this->db->from('tbl_subkegiatan_kl left join tbl_kegiatan_kl on tbl_subkegiatan_kl.kode_kegiatan =tbl_kegiatan_kl.kode_kegiatan and tbl_subkegiatan_kl.tahun=tbl_kegiatan_kl.tahun',false);
 			$this->db->order_by("tbl_subkegiatan_kl.tahun DESC, tbl_subkegiatan_kl.kode_satker ASC, tbl_subkegiatan_kl.kode_kegiatan ASC, tbl_subkegiatan_kl.kode_subkegiatan ASC");
-			//$this->db->from('tbl_subkegiatan_kl sbkl left join tbl_kegiatan_kl on sbkl.kode_kegiatan = kl.kode_kegiatan',false);
 			//$this->db->join('tbl_kegiatan','tbl_kegiatan.kode_kegiatan = tbl_subkegiatan_kl.kode_kegiatan');
 			
 			
@@ -130,21 +134,47 @@ class Subkegiatankl_model extends CI_Model
 		}
 	}
 	
-	public function GetRecordCount($file1=null,$file2=null){
-		/* if($file2 != '' && $file2 != '-1' && $file2 != null) {
-			$this->db->where("kl.kode_e2",$file2);
+	public function GetRecordCount($file1=null,$file2=null,$filtahun){
+		 if($file2 != '' && $file2 != '-1' && $file2 != null) {
+			$this->db->where("kkl.kode_e2",$file2);
 		}
-		if($file1 != '' && $file1 != '-1' && $file1 != null) {
+		/* if($file1 != '' && $file1 != '-1' && $file1 != null) {
 			$this->db->where("e2.kode_e1",$file1);
-		} */
+		}  */
+		
+		if($filtahun != '' && $filtahun != '-1' && $filtahun != null) {
+				$this->db->where("sbkl.tahun",$filtahun);
+			}
 		$this->db->flush_cache();
 		$this->db->select("*",false);
-		$this->db->from('tbl_subkegiatan_kl');
-		//$this->db->from('tbl_subkegiatan_kl sbkl left join tbl_kegiatan_kl on sbkl.kode_kegiatan = kl.kode_kegiatan',false);
+		//$this->db->from('tbl_subkegiatan_kl');
+		$this->db->from('tbl_subkegiatan_kl sbkl left join tbl_kegiatan_kl kkl on sbkl.kode_kegiatan = kkl.kode_kegiatan  and sbkl.tahun=kkl.tahun',false);
 		//$this->db->join('tbl_kegiatan','tbl_kegiatan.kode_kegiatan = tbl_subkegiatan_kl.kode_kegiatan');
 		
 		return $this->db->count_all_results();
 		$this->db->free_result();
+	}
+	
+	public function getListTahun($objectId,$name="filter_tahun",$required="false",$withAll=true){
+		
+		$this->db->flush_cache();
+		$this->db->select('distinct tahun',false);
+		$this->db->from('tbl_subkegiatan_kl');
+		
+		$this->db->order_by('tahun');
+		
+		$que = $this->db->get();
+		
+		$out = '<select name="'.$name.$objectId.'" id="'.$name.$objectId.'"  class="easyui-validatebox" required="'.$required.'">';
+		if ($withAll)
+		$out .= '<option value="-1">Semua</option>';
+		foreach($que->result() as $r){
+			$out .= '<option value="'.$r->tahun.'">'.$r->tahun.'</option>';
+		}
+		
+		$out .= '</select>';
+		
+		echo $out;
 	}
 	
 	public function GetKodeE1($kode_program){

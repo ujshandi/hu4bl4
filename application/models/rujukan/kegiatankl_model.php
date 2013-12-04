@@ -261,6 +261,8 @@ class Kegiatankl_model extends CI_Model
 		$this->db->from('tbl_kegiatan_kl');
 		$this->db->order_by('id_kegiatan_kl');
 		if($e2!=''){$this->db->where('kode_e2',$e2);}
+		$tahun= (isset($data['tahun']))||($data['tahun']=='')?$data['tahun']:'0';
+		if($tahun!=''){$this->db->where('tahun',$tahun);}
 		$que = $this->db->get();
 		
 		$e2 = ($e2=='')?'-1':$e2;

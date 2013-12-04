@@ -215,27 +215,26 @@
 	<table border="0" cellpadding="1" cellspacing="1" width="100%">
 		<tr>
 			<td>
-			<div class="fsearch" <?=($this->session->userdata('unit_kerja_e1')=='-1'?'':'style="display:none"')?>>
+			<div class="fsearch" >
 				<table border="0" cellpadding="1" cellspacing="1">
 				<tr>
 					<td>Tahun :</td>
 					<td><span id="divTahun<?=$objectId;?>"></span></td>
 				</tr>	
-					<? if (($this->session->userdata('unit_kerja_e1')==-1)||($this->session->userdata('unit_kerja_e1')!=null)){?>
-			<tr>
-				<td>Unit Kerja Eselon I&nbsp</td>
+				<tr>
+				<td>Unit Kerja Eselon I&nbsp;</td>
 				<td>
 					<?=$this->eselon1_model->getListFilterEselon1($objectId,$this->session->userdata('unit_kerja_e1'))?>				
 				</td>
 			</tr>
-			<?}?>
+			
 			<tr>
 				<td>Unit Kerja Eselon II&nbsp</td>
 				<td><span class="fitem" id="divUnitKerja<?=$objectId;?>">
-					<?=$this->eselon2_model->getListFilterEselon2($objectId,$this->session->userdata('unit_kerja_e2'),$this->session->userdata('unit_kerja_e1'))?>
+					<?=$this->eselon2_model->getListFilterEselon2($objectId,$this->session->userdata('unit_kerja_e1'),$this->session->userdata('unit_kerja_e2'))?>
 					</span>
 				</td>
-			</tr>
+			</tr>	
 				<tr>
 					<td align="right" colspan="2" valign="top">
 						<a href="#" class="easyui-linkbutton" onclick="clearFilter<?=$objectId;?>();" iconCls="icon-reset">Reset</a>
