@@ -60,11 +60,11 @@ class Pre_usulan1_e2 extends CI_Controller {
 	
 	private function get_form_values() {
 		$dt['tahun'] = $this->input->post("tahun", TRUE); 
-		if ($this->session->userdata('unit_kerja_e1')=='-1')
-			$dt['kode_e1'] = $this->input->post("kode_e1", TRUE); //id
+		if ($this->session->userdata('unit_kerja_e2')=='-1')
+			$dt['kode_e2'] = $this->input->post("kode_e2", TRUE); //id
 		else 
-			$dt['kode_e1'] = $this->session->userdata('unit_kerja_e1');
-		$dt['kode_sasaran_e1'] = $this->input->post("kode_sasaran_e1", TRUE); 
+			$dt['kode_e2'] = $this->session->userdata('unit_kerja_e2');
+		$dt['kode_sasaran_e2'] = $this->input->post("kode_sasaran_e2", TRUE); 
 		$dt['kode_ikk'] = $this->input->post("kode_ikk", TRUE); 
 		$dt['detail'] = $this->input->post("detail", TRUE); 
 		
@@ -147,7 +147,9 @@ class Pre_usulan1_e2 extends CI_Controller {
 		$terpilih = 0;
 		foreach($data['detail'] as $r){
 			
-		    if((!isset($r['chk']))||(!isset($r['chksub']))) continue;
+		    if(!isset($r['chk'])){
+				if (!isset($r['chksub'])) continue;
+			}
 			$terpilih++;
 			if (isset($r['chk'])){
 				if($r['kode_kegiatan'] == '0'){ // cek kode iku
