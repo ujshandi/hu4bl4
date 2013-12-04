@@ -15,12 +15,12 @@ class Pre_usulan1_e2_model extends CI_Model
     }
 	
 	// purpose : 1=buat grid, 2=buat pdf, 3=buat excel
-	public function easyGrid($filtahun=null,$file1=null,$purpose=1){
+	public function easyGrid($filtahun=null,$file2=null,$purpose=1){
 		$lastNo = isset($_POST['lastNo']) ? intval($_POST['lastNo']) : 0;  
 		$page = isset($_POST['page']) ? intval($_POST['page']) : 1;  
 		$limit = isset($_POST['rows']) ? intval($_POST['rows']) : 10;  
 		
-		$count = $this->GetRecordCount($filtahun,$file1);
+		$count = $this->GetRecordCount($filtahun,$file2);
 		$response = new stdClass();
 		$response->total = $count;
 		$sort = isset($_POST['sort']) ? strval($_POST['sort']) : 'a.tahun';  
@@ -32,18 +32,19 @@ class Pre_usulan1_e2_model extends CI_Model
 			if($filtahun != '' && $filtahun != '-1' && $filtahun != null) {
 				$this->db->where("a.tahun",$filtahun);
 			}	
-			if($file1 != '' && $file1 != '-1' && $file1 != null) {
-				$this->db->where("a.kode_sasaran_e2",$file1);
-			}
+		/* 	if($file2 != '' && $file2 != '-1' && $file2 != null) {
+				$this->db->where("a.kode_e2",$file2);
+			} */
 			$this->db->order_by($sort." ".$order );
 			if($purpose==1){$this->db->limit($limit,$offset);}
-			$this->db->select('a.preusulan1_e1_id, a.tahun, a.kode_ikk, a.kode_e2 as rkt_kode_e2, a.kode_sasaran_e2 AS kode_sasaran_e2, b.deskripsi, a.jumlah,k.kode_kegiatan,k.nama_kegiatan');
+			$this->db->select('a.preusulan1_e2_id, a.tahun, a.kode_ikk, a.kode_e2 as rkt_kode_e2, a.kode_sasaran_e2 AS kode_sasaran_e2, b.deskripsi, a.jumlah,k.kode_kegiatan,k.nama_kegiatan,subkl.kode_subkegiatan, subkl.nama_subkegiatan');
 			$this->db->select("c.deskripsi as deskripsi_sasaran_e1, b.deskripsi AS deskripsi_iku_e1, d.nama_e2");
 			$this->db->from('tbl_pre_usulan1_e2 a');
 			$this->db->join('tbl_ikk b', 'b.kode_ikk = a.kode_ikk and b.tahun = a.tahun');
 			$this->db->join('tbl_sasaran_eselon2 c', 'c.kode_sasaran_e2 = a.kode_sasaran_e2 and c.tahun = a.tahun');
 			$this->db->join('tbl_eselon2 d', 'd.kode_e2 = a.kode_e2');
-			$this->db->join('tbl_kegiatan_kl k', 'k.kode_kegiatan = a.kode_kegiatan');
+			$this->db->join('tbl_subkegiatan_kl subkl', 'subkl.kode_subkegiatan = a.kode_subkegiatan','left');
+			$this->db->join('tbl_kegiatan_kl k', 'k.kode_kegiatan = a.kode_kegiatan','left');
 			$this->db->order_by("a.tahun DESC, a.kode_sasaran_e2 ASC, a.kode_ikk ASC");
 			$query = $this->db->get();
 			
@@ -53,17 +54,19 @@ class Pre_usulan1_e2_model extends CI_Model
 			{
 				$no++;
 				$response->rows[$i]['no']= $no;
-				$response->rows[$i]['preusulan1_e1_id']=$row->preusulan1_e1_id;
+				$response->rows[$i]['preusulan1_e2_id']=$row->preusulan1_e2_id;
 				$response->rows[$i]['tahun']=$row->tahun;
 				$response->rows[$i]['kode_e2']=$row->rkt_kode_e2;
 				$response->rows[$i]['nama_e2']=$row->nama_e2;
 				$response->rows[$i]['kode_sasaran_e2']=$row->kode_sasaran_e2;
 				$response->rows[$i]['deskripsi_sasaran_e1']=$row->deskripsi_sasaran_e1;
 				$response->rows[$i]['deskripsi']=$row->deskripsi;
-				$response->rows[$i]['kode_iku']=$row->kode_ikk;
-				$response->rows[$i]['deskripsi_iku_e1']=$row->deskripsi_iku_e1;
+				$response->rows[$i]['kode_ikk']=$row->kode_ikk;
+				$response->rows[$i]['deskripsi_ikk']=$row->deskripsi;
 				$response->rows[$i]['kode_kegiatan']=$row->kode_kegiatan;
+				$response->rows[$i]['kode_subkegiatan']=$row->kode_subkegiatan;
 				$response->rows[$i]['nama_kegiatan']=$row->nama_kegiatan;
+				$response->rows[$i]['nama_subkegiatan']=$row->nama_subkegiatan;
 /*
 				if(is_numeric($row->jumlah)){
 					if(strpos($row->jumlah, '.') || strpos($row->jumlah, ',')){
@@ -80,20 +83,19 @@ class Pre_usulan1_e2_model extends CI_Model
 				//$response->rows[$i]['status']= $row->status;
 				
 				//utk kepentingan export excel ==========================
-				// $row->keterangan = str_replace("<br>",", ",$response->rows[$i]['pejabat']);
-				// $row->indikator_kinerja=$response->rows[$i]['indikator_kinerja'];
-				if($file1 == '-1'){unset($row->rkt_kode_sasaran_e2);}
-				unset($row->preusulan1_e1_id);
+				
+				//if($file1 == '-1'){unset($row->rkt_kode_sasaran_e2);}
+				unset($row->preusulan1_e2_id);
 				unset($row->tahun);
 				//unset($row->status);
 				unset($row->kode_ikk);
 				//============================================================
 					
 				//utk kepentingan export pdf===================
-				if($file1 != '' && $file1 != '-1' && $file1 != null)
+				/* if($file1 != '' && $file1 != '-1' && $file1 != null)
 					$pdfdata[] = array($no,$response->rows[$i]['kode_sasaran_e2'],$response->rows[$i]['deskripsi'],$response->rows[$i]['jumlah']);
 				else
-					$pdfdata[] = array($no,$response->rows[$i]['kode_sasaran_e2'],$response->rows[$i]['kode_sasaran_e2'],$response->rows[$i]['deskripsi'],$response->rows[$i]['jumlah']);
+					$pdfdata[] = array($no,$response->rows[$i]['kode_sasaran_e2'],$response->rows[$i]['kode_sasaran_e2'],$response->rows[$i]['deskripsi'],$response->rows[$i]['jumlah']); */
 				//============================================================
 				$i++;
 			} 
@@ -124,22 +126,22 @@ class Pre_usulan1_e2_model extends CI_Model
 		}
 		else if($purpose==3){//to excel
 			//tambahkan header kolom
-			if($file1 != '' && $file1 != '-1' && $file1 != null)
+			/* if($file1 != '' && $file1 != '-1' && $file1 != null)
 				$colHeaders = array("Kode Sasaran","Indikator Kinerja Utama","jumlah");
 			else
 				$colHeaders = array("Kode Eselon I","Kode Sasaran","Indikator Kinerja Utama","jumlah");	
 			//	var_dump($query->result());die;
-			to_excel($query,"SasaranEselon1",$colHeaders);
+			to_excel($query,"SasaranEselon1",$colHeaders); */
 		}
 	}
 	
-	public function GetRecordCount($filtahun=null,$file1){
+	public function GetRecordCount($filtahun=null,$file2){
 		if($filtahun != '' && $filtahun != '-1' && $filtahun != null) {
 			$this->db->where("a.tahun",$filtahun);
 		}	
-		if($file1 != '' && $file1 != '-1' && $file1 != null) {
-			$this->db->where("a.kode_sasaran_e2",$file1);
-		}		
+		/* if($file2 != '' && $file2 != '-1' && $file2 != null) {
+			$this->db->where("a.kode_e2",$file2);
+		} */		
 		$this->db->from('tbl_pre_usulan1_e2 a');
 		$this->db->join('tbl_ikk b', 'b.kode_ikk = a.kode_ikk and b.tahun = a.tahun');
 		$this->db->join('tbl_sasaran_eselon2 c', 'c.kode_sasaran_e2 = a.kode_sasaran_e2');
@@ -157,7 +159,7 @@ class Pre_usulan1_e2_model extends CI_Model
 		$this->db->join('tbl_sasaran_eselon2 b', 'b.kode_sasaran_e2 = a.kode_sasaran_e2');
 		$this->db->join('tbl_ikk c', 'c.kode_ikk = a.kode_ikk and c.tahun = a.tahun');
 		$this->db->join('tbl_eselon2 d', 'd.kode_sasaran_e2 = a.kode_sasaran_e2');
-		$this->db->where('a.preusulan1_e1_id', $id);
+		$this->db->where('a.preusulan1_e2_id', $id);
 		
 		return $this->db->get()->row();
 	}
@@ -166,13 +168,15 @@ class Pre_usulan1_e2_model extends CI_Model
 		$this->db->trans_start();
 		
 		foreach($data['detail'] as $dt){
-			 if(!isset($dt['chk'])) continue;
+			 if(!isset($dt['chk'])){
+				if (!isset($dt['chksub'])) continue;
+			}
 			$this->db->set('tahun',				$data['tahun']);
 			$this->db->set('kode_e2',			$data['kode_e2']);
 			$this->db->set('kode_sasaran_e2',	$data['kode_sasaran_e2']);
 			$this->db->set('kode_ikk',	$data['kode_ikk']);
-			$this->db->set('kode_kegiatan',		$dt['kode_kegiatan']);
-			$this->db->set('kode_subkegiatan',		$dt['kode_subkegiatan']);
+			$this->db->set('kode_kegiatan',		(isset($dt['kode_kegiatan'])?$dt['kode_kegiatan']:''));
+			$this->db->set('kode_subkegiatan',		(isset($dt['kode_subkegiatan'])?$dt['kode_subkegiatan']:''));
 			$this->db->set('jumlah',			$dt['jumlah']);
 			//$this->db->set('satuan',			$dt['satuan']);
 			//$this->db->set('status',			'0');
@@ -305,6 +309,7 @@ class Pre_usulan1_e2_model extends CI_Model
 		$this->db->select('*');
 		$this->db->from('tbl_kegiatan_kl');
 		$this->db->order_by('id_kegiatan_kl');
+		$this->db->where('tahun',$tahun);
 		$this->db->where('kode_e2',$kode);
 		//if($e2!=''){$this->db->where('kode_e2',$e2);}
 		$que = $this->db->get();
@@ -312,7 +317,7 @@ class Pre_usulan1_e2_model extends CI_Model
 		foreach($que->result() as $r){
 			$out .= '<tr>
 					<td>'.($i+1).'</td>
-					<td><input type="checkbox" name="detail['.$i.'][chk]" value="chk"/></td>					
+					<td><input type="hidden" name="detail['.$i.'][tipe]" value="kegiatan"/><input type="checkbox" name="detail['.$i.'][chk]" value="chk"/></td>					
 					<td><input type="hidden" name="detail['.$i.'][kode_kegiatan]" value="'.$r->kode_kegiatan.'"/>'.$r->kode_kegiatan.'</td>
 					<td>'.$r->nama_kegiatan.'</td>
 					<td align="right"><input name="detail['.$i.'][jumlah]" style="text-align:right" size="20" /></td>					
@@ -330,9 +335,9 @@ class Pre_usulan1_e2_model extends CI_Model
 				foreach($queSub->result() as $z){
 					$out .= '<tr>
 					<td>'.($i+1).'</td>
-					<td><input type="checkbox" name="detail['.$i.'][chksub]" value="chksub"/></td>					
+					<td><input type="hidden" name="detail['.$i.'][tipe]" value="subkegiatan"/><input type="checkbox" name="detail['.$i.'][chksub]" value="chksub"/></td>					
 					<td><input type="hidden" name="detail['.$i.'][kode_subkegiatan]" value="'.$z->kode_subkegiatan.'"/>'.$z->kode_subkegiatan.'</td>
-					<td>'.$z->nama_subkegiatan.'</td>
+					<td>&nbsp;&nbsp;&nbsp;>> '.$z->nama_subkegiatan.'</td>
 					<td align="right"><input name="detail['.$i.'][jumlah]" style="text-align:right" size="20" /></td>					
 					</tr>';
 					$i++;
@@ -347,7 +352,7 @@ class Pre_usulan1_e2_model extends CI_Model
 	
 	public function UpdateOnDb($data){
 		$this->db->flush_cache();
-		$this->db->where('preusulan1_e1_id', $data['preusulan1_e1_id']);
+		$this->db->where('preusulan1_e2_id', $data['preusulan1_e2_id']);
 		
 		$this->db->set('kode_ikk', $data['kode_ikk']);
 		$this->db->set('jumlah', $data['jumlah']);
@@ -359,7 +364,7 @@ class Pre_usulan1_e2_model extends CI_Model
 		$this->db->flush_cache();
 		$this->db->select("*");
 		$this->db->from("tbl_pre_usulan1_e2");
-		$this->db->where('preusulan1_e1_id', $data['preusulan1_e1_id']);
+		$this->db->where('preusulan1_e2_id', $data['preusulan1_e2_id']);
 		$qt = $this->db->get();
 		
 		$this->db->flush_cache();
@@ -391,7 +396,7 @@ class Pre_usulan1_e2_model extends CI_Model
 		$this->db->flush_cache();
 		$this->db->select("*");
 		$this->db->from("tbl_pre_usulan1_e2");
-		$this->db->where('preusulan1_e1_id', $id);
+		$this->db->where('preusulan1_e2_id', $id);
 		$qt = $this->db->get();
 		
 		$this->db->flush_cache();
@@ -404,7 +409,7 @@ class Pre_usulan1_e2_model extends CI_Model
 		$this->db->insert('tbl_pre_usulan1_e2_log');
 		
 		$this->db->flush_cache();
-		$this->db->where('preusulan1_e1_id', $id);
+		$this->db->where('preusulan1_e2_id', $id);
 		$result = $this->db->delete('tbl_pre_usulan1_e2'); 
 		
 		

@@ -190,13 +190,13 @@
 							showPopup('#popdesc<?=$objectId?>', row.deskripsi_sasaran_e1);
 							break;
 						case "kode_ikk":
-							showPopup('#popdesc<?=$objectId?>', row.deskripsi_ikk);
+							showPopup('#popdesc<?=$objectId?>', row.deskripsi);
 							break;
 						case "kode_e1":
 							showPopup('#popdesc<?=$objectId?>', row.nama_e1);
 							break;	
-						case "kode_kegiatan":
-							showPopup('#popdesc<?=$objectId?>', row.nama_kegiatan);
+						case "kode_subkegiatan":
+							showPopup('#popdesc<?=$objectId?>', row.nama_subkegiatan);
 							break;
 						default:
 							closePopup('#popdesc<?=$objectId?>');
@@ -324,11 +324,11 @@
 		<th field="kode_e1" sortable="true" width="50px"<?=($this->session->userdata('unit_kerja_e1')=='-1'?'':'hidden="true"')?>>Kode Unit Kerja</th>
 		<th field="nama_e1" hidden="true">nama e1</th>
 		<th field="kode_sasaran_e2" sortable="true" width="50px">Kode Sasaran</th>
-		<th field="deskripsi_sasaran_e1" hidden="true">deskripsi_sasaran_e1</th>
+		<th field="deskripsi_sasaran_e2" hidden="true">deskripsi_sasaran_e1</th>
 		<th field="kode_ikk" sortable="true" width="50px">Kode IKK</th>
-		<th field="kode_kegiatan" sortable="true" width="50px">Kode Kegiatan</th>
-		<th field="deskripsi_ikk" hidden="true">deskripsi_ikk</th>
-		<th field="nama_kegiatan" hidden="true">nama_kegiatan</th>
+		<th field="kode_subkegiatan" sortable="true" width="50px">Kode</th>
+		<th field="deskripsi" hidden="true">deskripsi_ikk</th>
+		<th field="nama_subkegiatan" hidden="true">nama_subkegiatan</th>
 		<th field="jumlah" sortable="true" width="50px" align="right" formatter="formatPrice">Jumlah</th>
 		
 		
