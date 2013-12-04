@@ -29,11 +29,13 @@
 			<? }?>	
 				var file2 = $("#filter_e2<?=$objectId;?>").val();
 			
+			var tahun = $("#filter_tahun<?=$objectId;?>").val();
 			if (file1 == null) file1 = "-1";
 			if (file2 == null) file2 = "-1";
+			if (tahun == null) tahun = "-1";
 		
 			if (tipe==1){
-				return "<?=base_url()?>rujukan/subkegiatankl/grid/"+file1+"/"+file2;
+				return "<?=base_url()?>rujukan/subkegiatankl/grid/"+file1+"/"+file2+"/"+tahun;
 			}
 			else if (tipe==2){
 				return "<?=base_url()?>rujukan/subkegiatankl/pdf/"+file1+"/"+file2;
@@ -43,33 +45,13 @@
 		}
 			
 			searchData<?=$objectId;?> = function (){
-			//ambil nilai-nilai filter
-			/*$('#dg<?=$objectId;?>').datagrid({
-				url:getUrl<?=$objectId;?>(1),
-				queryParams:{lastNo:'0'},	
-				pageNumber : 1,
-				onLoadSuccess:function(data){	
-					$('#dg<?=$objectId;?>').datagrid('options').queryParams.lastNo = data.lastNo;
-					//prepareMerge<?=$objectId;?>(data);
-				}});
-			*/
-
-				//ambil nilai-nilai filter
-				var filnip = $("#filter_nip").val();
-				var filnama = $("#filter_nama").val();
-				var filalamat = $("#filter_alamat").val();
-				
-				//encode parameter
-				if(filnip.length==0) filnip ="6E756C6C";
-				else filnip = DoAsciiHex(filnip,"A2H");
-								
-				if(filnama.length==0) filnama ="6E756C6C";
-				else filnama = DoAsciiHex(filnama,"A2H");
-				if(filalamat.length==0) filalamat ="6E756C6C";
-				else filalamat = DoAsciiHex(filalamat,"A2H");
-
-				
-				$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>rujukan/subkegiatankl/grid/"+filnip+"/"+filnama+"/"+filalamat});
+				$('#dg<?=$objectId;?>').datagrid({
+					url:getUrl<?=$objectId;?>(1),
+					queryParams:{lastNo:'0'},	
+					pageNumber : 1,
+					onLoadSuccess:function(data){	
+						$('#dg<?=$objectId;?>').datagrid('options').queryParams.lastNo = data.lastNo;
+					}});
 			}
 			//end searhData 
 			
@@ -203,41 +185,45 @@
 	</style>
 	
 	<div id="tb<?=$objectId;?>" style="height:auto">
-	  <!--<table border="0" cellpadding="1" cellspacing="1" width="100%">
-		<tr>
-			<td>
-			<div class="fsearch" <?=($this->session->userdata('unit_kerja_e1')=='-1'?'':'style="display:none"')?>>
-				<table border="0" cellpadding="1" cellspacing="1">
-					<? if (($this->session->userdata('unit_kerja_e1')==-1)||($this->session->userdata('unit_kerja_e1')!=null)){?>
+	  <table border="0" cellpadding="1" cellspacing="1" width="100%">
+	  <tr>
+		<td>
+		  <div class="fsearch" <?//=(($this->session->userdata('unit_kerja_e2')=='-1')||($this->session->userdata('unit_kerja_e2')=='')?'':'style="display:none"')?>>
+			
+			<table border="0" cellpadding="1" cellspacing="1">
 			<tr>
-				<td>Unit Kerja Eselon I</td>
+				<td>Tahun&nbsp;</td>
+				<td>
+					<?=$this->subkegiatankl_model->getListTahun($objectId)?>				
+				</td>
+			</tr>
+			<tr>
+				<td>Unit Kerja Eselon I&nbsp;</td>
 				<td>
 					<?=$this->eselon1_model->getListFilterEselon1($objectId,$this->session->userdata('unit_kerja_e1'))?>				
 				</td>
 			</tr>
-			<?}?>
+			
 			<tr>
-				<td>Unit Kerja Eselon II</td>
+				<td>Unit Kerja Eselon II&nbsp</td>
 				<td><span class="fitem" id="divUnitKerja<?=$objectId;?>">
-					<?=$this->eselon2_model->getListFilterEselon2($objectId,$this->session->userdata('unit_kerja_e2'),$this->session->userdata('unit_kerja_e1'))?>
+					<?=$this->eselon2_model->getListFilterEselon2($objectId,$this->session->userdata('unit_kerja_e1'),$this->session->userdata('unit_kerja_e2'))?>
 					</span>
 				</td>
 			</tr>
-				<tr>
-					<td align="right" colspan="2" valign="top">
-						<a href="#" class="easyui-linkbutton" onclick="clearFilter<?=$objectId;?>();" iconCls="icon-reset">Reset</a>
-						<a href="#" class="easyui-linkbutton" onclick="searchData<?=$objectId;?>();" iconCls="icon-search">Search</a>
-					</td>
-				</tr>
-				</table>
-			</div>
-			</td>
-		</tr>
-		</table>
+			<tr>
+			  
+			  <td align="right" colspan="2" valign="top">
+				<a href="#" class="easyui-linkbutton" onclick="clearFilter<?=$objectId;?>();" iconCls="icon-reset">Reset</a>
+				<a href="#" class="easyui-linkbutton" onclick="searchData<?=$objectId;?>();" iconCls="icon-search">Search</a>
+			  </td>
+			</tr>
+			
+			</table>
 		  </div>
 		</td>
 	  </tr>
-	  </table>-->
+	  </table>
 	  <div style="margin-bottom:5px">  
 		<a href="#" onclick="newData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-add" plain="true">Add</a>  
 		<a href="#" onclick="editData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-edit" plain="true">Edit</a>

@@ -104,7 +104,7 @@ class Sasaran_eselon2 extends CI_Controller {
 			
 		}else {
 			if($aksi=="add"){ // add
-				$result = !$this->sasaran_eselon2_model->isExistKode($data['kode_sasaran_e2']);
+				$result = !$this->sasaran_eselon2_model->isExistKode($data['kode_sasaran_e2'],$data['tahun']);
 				if ($result)
 					$result = $this->sasaran_eselon2_model->InsertOnDb($data,$status);
 					

@@ -141,9 +141,11 @@ class Sasaran_eselon2_model extends CI_Model
 		$this->db->free_result();
 	}
 	
-	public function isExistKode($kode=null){	
+	public function isExistKode($kode=null,$tahun=null){	
 		if ($kode!=null)//utk update
 			$this->db->where('kode_sasaran_e2',$kode); //buat validasi
+		if ($tahun!=null)//utk update
+			$this->db->where('tahun',$tahun); //buat validasi
 		
 		$this->db->select('*');
 		$this->db->from('tbl_sasaran_eselon2');

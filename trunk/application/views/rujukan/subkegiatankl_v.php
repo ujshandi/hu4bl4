@@ -9,20 +9,24 @@
 					function (){
 						//setKegiatan<?=$objectId?>($("#kode_e2<?=$objectId?>").val());
 						$("#kode_e2<?=$objectId?>").change(function(){
-							setKegiatan<?=$objectId?>($(this).val());
+							setKegiatan<?=$objectId?>($(this).val(),$("#tahun<?=$objectId?>").val());
 						});	
-						setKegiatan<?=$objectId?>($("#kode_e2<?=$objectId?>").val());
+						setKegiatan<?=$objectId?>($("#kode_e2<?=$objectId?>").val(),$("#tahun<?=$objectId?>").val());
 					}
 				);
 			 }
 			 
 			 $("#kode_e1<?=$objectId?>").change(function(){
 				setListE2<?=$objectId?>();
+			  }); 
+			  
+			$("#tahun<?=$objectId?>").change(function(){
+				setKegiatan<?=$objectId;?>($("#kode_e2<?=$objectId?>").val(),$(this).val());
 			  });
 			  
-			function setKegiatan<?=$objectId;?>(e2){
+			function setKegiatan<?=$objectId;?>(e2,tahun){
 				$("#divKegiatan<?=$objectId?>").load(
-					base_url+"rujukan/subkegiatankl/getListKegiatan/"+"<?=$objectId;?>"+"/"+e2,
+					base_url+"rujukan/subkegiatankl/getListKegiatan/"+"<?=$objectId;?>"+"/"+e2+"/-1/"+tahun,
 					//on complete
 					function(){
 						$("textarea").autogrow();
@@ -291,7 +295,7 @@
 					<form id="fm<?=$objectId;?>" method="post">		
 						<div class="fitem">
 							<label style="width:120px">Tahun :</label>
-							<input name="tahun" size="5" class="easyui-validatebox" required="true">
+							<input name="tahun" size="5" class="easyui-validatebox" id="tahun<?=$objectId?>" required="true">
 						</div>					
 						<div class="fitem" >
 							<label style="width:120px">Unit Kerja Eselon I :</label>

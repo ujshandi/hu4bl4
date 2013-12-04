@@ -528,6 +528,11 @@
 		        $('#divLayout').layout('resize');
 		      //  $('#tt').trigger('_resize');
 		    });
+			
+			$('body').resize(function(){
+		        $('#divLayout').layout('resize');
+		      //  $('#tt').trigger('_resize');
+		    });
 		});
 		
 	</script>

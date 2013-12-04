@@ -17,21 +17,6 @@
 								title: 'Success',
 								msg: 'Data Berhasil Disimpan'
 							});
-							
-							// delete all row
-							// try {
-								// var table = document.getElementById('tbl<?=$objectId;?>');
-								// var rowCount = table.rows.length;
-								// var i=0;
-								
-								// for(i=rowCount-1; i>1; i--){
-									// table.deleteRow(i);
-								// }
-								
-							// }catch(e) {
-								// alert(e);
-							// }
-							
 							// reload and close tab
 							$('#dg<?=$objectId;?>').datagrid('reload');
 							$('#tt').tabs('close', 'Add Pra Monev Eselon II Pagu Usulan');
@@ -47,48 +32,64 @@
 			//end saveData 
 			
 			//chan=================================
-			
-			$("#tahun<?=$objectId;?>").change(function(){
+			function setListE2<?=$objectId?>(){
 				var e1 = $("#kode_e1<?=$objectId;?>").val();
-				 setSasaranE2<?=$objectId;?>(e1,$(this).val());
-				setIkuE1<?=$objectId;?>(e1,$(this).val());
-				setKegiatanE1<?=$objectId;?>(e1,$(this).val());
+				$("#divEselon2<?=$objectId?>").load(
+					base_url+"rujukan/eselon2/loadE2/"+e1+"/<?=$objectId;?>",
+					//on complete
+					function (){
+						//setSasaranE2<?=$objectId?>($("#kode_e2<?=$objectId?>").val());
+						$("#kode_e2<?=$objectId?>").change(function(){
+							setSasaranE2<?=$objectId?>($(this).val(), $('#tahun<?=$objectId;?>').val());
+							setKegiatanE2<?=$objectId;?>($(this).val(), $('#tahun<?=$objectId;?>').val()); 
+						});	
+						setSasaranE2<?=$objectId?>($("#kode_e2<?=$objectId?>").val(), $('#tahun<?=$objectId;?>').val());	
+						setKegiatanE2<?=$objectId;?>($("#kode_e2<?=$objectId?>").val(), $('#tahun<?=$objectId;?>').val()); 
+					}
+				);
+			 }
+			 
+			$("#tahun<?=$objectId;?>").change(function(){
+			 	var e2 = $("#kode_e2<?=$objectId;?>").val();
+				setSasaranE2<?=$objectId;?>(e2,$(this).val());
+				setIkkE2<?=$objectId;?>(e2,$(this).val());
+				setKegiatanE2<?=$objectId;?>(e2,$(this).val()); 
 			});
 			
-			setKegiatanE1<?=$objectId?> = function(e1,tahun){
-				<? if ($this->session->userdata('unit_kerja_e1')!='-1') {?>
-				 e1 = '<?=$this->session->userdata('unit_kerja_e1');?>';
+			setKegiatanE2<?=$objectId?> = function(e2,tahun){
+				<? if ($this->session->userdata('unit_kerja_e2')!='-1') {?>
+				 e2 = '<?=$this->session->userdata('unit_kerja_e2');?>';
 				<?}?>
 				
 				tahun =  $('#tahun<?=$objectId;?>').val();
 				$("#tbodykegiatan<?=$objectId;?>").load(
-					base_url+"kka/pre_usulan1_e2/getKegiatan_e1/"+e1+"/"+tahun
+					base_url+"kka/pre_usulan1_e2/getKegiatan_e2/"+e2+"/"+tahun
 				);
 			}
 			
 			
-			setSasaranE2<?=$objectId;?> = function(e1, tahun){
-				<? if ($this->session->userdata('unit_kerja_e1')!='-1') {?>
-				 e1 = '<?=$this->session->userdata('unit_kerja_e1');?>';
+			setSasaranE2<?=$objectId;?> = function(e2, tahun){
+				<? if ($this->session->userdata('unit_kerja_e2')!='-1') {?>
+				 e2 = '<?=$this->session->userdata('unit_kerja_e2');?>';
 				<?}?>
-				
+			
 				tahun =  $('#tahun<?=$objectId;?>').val();
-				$("#divSasaranE1<?=$objectId?>").load(
-					base_url+"kka/pre_usulan1_e2/getListSasaranE1/"+"<?=$objectId;?>"+"/"+e1+"/"+tahun,
+				$("#divSasaranE2<?=$objectId?>").load(
+					base_url+"kka/pre_usulan1_e2/getListSasaranE2/"+"<?=$objectId;?>"+"/"+e2+"/"+tahun,
 					function(){
 						$("textarea").autogrow();
 						if($("#drop<?=$objectId;?>").is(":visible")){
 							$("#drop<?=$objectId;?>").slideUp("slow");
 						}
 						
-						$("#txtkode_sasaran_e1<?=$objectId;?>").click(function(){
+						$("#txtkode_sasaran_e2<?=$objectId;?>").click(function(){
 							$("#drop<?=$objectId;?>").slideDown("slow");
 						});
 						
 						$("#drop<?=$objectId;?> li").click(function(e){
 							var chose = $(this).text();
 							//alert(chose);
-							$("#txtkode_sasaran_e1<?=$objectId;?>").text(chose);
+							$("#txtkode_sasaran_e2<?=$objectId;?>").text(chose);
 							$("#drop<?=$objectId;?>").slideUp("slow");
 						});
 					//	
@@ -104,28 +105,28 @@
 				
 			}
 			
-			setIkuE1<?=$objectId;?> = function(e1, tahun){
-				<? if ($this->session->userdata('unit_kerja_e1')!='-1') {?>
-				 e1 = '<?=$this->session->userdata('unit_kerja_e1');?>';
+			setIkkE2<?=$objectId;?> = function(e2, tahun){
+				<? if ($this->session->userdata('unit_kerja_e2')!='-1') {?>
+				 e2 = '<?=$this->session->userdata('unit_kerja_e2');?>';
 				<?}?>
 				
 				tahun =  $('#tahun<?=$objectId;?>').val();
-				$("#divIkuE1<?=$objectId?>").load(
-					base_url+"kka/pre_usulan1_e2/getListIkuE1/"+"<?=$objectId;?>"+"/"+e1+"/"+tahun,
+				$("#divIkk<?=$objectId?>").load(
+					base_url+"kka/pre_usulan1_e2/getListIkuE2/"+"<?=$objectId;?>"+"/"+e2+"/"+tahun,
 					function(){
 						$("textarea").autogrow();
 						if($("#dropIku<?=$objectId;?>").is(":visible")){
 							$("#dropIku<?=$objectId;?>").slideUp("slow");
 						}
 						
-						$("#txtkode_iku_e1<?=$objectId;?>").click(function(){
+						$("#txtkode_ikk<?=$objectId;?>").click(function(){
 							$("#dropIku<?=$objectId;?>").slideDown("slow");
 						});
 						
 						$("#dropIku<?=$objectId;?> li").click(function(e){
 							var chose = $(this).text();
 							//alert(chose);
-							$("#txtkode_iku_e1<?=$objectId;?>").text(chose);
+							$("#txtkode_ikk<?=$objectId;?>").text(chose);
 							$("#dropIku<?=$objectId;?>").slideUp("slow");
 						});
 					//	
@@ -142,146 +143,28 @@
 			}
 			
 			
-			$("#kode_e1<?=$objectId?>").change(function(){
+			$("#kode_e2<?=$objectId?>").change(function(){
 				setSasaranE2<?=$objectId;?>($(this).val(), $('#tahun<?=$objectId;?>').val());
 			});
 			
-			//inisilaisasi;
-			setSasaranE2<?=$objectId;?>($("#kode_e1<?=$objectId?>").val(), $('#tahun<?=$objectId;?>').val());
-			
+				
+			  //inisialisasi
+			 setListE2<?=$objectId?>();
+			 
 			//--------------------
 		});
 
 	</script>
 	
 	
-	<script language="javascript">
-        function addRow<?=$objectId;?>(tableID) {
-			
-			var table = document.getElementById(tableID);
-			var dataCount = table.rows.length;
-			
-			if(dataCount > 1){
-				var table = document.getElementById(tableID);
- 
-				var rowCount = table.rows.length;
-				var row = table.insertRow(rowCount);
-	 
-				var colCount = table.rows[1].cells.length;
-				
-				var newcell = row.insertCell(0);
-				newcell.innerHTML = table.rows[1].cells[0].innerHTML;
-				
-				newcell = row.insertCell(1);
-				newcell.innerHTML = rowCount;
-				
-				newcell = row.insertCell(2);
-				newcell.innerHTML = table.rows[1].cells[2].innerHTML;
-				newcell.childNodes[0].selectedIndex = 0;
-				newcell.childNodes[0].id = rowCount;
-				newcell.childNodes[0].name = "detail[" + rowCount + "][kode_iku_e1]";
-				
-				newcell = row.insertCell(3);
-				newcell.innerHTML = table.rows[1].cells[3].innerHTML;
-				newcell.childNodes[1].value = "";
-				newcell.childNodes[1].name = "detail[" + rowCount + "][target]";
-				
-				newcell = row.insertCell(4);
-				newcell.innerHTML = table.rows[1].cells[4].innerHTML;
-				newcell.childNodes[1].id = "satuan" + rowCount + '<?=$objectId;?>';
-				newcell.childNodes[1].value = "";
-				newcell.childNodes[1].name = "detail[" + rowCount + "][satuan]";
-				newcell.childNodes[1].readOnly = "true";
-			}else{
-				alert("Tidak terdapat data yang akan ditambah");
-			}
-			
-        }
- 
-        function deleteRow<?=$objectId;?>(tableID) {
-            try {
-				var table = document.getElementById(tableID);
-				var rowCount = table.rows.length;
-				
-				if(rowCount <= 2) {
-					alert("Cannot delete all the rows.");
-				}else{
-					//table.deleteRow(rowCount-1);
-					for(var i=0; i<rowCount; i++) {
-						if(rowCount <= 2){
-							//alert("Cannot delete all the rows.");
-							break;
-						}
-						var row = table.rows[i];
-						var chkbox = row.cells[0].childNodes[0];
-						if(null != chkbox && true == chkbox.checked) {
-							table.deleteRow(i);
-							rowCount--;
-							i--;
-						}
-					}
-					
-					for(var i=1; i<rowCount; i++) {
-						var row = table.rows[i];
-						row.cells[1].innerHTML = (i);
-						
-						row.cells[2].childNodes[0].id = i;
-						row.cells[2].childNodes[0].name = "detail[" + i + "][kode_iku_e1]";;
-						
-						row.cells[3].childNodes[1].name = "detail[" + i + "][target]";
-						
-						row.cells[4].childNodes[1].id = "satuan" + i + '<?=$objectId;?>';
-						row.cells[4].childNodes[1].name = "detail[" + i + "][satuan]";
-					}
-				}
-				
-            }catch(e) {
-                alert(e);
-            }
-        }
-		
-		function getSatuan<?=$objectId;?>(kode, idText){
-			var response = '';
-			$.ajax({ type: "GET",   
-					 url: base_url+'kka/pre_usulan1_e2/getSatuan/' + kode,   
-					 //url: base_url+'kka/pre_usulan1_e2/getSatuan/' + kode + '/' + idText,   
-					 async: false,
-					 success : function(text)
-					 {
-						 response = text;
-					 }
-			});
-			document.getElementById('satuan'+idText+'<?=$objectId;?>').value = response;
-		}
-		
-		
-		
-    </script>
-	
 	<!-- Dari Stef -->
 	<script type="text/javascript">
-		$(document).ready(function() {
-			/*chan-----------
-			if($("#drop<?=$objectId;?>").is(":visible")){
-				$("#drop<?=$objectId;?>").slideToggle("slow");
-			}
-			
-			$("#txtkode_sasaran_e1<?=$objectId;?>").click(function(){
-				$("#drop<?=$objectId;?>").slideToggle("slow");
-			});
-			
-			$("#drop<?=$objectId;?> li").click(function(e){
-				var chose = $(this).text();
-				$("#txtkode_sasaran_e1<?=$objectId;?>").text(chose);
-				$("#drop<?=$objectId;?>").slideToggle("slow");
-			});*/
-		});
 		
 		//chan-----------
 		function setSasaran<?=$objectId;?>(valu){
 			
 			if(valu != null){
-				document.getElementById('kode_sasaran_e1<?=$objectId;?>').value = valu;
+				document.getElementById('kode_sasaran_e2<?=$objectId;?>').value = valu;
 			}
 			
 			// set IKU E1 berdasarkan unit kerja eselon 1
@@ -299,10 +182,10 @@
 			
 		}
 		//chan-----------
-		function setIku<?=$objectId;?>(valu){
+		function setIkk<?=$objectId;?>(valu){
 			
 			if(valu != null){
-				document.getElementById('kode_iku_e1<?=$objectId;?>').value = valu;
+				document.getElementById('kode_ikk<?=$objectId;?>').value = valu;
 			}			
 			
 		}
@@ -401,15 +284,27 @@
 							echo '<input class="easyui-validatebox" type="text" id="kode_e1" name="kode_e1" size="10" required="true" value="tes">'; */
 						 //} ?>
 					</div>	
+					<div class="fitem">							
+						<label style="width:120px">Unit Kerja Eselon II :</label>
+						<span id="divEselon2<?=$objectId?>">
+						<?
+						/* CHAN 
+						if ($this->session->userdata('unit_kerja_e2')=='-1'){
+							$this->eselon2_model->getListEselon2($objectId);
+						} else { 
+							echo $this->eselon2_model->getNamaE2($this->session->userdata('unit_kerja_e2'));
+						 } */?>
+						 </span>
+					</div>
 					<div class="fitem">
 						<label style="width:120px">Sasaran :</label>
-						<span id="divSasaranE1<?=$objectId?>">
+						<span id="divSasaranE2<?=$objectId?>">
 						<?="";//chan $this->sasaran_eselon1_model->getListSasaranE1($objectId)?>
 						</span>
 					</div>
 					<div class="fitem">
 						<label style="width:120px">IKK :</label>
-						<span id="divIkuE1<?=$objectId?>">
+						<span id="divIkk<?=$objectId?>">
 						<?="";//chan $this->sasaran_eselon1_model->getListSasaranE1($objectId)?>
 						</span>
 					</div>

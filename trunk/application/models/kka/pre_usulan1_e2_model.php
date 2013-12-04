@@ -168,10 +168,11 @@ class Pre_usulan1_e2_model extends CI_Model
 		foreach($data['detail'] as $dt){
 			 if(!isset($dt['chk'])) continue;
 			$this->db->set('tahun',				$data['tahun']);
-			$this->db->set('kode_sasaran_e2',			$data['kode_sasaran_e2']);
+			$this->db->set('kode_e2',			$data['kode_e2']);
 			$this->db->set('kode_sasaran_e2',	$data['kode_sasaran_e2']);
 			$this->db->set('kode_ikk',	$data['kode_ikk']);
 			$this->db->set('kode_kegiatan',		$dt['kode_kegiatan']);
+			$this->db->set('kode_subkegiatan',		$dt['kode_subkegiatan']);
 			$this->db->set('jumlah',			$dt['jumlah']);
 			//$this->db->set('satuan',			$dt['satuan']);
 			//$this->db->set('status',			'0');
@@ -292,7 +293,7 @@ class Pre_usulan1_e2_model extends CI_Model
 		return $out;
 	}
 	
-	public function getKegiatan_e1($objectId, $kode, $tahun){
+	public function getKegiatan_e2($objectId, $kode, $tahun){
 		$out = '';
 		/* $data['kode_sasaran_e2'] = $kode;
 		$data['tahun'] = $tahun;
@@ -304,7 +305,7 @@ class Pre_usulan1_e2_model extends CI_Model
 		$this->db->select('*');
 		$this->db->from('tbl_kegiatan_kl');
 		$this->db->order_by('id_kegiatan_kl');
-		$this->db->where('kode_e2 in (select kode_e2 from tbl_eselon2 where kode_e2 = '.$kode.')',null,false);
+		$this->db->where('kode_e2',$kode);
 		//if($e2!=''){$this->db->where('kode_e2',$e2);}
 		$que = $this->db->get();
 		$i=0;
@@ -316,7 +317,30 @@ class Pre_usulan1_e2_model extends CI_Model
 					<td>'.$r->nama_kegiatan.'</td>
 					<td align="right"><input name="detail['.$i.'][jumlah]" style="text-align:right" size="20" /></td>					
 				</tr>';
+				
+				$this->db->flush_cache();
+				$this->db->select('*');
+				$this->db->from('tbl_subkegiatan_kl');
+				$this->db->order_by('id_subkegiatan_kl');
+				$this->db->where('kode_kegiatan',$r->kode_kegiatan);
+				//if($e2!=''){$this->db->where('kode_e2',$e2);}
+				$queSub = $this->db->get();
+				$j=0;
 				$i++;
+				foreach($queSub->result() as $z){
+					$out .= '<tr>
+					<td>'.($i+1).'</td>
+					<td><input type="checkbox" name="detail['.$i.'][chksub]" value="chksub"/></td>					
+					<td><input type="hidden" name="detail['.$i.'][kode_subkegiatan]" value="'.$z->kode_subkegiatan.'"/>'.$z->kode_subkegiatan.'</td>
+					<td>'.$z->nama_subkegiatan.'</td>
+					<td align="right"><input name="detail['.$i.'][jumlah]" style="text-align:right" size="20" /></td>					
+					</tr>';
+					$i++;
+				
+				}
+				
+				
+				
 		}
 		return $out;
 	}

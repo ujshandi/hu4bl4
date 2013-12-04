@@ -72,19 +72,20 @@ class Pre_usulan1_e2 extends CI_Controller {
     }
 	
 	//chan
-	function getListSasaranE1($objectId,$kode="",$tahun=""){
+	function getListSasaranE2($objectId,$kode="",$tahun=""){
 		$data['tahun'] = $tahun;
 		$data['kode'] = $kode;
+		//$data['e2'] = $e2;
 		$data['deskripsi'] = ($kode=='')?'':$this->sasaran_eselon2_model->getDeskripsiSasaranE2($kode, $tahun);
 		echo $this->sasaran_eselon2_model->getListSasaranE2($objectId, $kode, $data);
 	}
 	
 	//chan
-	function getListIkuE1($objectId,$kode="",$tahun=""){
+	function getListIkuE2($objectId,$kode="",$tahun=""){
 		$data['tahun'] = $tahun;
 		$data['kode'] = $kode;
 	//	$data['deskripsi'] = ($kode=='')?'':$this->sasaran_eselon2_model->getDeskripsiSasaranE1($kode, $tahun);
-		echo $this->ikk_model->getListikk($objectId, $kode, $tahun,'dropIku');
+		echo $this->ikk_model->getListIKK_E2($objectId, $kode, $tahun,'dropIku');
 	}
 	
 	function save(){
@@ -98,8 +99,9 @@ class Pre_usulan1_e2 extends CI_Controller {
 		// validation
 		# rules
 		$this->form_validation->set_rules("tahun", 'Tahun', 'trim|required|numeric|exact_length[4]|xss_clean');
-		$this->form_validation->set_rules("kode_e1", 'Eselon 1', 'trim|required|xss_clean');
-		$this->form_validation->set_rules("kode_sasaran_e1", 'Sasaran Eselon 1', 'trim|required|xss_clean');
+		$this->form_validation->set_rules("kode_e1", 'Eselon I', 'trim|required|xss_clean');
+		$this->form_validation->set_rules("kode_e2", 'Eselon II', 'trim|required|xss_clean');
+		$this->form_validation->set_rules("kode_sasaran_e2", 'Sasaran Eselon II', 'trim|required|xss_clean');
 		$this->form_validation->set_rules("kode_ikk", 'IKU Eselon 1', 'trim|required|xss_clean');
 		
 		# message rules
@@ -110,16 +112,17 @@ class Pre_usulan1_e2 extends CI_Controller {
 		if ($this->form_validation->run() == FALSE){ // jika tidak valid
 			$data['pesan_error'].=(trim(form_error('tahun',' ',' '))==''?'':form_error('tahun',' ','<br>'));
 			$data['pesan_error'].=(trim(form_error('kode_e1',' ',' '))==''?'':form_error('kode_e1',' ','<br>'));
-			$data['pesan_error'].=(trim(form_error('kode_sasaran_e1',' ',' '))==''?'':form_error('kode_sasaran_e1',' ','<br>'));
+			$data['pesan_error'].=(trim(form_error('kode_e2',' ',' '))==''?'':form_error('kode_e2',' ','<br>'));
+			$data['pesan_error'].=(trim(form_error('kode_sasaran_e2',' ',' '))==''?'':form_error('kode_sasaran_e1',' ','<br>'));
 			$data['pesan_error'].=(trim(form_error('kode_ikk',' ',' '))==''?'':form_error('kode_ikk',' ','<br>'));
 			
 		}else{
 			// validasi detail
 			$result =false;
-			if ($data['kode_sasaran_e1']=='0') {
+			if ($data['kode_sasaran_e2']=='0') {
 				$data['pesan_error'].= 'Data Sasaran belum dipilih!';
 			} else if ($data['kode_ikk']=='0') {
-				$data['pesan_error'].= 'Data IKU belum dipilih!';
+				$data['pesan_error'].= 'Data IKK belum dipilih!';
 			}
 			else {
 			
@@ -144,11 +147,19 @@ class Pre_usulan1_e2 extends CI_Controller {
 		$terpilih = 0;
 		foreach($data['detail'] as $r){
 			
-		    if(!isset($r['chk'])) continue;
+		    if((!isset($r['chk']))||(!isset($r['chksub']))) continue;
 			$terpilih++;
-			if($r['kode_kegiatan'] == '0'){ // cek kode iku
-				$pesan = 'Kode Kegiatan pada no. '.$i.' harus diisi.';
-				return FALSE;
+			if (isset($r['chk'])){
+				if($r['kode_kegiatan'] == '0'){ // cek kode iku
+					$pesan = 'Kode Kegiatan pada no. '.$i.' harus diisi.';
+					return FALSE;
+				}
+			}
+			if (isset($r['chksub'])){
+				if($r['kode_subkegiatan'] == '0'){ // cek kode iku
+					$pesan = 'Kode Sub Kegiatan pada no. '.$i.' harus diisi.';
+					return FALSE;
+				}
 			}
 			
 			if($r['jumlah'] == ''){ // nilai target null
@@ -166,7 +177,7 @@ class Pre_usulan1_e2 extends CI_Controller {
 			$i++;
 		}
 		 if ($terpilih==0) {
-			$pesan = 'Kegiatan belum ada yang dipilih!';
+			$pesan = 'Kegiatan/subkegiatan belum ada yang dipilih!';
 			return false;
 		 }
 		
@@ -244,9 +255,9 @@ class Pre_usulan1_e2 extends CI_Controller {
 		}
 	}
 	
-	function getKegiatan_e1($kode, $tahun=""){
+	function getKegiatan_e2($kode, $tahun=""){
 		if($kode != '0' && $tahun != ""){
-			echo $this->pre_usulan1_e2_model->getKegiatan_e1($this->objectId, $kode, $tahun);
+			echo $this->pre_usulan1_e2_model->getKegiatan_e2($this->objectId, $kode, $tahun);
 		}
 	}
 	
