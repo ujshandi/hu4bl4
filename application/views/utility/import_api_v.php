@@ -46,18 +46,39 @@
 			
 			
 			$('#importDestination').tree({
-				checkbox: true,
+				checkbox: false,
 				url: base_url+'utility/import/loadMenu',
 				
 				onClick:function(node){					
 					$(this).tree('toggle', node.target);
 					
 					var b = $('#tt2').tree('isLeaf', node.target);
-					if (b){
+					/* if (b){
 						setTimeout(function(){
 							addTab(node.text,node.attributes.url);},100);
-					}
+					} */
 					//alert('you dbclick '+node.attributes.url);
+					var msgAll="";
+					$.ajax({
+					  type: "POST",
+					  url: "utility/import_rujukan_api/doImport/"+node.text,
+					  beforeSend: function ( xhr ) {
+						/* msgAll += checked[i].text+" "+"<br>";
+						msgAll += "------------------------------------------------------- "+"<br>";
+						$("#content<?=$objectId?>").html(msgAll); */
+					  }
+					}).done(function( msg ) {
+					  //alert( "Data Saved: " + msg );
+					  if (msg!=null)
+						msgAll = msgAll+msg;
+						$("#content<?=$objectId?>").html(msgAll);
+					}).fail(function(jq,msg) { msgAll += "Error.<br>";
+						alert(msg);
+					
+						$("#content<?=$objectId?>").html(msgAll);
+					}).always(function() { 
+						 
+					});
 				}
 			}); 
 			
@@ -130,17 +151,14 @@
 		}
 	</style>
 
-	<div id="tb<?=$objectId;?>" style="height:auto">
+	<!--<div id="tb<?=$objectId;?>" style="height:auto">
 		
 		<div style="margin-bottom:5px" >  
 			
 			<a href="#" onclick="importData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-reload" plain="true">Import</a>
-			<!--
-			<a href="#" onclick="printData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-print" plain="true">Print</a>
-			<a href="#" onclick="toExcel<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-excel" plain="true">Excel</a>
-			-->
-	  	</div>
-	</div>
+		
+	  	</div> 
+	</div>-->
 	
 	<div class="easyui-layout" fit="true" >  
    <div region="north" border="true" style="height:auto">
@@ -152,7 +170,7 @@
 	</div>
         <ul id="importDestination" ></ul>
     </div>  
-    <div id="content<?=$objectId?>" region="center" title="Hasil" style="padding:5px;">
+    <div id="content<?=$objectId?>" region="center" title="Sumber : e-performance.dephub.go.id" style="padding:5px;">
 		No Result.
     </div>  
 </div>  

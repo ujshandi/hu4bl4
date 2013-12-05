@@ -177,7 +177,7 @@ class Pre_usulan1_e2_model extends CI_Model
 			$this->db->set('kode_ikk',	$data['kode_ikk']);
 			$this->db->set('kode_kegiatan',		(isset($dt['kode_kegiatan'])?$dt['kode_kegiatan']:''));
 			$this->db->set('kode_subkegiatan',		(isset($dt['kode_subkegiatan'])?$dt['kode_subkegiatan']:''));
-			$this->db->set('jumlah',			$dt['jumlah']);
+			$this->db->set('jumlah',			$this->utility->ourDeFormatNumber2($dt['jumlah']));
 			//$this->db->set('satuan',			$dt['satuan']);
 			//$this->db->set('status',			'0');
 			$this->db->set('log_insert', 		$this->session->userdata('user_id').';'.date('Y-m-d H:i:s'));
@@ -315,21 +315,30 @@ class Pre_usulan1_e2_model extends CI_Model
 		$que = $this->db->get();
 		$i=0;
 		foreach($que->result() as $r){
+		
+			$idxKegiatan = $i;
+			
+			$this->db->flush_cache();
+			$this->db->select('*');
+			$this->db->from('tbl_subkegiatan_kl');
+			$this->db->order_by('id_subkegiatan_kl');
+			$this->db->where('kode_kegiatan',$r->kode_kegiatan);
+			$this->db->where('tahun',$r->tahun);
+			//if($e2!=''){$this->db->where('kode_e2',$e2);}
+			$queSub = $this->db->get();
+			$max_sub_idx = 0;
+			if ($queSub!=null)
+				$max_sub_idx=$queSub->num_rows;		
+				
 			$out .= '<tr>
 					<td>'.($i+1).'</td>
 					<td><input type="hidden" name="detail['.$i.'][tipe]" value="kegiatan"/><input type="checkbox" name="detail['.$i.'][chk]" value="chk"/></td>					
 					<td><input type="hidden" name="detail['.$i.'][kode_kegiatan]" value="'.$r->kode_kegiatan.'"/>'.$r->kode_kegiatan.'</td>
 					<td>'.$r->nama_kegiatan.'</td>
-					<td align="right"><input name="detail['.$i.'][jumlah]" style="text-align:right" size="20" /></td>					
+					<td align="right"><input class="money" readonly id="jumlah_'.$i.'" name="detail['.$i.'][jumlah]" style="text-align:right" size="20" /><input type="hidden" id="max_sub_idx_'.$i.'" value="'.$max_sub_idx.'"/></td>					
 				</tr>';
 				
-				$this->db->flush_cache();
-				$this->db->select('*');
-				$this->db->from('tbl_subkegiatan_kl');
-				$this->db->order_by('id_subkegiatan_kl');
-				$this->db->where('kode_kegiatan',$r->kode_kegiatan);
-				//if($e2!=''){$this->db->where('kode_e2',$e2);}
-				$queSub = $this->db->get();
+				
 				$j=0;
 				$i++;
 				foreach($queSub->result() as $z){
@@ -338,11 +347,12 @@ class Pre_usulan1_e2_model extends CI_Model
 					<td><input type="hidden" name="detail['.$i.'][tipe]" value="subkegiatan"/><input type="checkbox" name="detail['.$i.'][chksub]" value="chksub"/></td>					
 					<td><input type="hidden" name="detail['.$i.'][kode_subkegiatan]" value="'.$z->kode_subkegiatan.'"/>'.$z->kode_subkegiatan.'</td>
 					<td>&nbsp;&nbsp;&nbsp;>> '.$z->nama_subkegiatan.'</td>
-					<td align="right"><input name="detail['.$i.'][jumlah]" style="text-align:right" size="20" /></td>					
+					<td align="right"><input class="money" name="detail['.$i.'][jumlah]" style="text-align:right" size="20" id="jumlah_'.$i.'" onchange="calculateKegiatan'.$objectId.'('.$idxKegiatan.','.$max_sub_idx.')"/></td>					
 					</tr>';
 					$i++;
 				
 				}
+				
 				
 				
 				

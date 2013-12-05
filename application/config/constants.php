@@ -51,3 +51,6 @@ define('FILTER_E1_LIST',"'022.04'");//kalau lebih dari 1 tinggal tambah pake com
 define('FILTER_E1_SINGLE',true);
 define('FILTER_E1','022.04');//kalau lebih dari 1 tinggal tambah pake comma
 // Untuk kasus aplikasi hubla JANGAN DIRUBAH... FILTER_E1_LIST hanya untuk kode Eselon 1 LAUT
+
+
+define('API_RUJUKAN_HREF','http://192.168.0.100/e-performance/api_service/rujukan_api/');
