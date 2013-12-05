@@ -1,7 +1,7 @@
 <?php
 
-class Import extends CI_Controller {
-
+class Import_rujukan_api extends CI_Controller {
+	var $objectId="importRujukanApi";
 	function __construct()
 	{
 		parent::__construct();		
@@ -14,8 +14,7 @@ class Import extends CI_Controller {
 	
 	function index(){
 		$data['title'] = 'Import Data Rujukan';	
-		$data['objectId'] = 'import';
-		//$this->load->view('utility/import_v',$data);
+		$data['objectId'] = $this->objectId;
 		$this->load->view('utility/import_api_v',$data);
 	}
 	
@@ -23,9 +22,15 @@ class Import extends CI_Controller {
 		echo $this->sys_menu_model->loadMenu($this->session->userdata('app_type'),1);
 	}
 	
-	function doImport($menuId,$menuTitle,$replace,$tahun){
-		$rs = $this->import_model->doImport($menuId,$menuTitle,$replace,$tahun);
-		echo urldecode ($rs);
+	function doImport($menuTitle){
+		
+		$data['objectId'] = $this->objectId;
+		switch (urldecode($menuTitle)){
+			case "Kementerian":$this->load->view('utility/import_kl_v',$data);break;			
+			case "Eselon I":$this->load->view('utility/import_eselon1_v',$data);break;			
+			case "Eselon II":$this->load->view('utility/import_eselon2_v',$data);break;
+		}
+		
 	}
 }
 ?>

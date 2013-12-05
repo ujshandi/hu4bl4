@@ -7,7 +7,7 @@
 		 	saveData<?=$objectId;?>=function(){
 			
 				$('#fm<?=$objectId;?>').form('submit',{
-					url: base_url + 'kka/pre_usulan1_e2/save',
+					url: base_url + 'kka/pre_indikatif_e2/save',
 					onSubmit: function(){
 						return $(this).form('validate');
 					},
@@ -21,7 +21,7 @@
 							});
 							// reload and close tab
 							$('#dg<?=$objectId;?>').datagrid('reload');
-							$('#tt').tabs('close', 'Add Pra Monev Eselon II Pagu Usulan');
+							$('#tt').tabs('close', 'Add Pra Monev Eselon II Pagu Indikatif');
 						} else {
 							$.messager.show({
 								title: 'Error',
@@ -65,7 +65,7 @@
 				
 				tahun =  $('#tahun<?=$objectId;?>').val();
 				$("#tbodykegiatan<?=$objectId;?>").load(
-					base_url+"kka/pre_usulan1_e2/getKegiatan_e2/"+e2+"/"+tahun,
+					base_url+"kka/pre_indikatif_e2/getKegiatan_e2/"+e2+"/"+tahun,
 					function(){
 						$('.money').autoNumeric('init',{aSep: '.', aDec: ',',vMin:'0',aPad:"false",vMax:"999999999999999"});
 
@@ -81,7 +81,7 @@
 			
 				tahun =  $('#tahun<?=$objectId;?>').val();
 				$("#divSasaranE2<?=$objectId?>").load(
-					base_url+"kka/pre_usulan1_e2/getListSasaranE2/"+"<?=$objectId;?>"+"/"+e2+"/"+tahun,
+					base_url+"kka/pre_indikatif_e2/getListSasaranE2/"+"<?=$objectId;?>"+"/"+e2+"/"+tahun,
 					function(){
 						$("textarea").autogrow();
 						if($("#drop<?=$objectId;?>").is(":visible")){
@@ -118,7 +118,7 @@
 				
 				tahun =  $('#tahun<?=$objectId;?>').val();
 				$("#divIkk<?=$objectId?>").load(
-					base_url+"kka/pre_usulan1_e2/getListIkuE2/"+"<?=$objectId;?>"+"/"+e2+"/"+tahun,
+					base_url+"kka/pre_indikatif_e2/getListIkuE2/"+"<?=$objectId;?>"+"/"+e2+"/"+tahun,
 					function(){
 						$("textarea").autogrow();
 						if($("#dropIku<?=$objectId;?>").is(":visible")){
@@ -148,22 +148,8 @@
 				
 			}
 			
-			calculateKegiatan<?=$objectId?>=function(idxKegiatan,max_sub_idx){
-				$('.money').autoNumeric('init',{aSep: '.', aDec: ',',vMin:'0',aPad:"false",vMax:"999999999999999"});
-				//alert($("#"+kegiatanJumlahId).val());
-				//alert($("#jumlah_"+idx).val());
-				var jumlahSubkegiatan=0, jumlahKegiatan = 0, idkegiatan;
+			calculateKegiatan<?=$objectId?>=function(kegiatanJumlahId){
 				
-				//jumlahKegiatan = parseFloat($("#jumlah_"+idxKegiatan).autoNumeric('get'));
-				//if (!jumlahKegiatan) jumlahKegiatan = parseFloat(0);
-				for (idx=(idxKegiatan+1);idx<max_sub_idx;idx++){
-					jumlahSubkegiatan = parseFloat($("#jumlah_"+idx).autoNumeric('get'));
-					if (!jumlahSubkegiatan) jumlahSubkegiatan = parseFloat(0);
-					jumlahKegiatan = jumlahKegiatan + jumlahSubkegiatan;
-				}
-		          				  
-		        
-		        $("#jumlah_"+idxKegiatan).autoNumeric('set',(jumlahKegiatan));	
 			}
 			
 			
@@ -174,7 +160,7 @@
 				
 			  //inisialisasi
 			 setListE2<?=$objectId?>();
-			 $("#tahun<?=$objectId?>").focus();
+			 
 			//--------------------
 		});
 
@@ -200,7 +186,7 @@
 			}else{
 			//	setSasaranE2<?=$objectId;?>(kode_e1, tahun);
 				$("#tbodykegiatan<?=$objectId;?>").load(
-					base_url+"kka/pre_usulan1_e2/getIKU_e1/"+kode_e1+"/"+tahun
+					base_url+"kka/pre_indikatif_e2/getIKU_e1/"+kode_e1+"/"+tahun
 				);
 			} */
 			

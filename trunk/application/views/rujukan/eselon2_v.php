@@ -242,7 +242,7 @@
 			<? if($this->sys_menu_model->cekAkses('EXCEL;',4,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 				<a href="#" onclick="toExcel<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-excel" plain="true">Excel</a>
 			<?}?>
-				<!--<li><a target="blank" href="http://192.168.0.100/e-performance/api/rujukan_api/eselon2_list/format/json">Rujukan E2</a> - get it in JSON</li> -->
+				<!--<li><a target="blank" href="http://192.168.0.100/e-performance/api/rujukan_api/eselon2_list/format/json">Rujukan E2</a> - get it in JSON</li>  -->
 	  	</div>
 	</div>
 	
