@@ -29,6 +29,27 @@ class Lke_konversi_model extends CI_Model
 	}
 	
 	
+	public function getCountIndex($data="",$required="true",$name="index_mutu"){
+		$jenis_lke = isset($data['jenis_lke'])?$data['jenis_lke']:'-1';
+		$unit_kerja = isset($data['unit_kerja'])?$data['unit_kerja']:'e1';
+		$value = isset($data['value'])?$data['value']:'0';
+		
+		$this->db->flush_cache();
+		$this->db->select('index_mutu');
+		$this->db->from('tbl_lke_konversi');
+		
+		if (($jenis_lke!= "-1")||($jenis_lke!= "")){
+			$this->db->where('jenis_lke',$jenis_lke);
+		}
+		if (($unit_kerja!= "-1")||($unit_kerja!= "")){
+			$this->db->where('unit_kerja',$unit_kerja);
+		}
+		
+		
+		$que = $this->db->get();
+		return $que;
+	}
+	
 	public function getListIndex($objectId="", $data="",$required="true",$name="index_mutu"){
 		
 		$jenis_lke = isset($data['jenis_lke'])?$data['jenis_lke']:'-1';

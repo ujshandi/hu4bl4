@@ -5,11 +5,11 @@
 			clearFilter<?=$objectId;?> = function (){
 				//ambil nilai-nilai filter
 				$("#filter_tahun<?=$objectId;?>").val(''); 			
-				$("#filter_e1<?=$objectId;?>").val('');			
+				$("#filter_e2<?=$objectId;?>").val('');			
 				$("#filter_sasaran<?=$objectId;?>").val('');			
 				$("#filter_iku<?=$objectId;?>").val('');			
-				//$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>lke/kke1_2/grid/"+filtahun+"/"+filnama+"/"+filalamat});
-					//$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>lke/kke1_2/grid/"+filtahun+"/"+filnama+"/"+filalamat});
+				//$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>lke/kke1_2_e2/grid/"+filtahun+"/"+filnama+"/"+filalamat});
+					//$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>lke/kke1_2_e2/grid/"+filtahun+"/"+filnama+"/"+filalamat});
 			}
 			
 				//tipe 1=grid, 2=pdf, 3=excel
@@ -28,24 +28,24 @@
 					//ambil nilai-nilai filter
 				//alert($("#filter_tahun<?=$objectId;?>").val());
 				var filtahun = $("#filter_tahun<?=$objectId;?>").val();
-				<? if ($this->session->userdata('unit_kerja_e1')==-1){?>
-					var file1 = $("#filter_e1<?=$objectId;?>").val();
+				<? if ($this->session->userdata('unit_kerja_e2')==-1){?>
+					var file2 = $("#filter_e2<?=$objectId;?>").val();
 				<?} else {?>
-					var file1 = "<?=$this->session->userdata('unit_kerja_e1');?>";
+					var file2 = "<?=$this->session->userdata('unit_kerja_e2');?>";
 				<?}?>
 				
 				 if(filtahun==null) filtahun ="-1";
-				 if((file1==null)||(file1.length==0)) file1 ="-1";
+				 if((file2==null)||(file2.length==0)) file2 ="-1";
 				var filsasaran = "-1";
 				var filiku = "-1";
 				
 				if (tipe==1){
-					return "<?=base_url()?>lke/kke1_2/grid/"+filtahun+"/"+file1;
+					return "<?=base_url()?>lke/kke1_2_e2/grid/"+filtahun+"/"+file2;
 				}
 				else if (tipe==2){
-					return "<?=base_url()?>lke/kke1_2/pdf/"+filtahun+"/"+file1+"/"+filsasaran+"/"+filiku+paging;
+					return "<?=base_url()?>lke/kke1_2_e2/pdf/"+filtahun+"/"+file2+"/"+filsasaran+"/"+filiku+paging;
 				}else if (tipe==3){
-					return "<?=base_url()?>lke/kke1_2/excel/"+filtahun+"/"+file1+"/"+filsasaran+"/"+filiku+paging;
+					return "<?=base_url()?>lke/kke1_2_e2/excel/"+filtahun+"/"+file2+"/"+filsasaran+"/"+filiku+paging;
 				}
 				
 			}
@@ -61,44 +61,19 @@
 					
 					var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
 					if (row){
-						$('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Add KKE1-II Capaian');  
+						$('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Add KKe2-II Capaian');  
 						$('#fm<?=$objectId;?>').form('clear');  						
 						//initCombo<?=$objectId?>();
-						url = base_url+'lke/kke1_2/save';  
-						$("#kke12_e1_id<?=$objectId?>").val(row.kke12_e1_id);
+						url = base_url+'lke/kke1_2_e2/save';  
+						$("#kke22_e2_id<?=$objectId?>").val(row.kke22_e2_id);
 						$("#tahun<?=$objectId?>").val(row.tahun);
 						$("#spanTahun<?=$objectId?>").text(row.tahun);
-						$("#kode_sasaran_e1<?=$objectId?>").val(row.kode_sasaran_e1);
+						$("#kode_sasaran_e2<?=$objectId?>").val(row.kode_sasaran_e2);
 						$("#spanSasaran<?=$objectId?>").text(row.sasaran_strategis);
-						$("#kode_iku_e1<?=$objectId?>").val(row.kode_iku_e1);
+						$("#kode_iku_e2<?=$objectId?>").val(row.kode_iku_e2);
 						$("#spanIku<?=$objectId?>").text(row.indikator_kinerja);
 						
-						<? $i=0;
-						foreach($listIndex_sasaran_tepat->result() as $r){?>
-							$('input:radio[name=sasaran_tepat]:nth(<?=$i?>)').prop('checked',(row.sasaran_tepat=='<?=$r->index_mutu?>'));
-					<? $i++;
-					 }?>
-					 <? $i=0;
-						foreach($listIndex_ik_tepat->result() as $r){?>
-							$('input:radio[name=ik_tepat]:nth(<?=$i?>)').prop('checked',(row.ik_tepat=='<?=$r->index_mutu?>'));
-					<? $i++;
-					 }?>
-					 <? $i=0;
-						foreach($listIndex_target_tercapai->result() as $r){?>
-							$('input:radio[name=target_tercapai]:nth(<?=$i?>)').prop('checked',(row.target_tercapai=='<?=$r->index_mutu?>'));
-					<? $i++;
-					 }?>
-					 <? $i=0;
-						foreach($listIndex_kinerja_baik->result() as $r){?>
-							$('input:radio[name=kinerja_baik]:nth(<?=$i?>)').prop('checked',(row.kinerja_baik=='<?=$r->index_mutu?>'));
-					<? $i++;
-					 }?>
-					 <? $i=0;
-						foreach($listIndex_data_andal->result() as $r){?>
-							$('input:radio[name=data_andal]:nth(<?=$i?>)').prop('checked',(row.data_andal=='<?=$r->index_mutu?>'));
-					<? $i++;
-					 }?>
-						/* $('input:radio[name=sasaran_tepat]:nth(0)').prop('checked',(row.sasaran_tepat=='A'));
+						$('input:radio[name=sasaran_tepat]:nth(0)').prop('checked',(row.sasaran_tepat=='A'));
 						$('input:radio[name=sasaran_tepat]:nth(1)').prop('checked',(row.sasaran_tepat=='B'));
 						$('input:radio[name=sasaran_tepat]:nth(2)').prop('checked',(row.sasaran_tepat=='C'));
 						$('input:radio[name=sasaran_tepat]:nth(3)').prop('checked',(row.sasaran_tepat=='D'));
@@ -126,7 +101,7 @@
 						$('input:radio[name=data_andal]:nth(1)').prop('checked',(row.data_andal=='B'));
 						$('input:radio[name=data_andal]:nth(2)').prop('checked',(row.data_andal=='C'));
 						$('input:radio[name=data_andal]:nth(3)').prop('checked',(row.data_andal=='D'));
-						$('input:radio[name=data_andal]:nth(4)').prop('checked',(row.data_andal=='E')); */
+						$('input:radio[name=data_andal]:nth(4)').prop('checked',(row.data_andal=='E'));
 					}
 						
 					else {
@@ -136,7 +111,7 @@
 				else {
 					alert("Pilih data subkomponen terlebih dahulu");
 				} */
-				//addTab("Add PK Kementerian", "lke/kke1_2/add");
+				//addTab("Add PK Kementerian", "lke/kke1_2_e2/add");
 			}
 			
 			saveData<?=$objectId;?>=function(){
@@ -287,7 +262,7 @@
 						
 			setTimeout(function(){
 				/* $('#dg<?=$objectId;?>').datagrid({
-				url:"<?=base_url()?>lke/kke1_2/grid",
+				url:"<?=base_url()?>lke/kke1_2_e2/grid",
 				queryParams:{lastNo:'0'},		
 					onLoadSuccess:function(data){
 						$('#dg<?=$objectId;?>').datagrid('options').queryParams.lastNo = data.lastNo;
@@ -372,7 +347,7 @@
 			<tr>
 				<td>Tahun :</td>
 				<td>
-				<?=$this->iku_e1_model->getListTahun($objectId,"filter_tahun","false",false);?>
+				<?=$this->iku_e2_model->getListTahun($objectId,"filter_tahun","false",false);?>
 				</td>
 				<td width="10px">&nbsp;</td>
 				<td><a href="#" class="easyui-linkbutton" onclick="searchData<?=$objectId;?>();" iconCls="icon-search">Search</a>
@@ -399,15 +374,15 @@
 	  </div>
 	</div>
 	
-	<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Laporan KKE1-II Capaian" toolbar="#tb<?=$objectId;?>" fitColumns="false" singleSelect="true" rownumbers="false" pagination="true"  nowrap="false" showFooter="true">
+	<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Laporan KKe2-II Capaian" toolbar="#tb<?=$objectId;?>" fitColumns="false" singleSelect="true" rownumbers="false" pagination="true"  nowrap="false" showFooter="true">
 	  <thead>
 	  <tr>
 		
 		<th field="no" rowspan="3" sortable="false" width="25px">No.</th>
-		<th field="kke12_e1_id" rowspan="3" sortable="false" hidden="true">kke12_e1_id</th>
+		<th field="kke22_e2_id" rowspan="3" sortable="false" hidden="true">kke22_e2_id</th>
 		<th field="tahun" rowspan="3" sortable="false" hidden="true" >tahun</th>
-		<th field="kode_sasaran_e1" rowspan="3" sortable="false" hidden="true" >kode_sasaran_e1</th>
-		<th field="kode_iku_e1" rowspan="3" sortable="false" hidden="true">kode_iku_e1</th>
+		<th field="kode_sasaran_e2" rowspan="3" sortable="false" hidden="true" >kode_sasaran_e2</th>
+		<th field="kode_iku_e2" rowspan="3" sortable="false" hidden="true">kode_iku_e2</th>
 		<th field="sasaran_strategis"  rowspan="3"  sortable="false" width="250px">Sasaran Strategis</th>
 		<th  sortable="false" colspan="2" width="250px">Indikator Kinerja Utama</th>
 		
@@ -454,17 +429,17 @@
 				<label style="width:130px;vertical-align:top">Tahun :</label>
 				<span id="spanTahun<?=$objectId?>"></span>
 				<input type="hidden" id="tahun<?=$objectId?>" name="tahun">
-				<input type="hidden" id="kke12_e1_id<?=$objectId?>" name="kke12_e1_id"/>				
+				<input type="hidden" id="kke22_e2_id<?=$objectId?>" name="kke22_e2_id"/>				
 			</div>
 			<div class="fitem">
 				<label style="width:130px;vertical-align:top">Sasaran Eselon I :</label>					
 					<span id="spanSasaran<?=$objectId?>"></span>
-					<input type="hidden" id="kode_sasaran_e1<?=$objectId?>" name="kode_sasaran_e1">
+					<input type="hidden" id="kode_sasaran_e2<?=$objectId?>" name="kode_sasaran_e2">
 			</div>
 			<div class="fitem">
 				<label style="width:130px;vertical-align:top">IKU Eselon I :</label>
 				<?//=$this->iku_kl_model->getListIKU_KL($objectId,"",false)?>
-				<input type="hidden" id="kode_iku_e1<?=$objectId?>" name="kode_iku_e1">
+				<input type="hidden" id="kode_iku_e2<?=$objectId?>" name="kode_iku_e2">
 				<span id="spanIku<?=$objectId?>">
 				</span>
 			</div>
