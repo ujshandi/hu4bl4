@@ -36,6 +36,30 @@ class Kke3b extends CI_Controller {
 		$data['kriteria_diukur_a_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true,"kriteria_diukur_a");
 		$data['pengukuran_a_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true,"pengukuran_a");
 		
+		$data['listIndex_renstra_a'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true);
+		$data['listIndex_renstra_b'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true);
+		$data['listIndex_rkt_a'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true);
+		$data['listIndex_rkt_b'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true);
+		$data['listIndex_pk_a'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true);
+		$data['listIndex_pk_b'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true);
+		$data['listIndex_iku_measurable_a'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true);
+		$data['listIndex_iku_measurable_b'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true);
+		$data['listIndex_iku_hasil_a'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true);
+		$data['listIndex_iku_hasil_b'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true);
+		$data['listIndex_iku_relevan_a'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true);
+		$data['listIndex_iku_relevan_b'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true);
+		$data['listIndex_iku_diukur_a'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true);
+		$data['listIndex_iku_diukur_b'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true);
+		$data['listIndex_kriteria_measurable_a'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true);
+		$data['listIndex_kriteria_measurable_b'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true);
+		$data['listIndex_kriteria_hasil_a'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true);
+		$data['listIndex_kriteria_hasil_b'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true);
+		$data['listIndex_kriteria_relevan_a'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true);
+		$data['listIndex_kriteria_relevan_b'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true);
+		$data['listIndex_kriteria_diukur_a'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true);
+		$data['listIndex_kriteria_diukur_b'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true);
+		$data['listIndex_pengukuran_a'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true);
+		$data['listIndex_pengukuran_b'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true);
 		
 		$data['renstra_b_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true,"renstra_b");
 		$data['rkt_b_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true,"rkt_b");
@@ -49,6 +73,9 @@ class Kke3b extends CI_Controller {
 		$data['kriteria_relevan_b_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true,"kriteria_relevan_b");
 		$data['kriteria_diukur_b_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true,"kriteria_diukur_b");
 		$data['pengukuran_b_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke3b','unit_kerja'=>'e1'),true,"pengukuran_b");
+		
+		
+		
 	  	$this->load->view('lke/kke3b_v',$data);
 	}
 	

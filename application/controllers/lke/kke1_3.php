@@ -28,7 +28,13 @@ class Kke1_3 extends CI_Controller {
 		$data['instansi_lainnya_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke1_3','unit_kerja'=>'e1'),true,"instansi_lainnya");
 		$data['transparansi_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke1_3','unit_kerja'=>'e1'),true,"transparansi");
 		$data['penghargaan_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke1_3','unit_kerja'=>'e1'),true,"penghargaan");
-		//$data['formLookupTarif'] = $this->tarif_model->lookup('#winLookTarif'.$data['objectId'],"#medrek_id".$data['objectId']);
+		
+		$data['listIndex_catatan_keuangan'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke1_3','unit_kerja'=>'e1'),true);
+		$data['listIndex_masyarakat'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke1_3','unit_kerja'=>'e1'),true);
+		$data['listIndex_instansi_lainnya'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke1_3','unit_kerja'=>'e1'),true);
+		$data['listIndex_transparansi'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke1_3','unit_kerja'=>'e1'),true);
+		$data['listIndex_penghargaan'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke1_3','unit_kerja'=>'e1'),true);
+		
 	  	$this->load->view('lke/kke1_3_v',$data);
 	}
 	
