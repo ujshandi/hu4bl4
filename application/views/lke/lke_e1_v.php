@@ -232,7 +232,7 @@
 		</table>
 	  <div style="margin-bottom:5px">
 	  
-		<? if($this->sys_menu_model->cekAkses('ADD;',302,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('ADD;',303,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="newData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-ok" plain="true">Set Nilai</a>  
 		<?}?>
 	

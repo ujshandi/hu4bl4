@@ -65,15 +65,42 @@
 						$('#fm<?=$objectId;?>').form('clear');  						
 						//initCombo<?=$objectId?>();
 						url = base_url+'lke/kke1_2_e2/save';  
-						$("#kke22_e2_id<?=$objectId?>").val(row.kke22_e2_id);
+						$("#kke12_e2_id<?=$objectId?>").val(row.kke12_e2_id);
 						$("#tahun<?=$objectId?>").val(row.tahun);
 						$("#spanTahun<?=$objectId?>").text(row.tahun);
+						$("#kode_e2<?=$objectId?>").val(row.kode_e2);
+						$("#spanE2<?=$objectId?>").text(row.nama_e2);
 						$("#kode_sasaran_e2<?=$objectId?>").val(row.kode_sasaran_e2);
 						$("#spanSasaran<?=$objectId?>").text(row.sasaran_strategis);
-						$("#kode_iku_e2<?=$objectId?>").val(row.kode_iku_e2);
+						$("#kode_ikk<?=$objectId?>").val(row.kode_ikk);
 						$("#spanIku<?=$objectId?>").text(row.indikator_kinerja);
 						
-						$('input:radio[name=sasaran_tepat]:nth(0)').prop('checked',(row.sasaran_tepat=='A'));
+								<? $i=0;
+						foreach($listIndex_sasaran_tepat->result() as $r){?>
+							$('input:radio[name=sasaran_tepat]:nth(<?=$i?>)').prop('checked',(row.sasaran_tepat=='<?=$r->index_mutu?>'));
+					<? $i++;
+					 }?>
+					 <? $i=0;
+						foreach($listIndex_ik_tepat->result() as $r){?>
+							$('input:radio[name=ik_tepat]:nth(<?=$i?>)').prop('checked',(row.ik_tepat=='<?=$r->index_mutu?>'));
+					<? $i++;
+					 }?>
+					 <? $i=0;
+						foreach($listIndex_target_tercapai->result() as $r){?>
+							$('input:radio[name=target_tercapai]:nth(<?=$i?>)').prop('checked',(row.target_tercapai=='<?=$r->index_mutu?>'));
+					<? $i++;
+					 }?>
+					 <? $i=0;
+						foreach($listIndex_kinerja_baik->result() as $r){?>
+							$('input:radio[name=kinerja_baik]:nth(<?=$i?>)').prop('checked',(row.kinerja_baik=='<?=$r->index_mutu?>'));
+					<? $i++;
+					 }?>
+					 <? $i=0;
+						foreach($listIndex_data_andal->result() as $r){?>
+							$('input:radio[name=data_andal]:nth(<?=$i?>)').prop('checked',(row.data_andal=='<?=$r->index_mutu?>'));
+					<? $i++;
+					 }?>
+						/* $('input:radio[name=sasaran_tepat]:nth(0)').prop('checked',(row.sasaran_tepat=='A'));
 						$('input:radio[name=sasaran_tepat]:nth(1)').prop('checked',(row.sasaran_tepat=='B'));
 						$('input:radio[name=sasaran_tepat]:nth(2)').prop('checked',(row.sasaran_tepat=='C'));
 						$('input:radio[name=sasaran_tepat]:nth(3)').prop('checked',(row.sasaran_tepat=='D'));
@@ -101,7 +128,7 @@
 						$('input:radio[name=data_andal]:nth(1)').prop('checked',(row.data_andal=='B'));
 						$('input:radio[name=data_andal]:nth(2)').prop('checked',(row.data_andal=='C'));
 						$('input:radio[name=data_andal]:nth(3)').prop('checked',(row.data_andal=='D'));
-						$('input:radio[name=data_andal]:nth(4)').prop('checked',(row.data_andal=='E'));
+						$('input:radio[name=data_andal]:nth(4)').prop('checked',(row.data_andal=='E')); */
 					}
 						
 					else {
@@ -347,28 +374,48 @@
 			<tr>
 				<td>Tahun :</td>
 				<td>
-				<?=$this->iku_e2_model->getListTahun($objectId,"filter_tahun","false",false);?>
-				</td>
-				<td width="10px">&nbsp;</td>
-				<td><a href="#" class="easyui-linkbutton" onclick="searchData<?=$objectId;?>();" iconCls="icon-search">Search</a>
-				</td>
+				<?=$this->ikk_model->getListTahun($objectId,"filter_tahun","false",false);?>
+				</td>				
 			</tr>
+			<tr>
+					<td>Unit Kerja Eselon I :</td>
+					<td>
+					<?=$this->eselon1_model->getListFilterEselon1($objectId,$this->session->userdata('unit_kerja_e1'))?>
+					</td>
+				</tr>
+				<tr>
+					<td>Unit Kerja Eselon II :</td>
+					<td><span class="fitem" id="divUnitKerja<?=$objectId;?>">
+					<?=$this->eselon2_model->getListFilterEselon2($objectId,$this->session->userdata('unit_kerja_e1'),$this->session->userdata('unit_kerja_e2'),false)?>
+					</span>
+					</td>
+				</tr>
+				<tr style="height:10px">
+					  <td style="">
+					  </td>
+				</tr>
+				<tr>
+					<td align="right" colspan="2" valign="top">
+						<a href="#" class="easyui-linkbutton" onclick="clearFilter<?=$objectId;?>();" iconCls="icon-reset">Reset</a>
+						<a href="#" class="easyui-linkbutton" onclick="searchData<?=$objectId;?>();" iconCls="icon-search">Search</a>
+					</td>
+				</tr>
 			</table>
 		  </div>
 		</td>
 	  </tr>
 	  </table>
 	  <div style="margin-bottom:5px">  
-	  <? if($this->sys_menu_model->cekAkses('ADD;',302,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+	  <? if($this->sys_menu_model->cekAkses('ADD;',316,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="newData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-ok" plain="true">Set Kinerja</a>  
 		<?}?>
 	
 		
 		
-			<? if($this->sys_menu_model->cekAkses('PRINT;',253,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+			<? if($this->sys_menu_model->cekAkses('PRINT;',316,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 				<a 	href="#" onclick="printData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-print" plain="true">Print</a>
 			<?}?>
-			<? if($this->sys_menu_model->cekAkses('EXCEL;',253,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+			<? if($this->sys_menu_model->cekAkses('EXCEL;',316,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 				<a href="#" onclick="toExcel<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-excel" plain="true">Excel</a>
 			<?}?>
 	  </div>
@@ -379,10 +426,12 @@
 	  <tr>
 		
 		<th field="no" rowspan="3" sortable="false" width="25px">No.</th>
-		<th field="kke22_e2_id" rowspan="3" sortable="false" hidden="true">kke22_e2_id</th>
+		<th field="kke12_e2_id" rowspan="3" sortable="false" hidden="true">kke22_e2_id</th>
 		<th field="tahun" rowspan="3" sortable="false" hidden="true" >tahun</th>
+		<th field="kode_e2" rowspan="3" sortable="false" hidden="true" >kode_e2</th>
+		<th field="nama_e2" rowspan="3" sortable="false" hidden="true" >nama_e2</th>
 		<th field="kode_sasaran_e2" rowspan="3" sortable="false" hidden="true" >kode_sasaran_e2</th>
-		<th field="kode_iku_e2" rowspan="3" sortable="false" hidden="true">kode_iku_e2</th>
+		<th field="kode_ikk" rowspan="3" sortable="false" hidden="true">kode_ikk</th>
 		<th field="sasaran_strategis"  rowspan="3"  sortable="false" width="250px">Sasaran Strategis</th>
 		<th  sortable="false" colspan="2" width="250px">Indikator Kinerja Utama</th>
 		
@@ -429,17 +478,23 @@
 				<label style="width:130px;vertical-align:top">Tahun :</label>
 				<span id="spanTahun<?=$objectId?>"></span>
 				<input type="hidden" id="tahun<?=$objectId?>" name="tahun">
-				<input type="hidden" id="kke22_e2_id<?=$objectId?>" name="kke22_e2_id"/>				
+				<input type="hidden" id="kke12_e2_id<?=$objectId?>" name="kke12_e2_id"/>				
 			</div>
 			<div class="fitem">
-				<label style="width:130px;vertical-align:top">Sasaran Eselon I :</label>					
+				<label style="width:130px;vertical-align:top">Unit Kerja Eselon II :</label>
+				<span id="spanE2<?=$objectId?>"></span>
+				<input type="hidden" id="kode_e2<?=$objectId?>" name="kode_e2">
+				
+			</div>
+			<div class="fitem">
+				<label style="width:130px;vertical-align:top">Sasaran Eselon II :</label>					
 					<span id="spanSasaran<?=$objectId?>"></span>
 					<input type="hidden" id="kode_sasaran_e2<?=$objectId?>" name="kode_sasaran_e2">
 			</div>
 			<div class="fitem">
-				<label style="width:130px;vertical-align:top">IKU Eselon I :</label>
+				<label style="width:130px;vertical-align:top">IKK :</label>
 				<?//=$this->iku_kl_model->getListIKU_KL($objectId,"",false)?>
-				<input type="hidden" id="kode_iku_e2<?=$objectId?>" name="kode_iku_e2">
+				<input type="hidden" id="kode_ikk<?=$objectId?>" name="kode_ikk">
 				<span id="spanIku<?=$objectId?>">
 				</span>
 			</div>

@@ -378,11 +378,12 @@ $this->db->set('kode_ikk',$data['kode_ikk']);
 	}
 	
 	
-	public function getListTahun($objectId){
+	public function getListTahun($objectId,$name="filter_tahun",$required="false",$withAll=true){
 		
 		$this->db->flush_cache();
 		$this->db->select('distinct tahun',false);
-		$this->db->from('tbl_ikk');
+		$this->db->from('tbl_ikk');	
+	
 		$e2 = $this->session->userdata('unit_kerja_e2');
 		if (($e2!=-1)&&($e2!=null)){
 			$this->db->where('kode_e2',$e2);
@@ -392,8 +393,9 @@ $this->db->set('kode_ikk',$data['kode_ikk']);
 		
 		$que = $this->db->get();
 		
-		$out = '<select name="filter_tahun'.$objectId.'" id="filter_tahun'.$objectId.'">';
-		$out .= '<option value="-1">Semua</option>';
+		$out = '<select name="'.$name.$objectId.'" id="'.$name.$objectId.'"  class="easyui-validatebox" required="'.$required.'">';
+		if ($withAll)
+			$out .= '<option value="-1">Semua</option>';
 		foreach($que->result() as $r){
 			$out .= '<option value="'.$r->tahun.'">'.$r->tahun.'</option>';
 		}

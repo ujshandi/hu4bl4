@@ -2,7 +2,7 @@
 		$(function(){
 			var url;
 			newData<?=$objectId;?> = function (){  			
-				addTab("Add Pre Usulan 1 Eselon I","kka/pre_usulan1_e1/add");
+				addTab("Add Pra Usulan 1 Eselon I","kka/pre_usulan1_e1/add");
 			}
 			//end newData 
 			
@@ -12,12 +12,12 @@
 				if (row){
 					if(editmode){
 						if(row.status == '0'){
-							addTab("Edit Pre Usulan 1 Eselon I", "kka/pre_usulan1_e1/edit/"+row.preusulan1_e1_id);
+							addTab("Edit Pra Usulan 1 Eselon I", "kka/pre_usulan1_e1/edit/"+row.preusulan1_e1_id);
 						}else{
 							alert('Maaf data tidak bisa diedit, karena sudah ditetapkan di PK.');
 						}
 					}else{
-						addTab("View Pre Usulan 1 Eselon I", "kka/pre_usulan1_e1/edit/"+row.preusulan1_e1_id+"/"+editmode);
+						addTab("View Pra Usulan 1 Eselon I", "kka/pre_usulan1_e1/edit/"+row.preusulan1_e1_id+"/"+editmode);
 					}
 					
 				}
@@ -92,96 +92,7 @@
 					url:getUrl<?=$objectId;?>(1),
 					queryParams:{lastNo:'0'},	
 					pageNumber : 1,
-					onLoadSuccess:function(data){	
-						$('#dg<?=$objectId;?>').datagrid('options').queryParams.lastNo = data.lastNo;
-						//prepareMerge<?=$objectId;?>(data);
-				}});
-			}
-			//end searchData 
-		
-			printData<?=$objectId;?>=function(){			
-				//$.jqURL.loc(getUrl<?=$objectId;?>(2),{w:800,h:600,wintype:"_blank"});
-			window.open(getUrl<?=$objectId;?>(2));;
-			//alert("Sedang dalam pengerjaan");
-			}
-			toExcel<?=$objectId;?>=function(){
-				// alert("Sedang dalam pengerjaan");	
-				window.open(getUrl<?=$objectId;?>(3));;
-			}
-			
-			saveData<?=$objectId;?>=function(){
-				$('#fm<?=$objectId;?>').form('submit',{
-					url: url,
-					onSubmit: function(){
-						return $(this).form('validate');
-					},
-					success: function(result){
-						//alert(result);
-						var result = eval('('+result+')');
-						if (result.success){
-							/* $.messager.show({
-								title: 'Success',
-								msg: result.msg
-							}); */
-							$('#dlg<?=$objectId;?>').dialog('close');		// close the dialog
-							$('#dg<?=$objectId;?>').datagrid('reload');	// reload the user data
-						} else {
-							$.messager.show({
-								title: 'Error',
-								msg: result.msg
-							});
-						}
-					}
-				});
-			}
-			//end saveData
-			
-			saveDataEdit<?=$objectId;?>=function(){
-				$('#fmedit<?=$objectId;?>').form('submit',{
-					url: url,
-					onSubmit: function(){
-						return $(this).form('validate');
-					},
-					success: function(result){
-						//alert(result);
-						var result = eval('('+result+')');
-						if (result.success){
-							/* $.messager.show({
-								title: 'Success',
-								msg: result.msg
-							}); */
-							$('#dlg<?=$objectId;?>').dialog('close');		// close the dialog
-							$('#dg<?=$objectId;?>').datagrid('reload');	// reload the user data
-						} else {
-							$.messager.show({
-								title: 'Error',
-								msg: result.msg
-							});
-						}
-					}
-				});
-			}
-			//end saveData
-			
-			formatPrice=function (val,row){
-				return val;//($.fn.autoNumeric.Format("txtAmount"+idx,total,{aSep:".",aDec:",",mDec:2}));
-				/* if (val < 20){
-					return '<span style="color:red;">('+val+')</span>';
-				} else {
-					return val;
-				} */
-			}
-
-			
-			setTimeout(function(){
-				searchData<?=$objectId;?> ();
-				//$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>kka/pre_usulan1_e1/grid"});
-			},50);
-			
-			
-			// yanto
-			$('#dg<?=$objectId;?>').datagrid({
-				onClickCell: function(rowIndex, field, value){
+					onClickCell: function(rowIndex, field, value){
 					$('#dg<?=$objectId;?>').datagrid('selectRow', rowIndex);
 					var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
 					
@@ -202,9 +113,43 @@
 							closePopup('#popdesc<?=$objectId?>');
 							break;
 					}
-				}
-			});
+				},
+					onLoadSuccess:function(data){	
+						$('#dg<?=$objectId;?>').datagrid('options').queryParams.lastNo = data.lastNo;
+						//prepareMerge<?=$objectId;?>(data);
+				}});
+			}
+			//end searchData 
+		
+			printData<?=$objectId;?>=function(){			
+				//$.jqURL.loc(getUrl<?=$objectId;?>(2),{w:800,h:600,wintype:"_blank"});
+			window.open(getUrl<?=$objectId;?>(2));;
+			//alert("Sedang dalam pengerjaan");
+			}
+			toExcel<?=$objectId;?>=function(){
+				// alert("Sedang dalam pengerjaan");	
+				window.open(getUrl<?=$objectId;?>(3));;
+			}
 			
+			
+			
+			formatPrice=function (val,row){
+				return val;//($.fn.autoNumeric.Format("txtAmount"+idx,total,{aSep:".",aDec:",",mDec:2}));
+				/* if (val < 20){
+					return '<span style="color:red;">('+val+')</span>';
+				} else {
+					return val;
+				} */
+			}
+
+			
+			setTimeout(function(){
+				searchData<?=$objectId;?> ();
+				//$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>kka/pre_usulan1_e1/grid"});
+			},50);
+			
+			
+		
 			$("#popdesc<?=$objectId?>").click(function(){
 				closePopup('#popdesc<?=$objectId?>');
 			});
@@ -297,16 +242,16 @@
 		</tr>
 		</table>
 	  <div style="margin-bottom:5px"> 
-		<? if($this->sys_menu_model->cekAkses('ADD;',52,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('ADD;',64,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="newData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-add" plain="true">Add</a>  
 		<?}?>
-		<? if($this->sys_menu_model->cekAkses('EDIT;',52,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('EDIT;',64,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="editData<?=$objectId;?>(true);" class="easyui-linkbutton" iconCls="icon-edit" plain="true">Edit</a>
 		<?}?>
-		<? if($this->sys_menu_model->cekAkses('VIEW;',52,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('VIEW;',64,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="editData<?=$objectId;?>(false);" class="easyui-linkbutton" iconCls="icon-view" plain="true">View</a>
 		<?}?>
-		<? if($this->sys_menu_model->cekAkses('DELETE;',52,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('DELETE;',64,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="deleteData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-remove" plain="true">Delete</a>
 		<?}?>
 		<!--
@@ -316,19 +261,19 @@
 	  </div>
 	</div>
 	
-	<table id="dg<?=$objectId;?>" class="easyui-datagrid" style="height:auto;width:auto" title="Data Pre Usulan 1 Eselon I" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true">
+	<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Data Pre Usulan 1 Eselon I" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true" noWrap="false">
 	  <thead>
 	  <tr>
 		<th field="preusulan1_e1_id" sortable="true" hidden="true" width="50px">preusulan1_e1_id</th>
-		<th field="tahun" sortable="true" width="50px">Tahun</th>
-		<th field="kode_e1" sortable="true" width="50px"<?=($this->session->userdata('unit_kerja_e1')=='-1'?'':'hidden="true"')?>>Kode Unit Kerja</th>
+		<th field="tahun" sortable="true" width="20px">Tahun</th>
+		<th field="kode_e1" sortable="true" width="20px"<?=($this->session->userdata('unit_kerja_e1')=='-1'?'':'hidden="true"')?>>Kode Unit Kerja</th>
 		<th field="nama_e1" hidden="true">nama e1</th>
-		<th field="kode_sasaran_e1" sortable="true" width="50px">Kode Sasaran</th>
+		<th field="kode_sasaran_e1" sortable="true" width="40px">Kode Sasaran</th>
 		<th field="deskripsi_sasaran_e1" hidden="true">deskripsi_sasaran_e1</th>
-		<th field="kode_iku" sortable="true" width="50px">Kode IKU</th>
+		<th field="kode_iku" sortable="true" width="40px">Kode IKU</th>
 		<th field="kode_kegiatan" sortable="true" width="50px">Kode Kegiatan</th>
 		<th field="deskripsi_iku_e1" hidden="true">deskripsi_iku_e1</th>
-		<th field="nama_kegiatan" hidden="true">nama_kegiatan</th>
+		<th field="nama_kegiatan" sortable="true" width="250px">Kegiatan / Sub Kegiatan</th>
 		<th field="jumlah" sortable="true" width="50px" align="right" formatter="formatPrice">Jumlah</th>
 		
 		

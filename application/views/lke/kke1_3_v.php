@@ -29,13 +29,39 @@
 						url = base_url+'lke/kke1_3/save';  
 						$("#kke13_e1_id<?=$objectId?>").val(row.kke13_e1_id);
 						$("#tahun<?=$objectId?>").val(row.tahun);
+						$("#kode_e1<?=$objectId?>").val('<?=FILTER_E1?>');
 						$("#spanTahun<?=$objectId?>").text(row.tahun);
 						$("#kode_sasaran_e1<?=$objectId?>").val(row.kode_sasaran_e1);
 						$("#spanSasaran<?=$objectId?>").text(row.sasaran_strategis);
 						$("#kode_iku_e1<?=$objectId?>").val(row.kode_iku_e1);
 						$("#spanIku<?=$objectId?>").text(row.indikator_kinerja);
 						
-						$('input:radio[name=catatan_keuangan]:nth(0)').prop('checked',(row.catatan_keuangan=='A'));
+						<? $i=0;
+						foreach($listIndex_catatan_keuangan->result() as $r){?>
+							$('input:radio[name=catatan_keuangan]:nth(<?=$i?>)').prop('checked',(row.catatan_keuangan=='<?=$r->index_mutu?>'));
+						<? $i++;
+						}?>
+						<? $i=0;
+						foreach($listIndex_masyarakat->result() as $r){?>
+							$('input:radio[name=masyarakat]:nth(<?=$i?>)').prop('checked',(row.masyarakat=='<?=$r->index_mutu?>'));
+						<? $i++;
+						}?>
+						<? $i=0;
+						foreach($listIndex_instansi_lainnya->result() as $r){?>
+							$('input:radio[name=instansi_lainnya]:nth(<?=$i?>)').prop('checked',(row.instansi_lainnya=='<?=$r->index_mutu?>'));
+						<? $i++;
+						}?>
+						<? $i=0;
+						foreach($listIndex_transparansi->result() as $r){?>
+							$('input:radio[name=transparansi]:nth(<?=$i?>)').prop('checked',(row.transparansi=='<?=$r->index_mutu?>'));
+						<? $i++;
+						}?>
+						<? $i=0;
+						foreach($listIndex_penghargaan->result() as $r){?>
+							$('input:radio[name=penghargaan]:nth(<?=$i?>)').prop('checked',(row.penghargaan=='<?=$r->index_mutu?>'));
+						<? $i++;
+						}?>
+						/* $('input:radio[name=catatan_keuangan]:nth(0)').prop('checked',(row.catatan_keuangan=='A'));
 						$('input:radio[name=catatan_keuangan]:nth(1)').prop('checked',(row.catatan_keuangan=='B'));
 						$('input:radio[name=catatan_keuangan]:nth(2)').prop('checked',(row.catatan_keuangan=='C'));
 						$('input:radio[name=catatan_keuangan]:nth(3)').prop('checked',(row.catatan_keuangan=='D'));
@@ -63,7 +89,7 @@
 						$('input:radio[name=penghargaan]:nth(1)').prop('checked',(row.penghargaan=='B'));
 						$('input:radio[name=penghargaan]:nth(2)').prop('checked',(row.penghargaan=='C'));
 						$('input:radio[name=penghargaan]:nth(3)').prop('checked',(row.penghargaan=='D'));
-						$('input:radio[name=penghargaan]:nth(4)').prop('checked',(row.penghargaan=='E'));
+						$('input:radio[name=penghargaan]:nth(4)').prop('checked',(row.penghargaan=='E')); */
 					}
 						
 					else {
@@ -349,15 +375,15 @@
 	  </tr>
 	  </table>
 	  <div style="margin-bottom:5px">  
-	  <? if($this->sys_menu_model->cekAkses('ADD;',302,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+	  <? if($this->sys_menu_model->cekAkses('ADD;',305,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="newData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-ok" plain="true">Set Kinerja</a>  
 		<?}?>
 	
 		
-			<? if($this->sys_menu_model->cekAkses('PRINT;',253,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+			<? if($this->sys_menu_model->cekAkses('PRINT;',305,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 				<a 	href="#" onclick="printData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-print" plain="true">Print</a>
 			<?}?>
-			<? if($this->sys_menu_model->cekAkses('EXCEL;',253,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+			<? if($this->sys_menu_model->cekAkses('EXCEL;',305,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 				<a href="#" onclick="toExcel<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-excel" plain="true">Excel</a>
 			<?}?>
 	  </div>
@@ -421,6 +447,14 @@
 				<input type="hidden" id="tahun<?=$objectId?>" name="tahun">
 				<input type="hidden" id="kke13_e1_id<?=$objectId?>" name="kke13_e1_id"/>				
 			</div>
+			<div class="fitem" >
+				<label style="width:130px">Unit Kerja Eselon I :</label>
+					<input type="hidden" name="kode_e1" id="kode_e1<?=$objectId?>" value="<? echo FILTER_E1?>"/>
+						<?php 
+							//$data['value'] = FILTER_E1;
+							echo $this->eselon1_model->getNamaE1(FILTER_E1);
+						?>
+			</div>	
 			<div class="fitem">
 				<label style="width:130px;vertical-align:top">Sasaran Eselon I :</label>					
 					<span id="spanSasaran<?=$objectId?>"></span>

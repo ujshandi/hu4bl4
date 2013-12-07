@@ -60,17 +60,30 @@ class Sys_menu_model extends CI_Model
 		$sql = "select m.* from tbl_menu m where hide<>1 and menu_parent is null and app_types like '%$app_type%'"
 		//.($menuparent==null?' where menu_parent is null ':' where menu_parent = '.$menuparent)
 		.($imported==null?'  ':' and imported = '.$imported)
-		.' order by menu_id ';
+		.' order by menu_id '; //and menu_group = \'UTILITY\' 
 		$query = $this->db->query($sql);
 		$result = "";
 		foreach ($query->result() as $row){
-			
+			$policy ='';
 			$child = $this->loadApycomChild($row->menu_id,$app_type,$imported,$cekPolicy,$policy);
-			
+			//var_dump($child.'='.$policy);
+		if (($cekPolicy)&&($policy=="")) {
+				$policy = $this->getAccessPolicy($row->menu_id,$this->session->userdata('group_id'),$this->session->userdata('level_id'));
+				if ($policy=="")
+					continue;
+			}
 			$result .= "<li><a href='#' ".($child!=""?'class="parent"':"")."><span>$row->menu_name</span></a>";
 			
-			if ($child!="")
+			if ($child!=""){
+			/* 	//tambah
+			if (($cekPolicy)&&($policy=="")) {
+				$policy = $this->getAccessPolicy($row->menu_id,$this->session->userdata('group_id'),$this->session->userdata('level_id'));
+				if ($policy=="")
+					continue;
+			}
+			//end tambah */
 				$result .= "<div><ul>".$child."</ul></div>";
+			}
 			$result .= "</li>";
 		}	
 		//var_dump($result);die;
@@ -188,11 +201,23 @@ class Sys_menu_model extends CI_Model
 			
 			$childs = $this->loadApycomChild($row->menu_id,$app_type,$imported,$cekPolicy,$policy);
 			
+			
 			if ($childs==""){ 
-				
+				//tambah
+				 if (($cekPolicy) ) {
+					//if ($policy!="")
+					$currentPolicy = $this->getAccessPolicy($row->menu_id,$this->session->userdata('group_id'),$this->session->userdata('level_id'));	
+					$policy .= $currentPolicy;
+					
+						if ($currentPolicy =='')
+							continue;
+					
+				} 
+			//end tambah
 				$result .= '<li><a href="#" onclick="addTab(\''.$row->menu_name.'\',\''.$row->url.'\')"><span>'.$row->menu_name.'</a></span></li>';
 			}
 			else {
+				
 				$result .= "<li><a href='#' class='parent'><span>$row->menu_name</span></a>";
 				
 				$result .= "<div><ul>".$childs."</ul></div></li>";

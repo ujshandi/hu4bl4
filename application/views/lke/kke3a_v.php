@@ -68,13 +68,75 @@
 						url = base_url+'lke/kke3a/save';  
 						$("#kke3a_e1_id<?=$objectId?>").val(row.kke3a_e1_id);
 						$("#tahun<?=$objectId?>").val(row.tahun);
+						$("#kode_e1<?=$objectId?>").val('<?=FILTER_E1?>');
 						$("#spanTahun<?=$objectId?>").text(row.tahun);
 						$("#kode_sasaran_e1<?=$objectId?>").val(row.kode_sasaran_e1);
 						$("#spanSasaran<?=$objectId?>").text(row.sasaran_strategis);
 						$("#kode_iku_e1<?=$objectId?>").val(row.kode_iku_e1);
 						$("#spanIku<?=$objectId?>").text(row.indikator_kinerja);
 						
-						$('input:radio[name=renstra_ip]:nth(0)').prop('checked',(row.renstra_ip=='T'));
+						<? $i=0;
+						foreach($listIndex_renstra_ip->result() as $r){?>
+							$('input:radio[name=renstra_ip]:nth(<?=$i?>)').prop('checked',(row.renstra_ip=='<?=$r->index_mutu?>'));
+						<? $i++;
+						}?>
+						<? $i=0;
+						foreach($listIndex_rkt_ip->result() as $r){?>
+							$('input:radio[name=rkt_ip]:nth(<?=$i?>)').prop('checked',(row.rkt_ip=='<?=$r->index_mutu?>'));
+						<? $i++;
+						}?>
+						<? $i=0;
+						foreach($listIndex_pk_ip->result() as $r){?>
+							$('input:radio[name=pk_ip]:nth(<?=$i?>)').prop('checked',(row.pk_ip=='<?=$r->index_mutu?>'));
+						<? $i++;
+						}?>
+						<? $i=0;
+						foreach($listIndex_iku_measurable->result() as $r){?>
+							$('input:radio[name=iku_measurable]:nth(<?=$i?>)').prop('checked',(row.iku_measurable=='<?=$r->index_mutu?>'));
+						<? $i++;
+						}?>
+						<? $i=0;
+						foreach($listIndex_iku_hasil->result() as $r){?>
+							$('input:radio[name=iku_hasil]:nth(<?=$i?>)').prop('checked',(row.iku_hasil=='<?=$r->index_mutu?>'));
+						<? $i++;
+						}?>
+						<? $i=0;
+						foreach($listIndex_iku_relevan->result() as $r){?>
+							$('input:radio[name=iku_relevan]:nth(<?=$i?>)').prop('checked',(row.iku_relevan=='<?=$r->index_mutu?>'));
+						<? $i++;
+						}?>
+						<? $i=0;
+						foreach($listIndex_iku_diukur->result() as $r){?>
+							$('input:radio[name=iku_diukur]:nth(<?=$i?>)').prop('checked',(row.iku_diukur=='<?=$r->index_mutu?>'));
+						<? $i++;
+						}?>
+						<? $i=0;
+						foreach($listIndex_kriteria_measurable->result() as $r){?>
+							$('input:radio[name=kriteria_measurable]:nth(<?=$i?>)').prop('checked',(row.kriteria_measurable=='<?=$r->index_mutu?>'));
+						<? $i++;
+						}?>
+						<? $i=0;
+						foreach($listIndex_kriteria_hasil->result() as $r){?>
+							$('input:radio[name=kriteria_hasil]:nth(<?=$i?>)').prop('checked',(row.kriteria_hasil=='<?=$r->index_mutu?>'));
+						<? $i++;
+						}?>
+						<? $i=0;
+						foreach($listIndex_kriteria_relevan->result() as $r){?>
+							$('input:radio[name=kriteria_relevan]:nth(<?=$i?>)').prop('checked',(row.kriteria_relevan=='<?=$r->index_mutu?>'));
+						<? $i++;
+						}?>
+						<? $i=0;
+						foreach($listIndex_kriteria_diukur->result() as $r){?>
+							$('input:radio[name=kriteria_diukur]:nth(<?=$i?>)').prop('checked',(row.kriteria_diukur=='<?=$r->index_mutu?>'));
+						<? $i++;
+						}?>
+						<? $i=0;
+						foreach($listIndex_pengukuran->result() as $r){?>
+							$('input:radio[name=pengukuran]:nth(<?=$i?>)').prop('checked',(row.pengukuran=='<?=$r->index_mutu?>'));
+						<? $i++;
+						}?>
+						
+						/* $('input:radio[name=renstra_ip]:nth(0)').prop('checked',(row.renstra_ip=='T'));
 						$('input:radio[name=renstra_ip]:nth(1)').prop('checked',(row.renstra_ip=='Y'));					
 						$('input:radio[name=rkt_ip]:nth(0)').prop('checked',(row.rkt_ip=='T'));
 						$('input:radio[name=rkt_ip]:nth(1)').prop('checked',(row.rkt_ip=='Y'));						
@@ -99,7 +161,7 @@
 						$('input:radio[name=kriteria_diukur]:nth(0)').prop('checked',(row.kriteria_diukur=='T'));
 						$('input:radio[name=kriteria_diukur]:nth(1)').prop('checked',(row.kriteria_diukur=='Y'));
 						$('input:radio[name=pengukuran]:nth(0)').prop('checked',(row.pengukuran=='T'));
-						$('input:radio[name=pengukuran]:nth(1)').prop('checked',(row.pengukuran=='Y'));
+						$('input:radio[name=pengukuran]:nth(1)').prop('checked',(row.pengukuran=='Y')); */
 					
 					}
 						
@@ -342,15 +404,15 @@
 	  </tr>
 	  </table>
 	  <div style="margin-bottom:5px">  
-	  <? if($this->sys_menu_model->cekAkses('ADD;',302,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+	  <? if($this->sys_menu_model->cekAkses('ADD;',308,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="newData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-ok" plain="true">Set Kinerja</a>  
 		<?}?>
 	
 		
-			<? if($this->sys_menu_model->cekAkses('PRINT;',253,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+			<? if($this->sys_menu_model->cekAkses('PRINT;',308,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 				<a 	href="#" onclick="printData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-print" plain="true">Print</a>
 			<?}?>
-			<? if($this->sys_menu_model->cekAkses('EXCEL;',253,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+			<? if($this->sys_menu_model->cekAkses('EXCEL;',308,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 				<a href="#" onclick="toExcel<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-excel" plain="true">Excel</a>
 			<?}?>
 	  </div>
@@ -433,6 +495,14 @@
 				<input type="hidden" id="tahun<?=$objectId?>" name="tahun">
 				<input type="hidden" id="kke3a_e1_id<?=$objectId?>" name="kke3a_e1_id"/>				
 			</div>
+			<div class="fitem" >
+				<label style="width:130px">Unit Kerja Eselon I :</label>
+					<input type="hidden" name="kode_e1" id="kode_e1<?=$objectId?>" value="<? echo FILTER_E1?>"/>
+						<?php 
+							//$data['value'] = FILTER_E1;
+							echo $this->eselon1_model->getNamaE1(FILTER_E1);
+						?>
+			</div>	
 			<div class="fitem">
 				<label style="width:130px;vertical-align:top">Sasaran Eselon I :</label>					
 					<span id="spanSasaran<?=$objectId?>"></span>

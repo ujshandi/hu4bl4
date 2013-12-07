@@ -1,11 +1,8 @@
-	<script  type="text/javascript" src="<?=base_url()?>public/js/autoNumeric.js"></script>
-	
-	<script  type="text/javascript" >
-				
+	<script  type="text/javascript" src="<?=base_url()?>public/js/autoNumeric.js"></script>	
+	<script  type="text/javascript" >				
 		$(function(){
      		$('.year').autoNumeric('init',{aSep: '', aDec: ',',vMin:'0',aPad:"false",vMax:"9999"});
-		 	saveData<?=$objectId;?>=function(){
-			
+		 	saveData<?=$objectId;?>=function(){			
 				$('#fm<?=$objectId;?>').form('submit',{
 					url: base_url + 'kka/pre_usulan1_e2/save',
 					onSubmit: function(){
@@ -68,7 +65,6 @@
 					base_url+"kka/pre_usulan1_e2/getKegiatan_e2/"+e2+"/"+tahun,
 					function(){
 						$('.money').autoNumeric('init',{aSep: '.', aDec: ',',vMin:'0',aPad:"false",vMax:"999999999999999"});
-
 					}
 				);
 			}
@@ -106,16 +102,13 @@
 							//$('#txtkode_sasaran_e1<?=$objectId;?>').val(val);
 							
 					}
-				);
-				//alert("here");
-				
+				);		//alert("here");				
 			}
 			
 			setIkkE2<?=$objectId;?> = function(e2, tahun){
 				<? if ($this->session->userdata('unit_kerja_e2')!='-1') {?>
 				 e2 = '<?=$this->session->userdata('unit_kerja_e2');?>';
-				<?}?>
-				
+				<?}?>				
 				tahun =  $('#tahun<?=$objectId;?>').val();
 				$("#divIkk<?=$objectId?>").load(
 					base_url+"kka/pre_usulan1_e2/getListIkuE2/"+"<?=$objectId;?>"+"/"+e2+"/"+tahun,
@@ -143,9 +136,7 @@
 							//$('#txtkode_sasaran_e1<?=$objectId;?>').val(val);
 							
 					}
-				);
-				//alert("here");
-				
+				);				//alert("here");				
 			}
 			
 			calculateKegiatan<?=$objectId?>=function(idxKegiatan,max_sub_idx){
@@ -161,8 +152,6 @@
 					if (!jumlahSubkegiatan) jumlahSubkegiatan = parseFloat(0);
 					jumlahKegiatan = jumlahKegiatan + jumlahSubkegiatan;
 				}
-		          				  
-		        
 		        $("#jumlah_"+idxKegiatan).autoNumeric('set',(jumlahKegiatan));	
 			}
 			
@@ -170,8 +159,6 @@
 			$("#kode_e2<?=$objectId?>").change(function(){
 				setSasaranE2<?=$objectId;?>($(this).val(), $('#tahun<?=$objectId;?>').val());
 			});
-			
-				
 			  //inisialisasi
 			 setListE2<?=$objectId?>();
 			 $("#tahun<?=$objectId?>").focus();
@@ -182,38 +169,19 @@
 	
 	
 	<!-- Dari Stef -->
-	<script type="text/javascript">
-		
+	<script type="text/javascript">		
 		//chan-----------
-		function setSasaran<?=$objectId;?>(valu){
-			
+		function setSasaran<?=$objectId;?>(valu){			
 			if(valu != null){
 				document.getElementById('kode_sasaran_e2<?=$objectId;?>').value = valu;
-			}
-			
-			// set IKU E1 berdasarkan unit kerja eselon 1
-			/* var kode_e1 = $('#kode_e1<?=$objectId;?>').val();
-			var tahun = $('#tahun<?=$objectId;?>').val();
-			
-			if(tahun.length < 4){
-				$("#tbodykegiatan<?=$objectId;?>").html('<tr><td colspan="5">Isi Tahun dengan benar</td></tr>');
-			}else{
-			//	setSasaranE2<?=$objectId;?>(kode_e1, tahun);
-				$("#tbodykegiatan<?=$objectId;?>").load(
-					base_url+"kka/pre_usulan1_e2/getIKU_e1/"+kode_e1+"/"+tahun
-				);
-			} */
-			
+			}					
 		}
 		//chan-----------
-		function setIkk<?=$objectId;?>(valu){
-			
+		function setIkk<?=$objectId;?>(valu){			
 			if(valu != null){
 				document.getElementById('kode_ikk<?=$objectId;?>').value = valu;
-			}			
-			
-		}
-			
+			}						
+		}			
 	</script>
 	
 	<style type="text/css">

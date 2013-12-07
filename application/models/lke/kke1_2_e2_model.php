@@ -14,12 +14,12 @@ class Kke1_2_e2_model extends CI_Model
 		//$this->CI =& get_instance();
     }
 	// purpose : 1=buat grid, 2=buat pdf, 3=buat excel
-	public function easyGrid($filtahun=null,$file1=null,$filsasaran=null,$filiku=null,$purpose=1,$pageNumber=null,$pageSize=null){
+	public function easyGrid($filtahun=null,$file2=null,$filsasaran=null,$filiku=null,$purpose=1,$pageNumber=null,$pageSize=null){
 		$lastNo = isset($_POST['lastNo']) ? intval($_POST['lastNo']) : 0;  
 		$page = isset($_POST['page']) ? intval($_POST['page']) : 1;  
 		$limit = isset($_POST['rows']) ? intval($_POST['rows']) : 10;  
 		
-		$count = $this->GetRecordCount($filtahun,$file1,$filsasaran,$filiku);
+		$count = $this->GetRecordCount($filtahun,$file2,$filsasaran,$filiku);
 		$response = new stdClass();
 		$response->total = $count;
 		$sort = isset($_POST['sort']) ? strval($_POST['sort']) : 'sasaran_strategis';  
@@ -41,22 +41,21 @@ class Kke1_2_e2_model extends CI_Model
 			if($filtahun != '' && $filtahun != '-1' && $filtahun != null) {
 				$this->db->where("rkt.tahun",$filtahun);
 			}		
-			/* if($file1 != '' && $file1 != '-1' && $file1 != null) {
-						$this->db->where("kke.kode_e1",$file1);
-			} */
+			if($file2 != '' && $file2 != '-1' && $file2 != null) {
+				$this->db->where("rkt.kode_e2",$file2);
+			} 
 			if($filsasaran != '' && $filsasaran != '-1' && $filsasaran != null) {
-					$this->db->where("rkt.kode_sasaran_e1",$filsasaran);
+					$this->db->where("rkt.kode_sasaran_e2",$filsasaran);
 			}
 			if($filiku != '' && $filiku != '-1' && $filiku != null) {
-					$this->db->where("rkt.kode_iku_e1",$filiku);
+					$this->db->where("rkt.kode_ikk",$filiku);
 			}
 			
 			//$this->db->order_by($sort." ".$order );
-			$this->db->order_by("rkt.kode_sasaran_e1,iku.kode_iku_e1,rkt.tahun");
+			$this->db->order_by("rkt.kode_sasaran_e2,iku.kode_ikk,rkt.tahun");
 			if ($purpose==1) $this->db->limit($limit,$offset);
-			$this->db->select("rkt.kode_sasaran_e1,sasaran_strategis.deskripsi as sasaran_strategis, iku.deskripsi as indikator_kinerja,rkt.tahun,rkt.kode_iku_e1,lke.sasaran_tepat,lke.sasaran_tepat_nilai, lke.ik_tepat,lke.ik_tepat_nilai, lke.target_tercapai, lke.target_tercapai_nilai, lke.kinerja_baik,lke.kinerja_baik_nilai, lke.data_andal, lke.data_andal_nilai,lke.kke12_e1_id",false);
-			$this->db->from('tbl_rkt_eselon1 rkt inner join tbl_iku_eselon1 iku on iku.kode_iku_e1 = rkt.kode_iku_e1 and rkt.tahun = iku.tahun
-inner join tbl_sasaran_eselon1 sasaran_strategis on sasaran_strategis.kode_sasaran_e1 = rkt.kode_sasaran_e1 and sasaran_strategis.tahun=rkt.tahun left join tbl_kke1_2_e2 lke on rkt.kode_sasaran_e1=lke.kode_sasaran_e1 and rkt.tahun=lke.tahun and rkt.kode_iku_e1=lke.kode_iku_e1', false);
+			$this->db->select("rkt.kode_e2,rkt.kode_sasaran_e2,sasaran_strategis.deskripsi as sasaran_strategis, iku.deskripsi as indikator_kinerja,rkt.tahun,rkt.kode_ikk,lke.sasaran_tepat,lke.sasaran_tepat_nilai, lke.ik_tepat,lke.ik_tepat_nilai, lke.target_tercapai, lke.target_tercapai_nilai, lke.kinerja_baik,lke.kinerja_baik_nilai, lke.data_andal, lke.data_andal_nilai,lke.kke12_e2_id,e2.nama_e2",false);
+			$this->db->from('tbl_rkt_eselon2 rkt inner join tbl_ikk iku on iku.kode_ikk = rkt.kode_ikk and rkt.tahun = iku.tahun inner join tbl_sasaran_eselon2 sasaran_strategis on sasaran_strategis.kode_sasaran_e2 = rkt.kode_sasaran_e2 and sasaran_strategis.tahun=rkt.tahun left join tbl_kke1_2_e2 lke on rkt.kode_sasaran_e2=lke.kode_sasaran_e2 and rkt.tahun=lke.tahun and rkt.kode_ikk=lke.kode_ikk inner join tbl_eselon2 e2 on rkt.kode_e2=e2.kode_e2', false);
 			$query = $this->db->get();
 			
 			$i=0;
@@ -78,13 +77,10 @@ inner join tbl_sasaran_eselon1 sasaran_strategis on sasaran_strategis.kode_sasar
 					
 				if ($sasaran_strategis!=$row->sasaran_strategis){
 					$no++;
-					
-					
-					
 					$response->rows[$i]['no']= $no;					
 					$response->rows[$i]['sasaran_strategis']=$row->sasaran_strategis;
 					$sasaran_strategis=$row->sasaran_strategis;
-					
+					//var_dump($query->num_rows()."=".$i);	
 					if ($i>0){
 						$targetPersen=$targetSum/($noIndikator); 
 						$kinerjaPersen=$kinerjaSum/($noIndikator); 
@@ -92,8 +88,11 @@ inner join tbl_sasaran_eselon1 sasaran_strategis on sasaran_strategis.kode_sasar
 						$response->rows[$rowIdxPersen]['target_tercapai_persen']=$this->utility->cekNumericFmt($targetPersen*100,2);
 						$response->rows[$rowIdxPersen]['kinerja_baik_persen']=$this->utility->cekNumericFmt($kinerjaPersen*100,2);
 						$response->rows[$rowIdxPersen]['data_andal_persen']=$this->utility->cekNumericFmt($andalPersen*100,2);
-						$targetPersen=0; $kinerjaPersen=0; $andalPersen=0;
-					$targetSum=0; $kinerjaSum=0; $andalSum=0;
+						
+						
+							$targetPersen=0; $kinerjaPersen=0; $andalPersen=0;
+							$targetSum=0; $kinerjaSum=0; $andalSum=0;
+						
 					}
 					$noIndikator =0;
 					$rowIdxPersen=$i;
@@ -105,17 +104,19 @@ inner join tbl_sasaran_eselon1 sasaran_strategis on sasaran_strategis.kode_sasar
 				else{
 					$response->rows[$i]['sasaran_strategis']=$row->sasaran_strategis;//"";
 					$response->rows[$i]['no']= "";
-					
+					if ($i==$query->num_rows()-1){
+						
+						$targetPersen=$targetSum/($noIndikator+1); 
+						$kinerjaPersen=$kinerjaSum/($noIndikator+1); 
+						$andalPersen=$andalSum/($noIndikator+1);
+						$response->rows[$rowIdxPersen]['target_tercapai_persen']=$this->utility->cekNumericFmt($targetPersen*100,2);
+						$response->rows[$rowIdxPersen]['kinerja_baik_persen']=$this->utility->cekNumericFmt($kinerjaPersen*100,2);
+						$response->rows[$rowIdxPersen]['data_andal_persen']=$this->utility->cekNumericFmt($andalPersen*100,2);
+					}
 				}
 				
-					
-					
-					
-					
 				if ($indikator_kinerja!=$row->indikator_kinerja){	
-					$noIndikator++;
-					
-					
+					$noIndikator++;					
 					$response->rows[$i]['no_indikator']= $no.".".$noIndikator;
 					$response->rows[$i]['indikator_kinerja']=$row->indikator_kinerja;
 					$indikator_kinerja=$row->indikator_kinerja;
@@ -130,10 +131,12 @@ inner join tbl_sasaran_eselon1 sasaran_strategis on sasaran_strategis.kode_sasar
 				
 					
 				
-				$response->rows[$i]['kke12_e1_id']=$row->kke12_e1_id;
-				$response->rows[$i]['kode_sasaran_e1']=$row->kode_sasaran_e1;
+				$response->rows[$i]['kke12_e2_id']=$row->kke12_e2_id;
+				$response->rows[$i]['kode_sasaran_e2']=$row->kode_sasaran_e2;
 				$response->rows[$i]['tahun']=$row->tahun;
-				$response->rows[$i]['kode_iku_e1']=$row->kode_iku_e1;
+				$response->rows[$i]['kode_e2']=$row->kode_e2;
+				$response->rows[$i]['nama_e2']=$row->nama_e2;
+				$response->rows[$i]['kode_ikk']=$row->kode_ikk;
 				
 				$response->rows[$i]['sasaran_tepat']=$row->sasaran_tepat;
 				$response->rows[$i]['sasaran_tepat_nilai']=$this->utility->cekNumericFmt($row->sasaran_tepat_nilai,2);
@@ -145,7 +148,7 @@ inner join tbl_sasaran_eselon1 sasaran_strategis on sasaran_strategis.kode_sasar
 				$response->rows[$i]['kinerja_baik_nilai']=$this->utility->cekNumericFmt($row->kinerja_baik_nilai,2);
 				$response->rows[$i]['data_andal']=$row->data_andal;
 				$response->rows[$i]['data_andal_nilai']=$this->utility->cekNumericFmt($row->data_andal_nilai,2);
-				//$this->getIndex('target_tercapai',$row->tahun,$row->kode_sasaran_e1,$row->kode_iku_e1);//$this->utility->cekNumericFmt($row->target);
+				//$this->getIndex('target_tercapai',$row->tahun,$row->kode_sasaran_e2,$row->kode_ikk);//$this->utility->cekNumericFmt($row->target);
 				
 				$sumSasaran += $row->sasaran_tepat_nilai;	
 				$sumIk += $row->ik_tepat_nilai;	
@@ -164,9 +167,9 @@ inner join tbl_sasaran_eselon1 sasaran_strategis on sasaran_strategis.kode_sasar
 			} 
 			
 			//utk baris terakhir ga ke print makanya taro diluar looping 
-			$response->rows[$rowIdxPersen]['target_tercapai_persen']=$this->utility->cekNumericFmt($targetPersen*100,2);
+			/* $response->rows[$rowIdxPersen]['target_tercapai_persen']=$this->utility->cekNumericFmt($targetPersen*100,2);
 			$response->rows[$rowIdxPersen]['kinerja_baik_persen']=$this->utility->cekNumericFmt($kinerjaPersen*100,2);
-			$response->rows[$rowIdxPersen]['data_andal_persen']=$this->utility->cekNumericFmt($andalPersen*100,2);
+			$response->rows[$rowIdxPersen]['data_andal_persen']=$this->utility->cekNumericFmt($andalPersen*100,2); */
 			
 			$response->lastNo = $no;
 			$rataSasaran=$sumSasaran/$i;
@@ -179,6 +182,8 @@ inner join tbl_sasaran_eselon1 sasaran_strategis on sasaran_strategis.kode_sasar
 				//$response->rows[$count]['id_rkt_kl']=$row->id_rkt_kl;
 				$response->rows[$count]['no']= "";
 				$response->rows[$count]['no_indikator']= "";
+				$response->rows[$count]['kode_e2']= "";
+				$response->rows[$count]['nama_e2']= "";
 				$response->rows[$count]['indikator_kinerja']='';
 				$response->rows[$count]['sasaran_strategis']='';
 				$response->rows[$count]['sasaran_tepat']='';
@@ -219,24 +224,24 @@ inner join tbl_sasaran_eselon1 sasaran_strategis on sasaran_strategis.kode_sasar
 		
 	}
 	
-		public function GetRecordCount($filtahun=null,$file1=null,$filsasaran=null,$filiku=null){
+		public function GetRecordCount($filtahun=null,$file2=null,$filsasaran=null,$filiku=null){
 		if($filtahun != '' && $filtahun != '-1' && $filtahun != null) {
 			$this->db->where("rkt.tahun",$filtahun);
 		}		
-		/* if($file1 != '' && $file1 != '-1' && $file1 != null) {
-					$this->db->where("rkt.kode_e1",$file1);
-		} */
+		 if($file2 != '' && $file2 != '-1' && $file2 != null) {
+					$this->db->where("rkt.kode_e2",$file2);
+		} 
 		if($filsasaran != '' && $filsasaran != '-1' && $filsasaran != null) {
-				$this->db->where("rkt.kode_sasaran_e1",$filsasaran);
+				$this->db->where("rkt.kode_sasaran_e2",$filsasaran);
 		}
 		if($filiku != '' && $filiku != '-1' && $filiku != null) {
-				$this->db->where("rkt.kode_iku_e1",$filiku);
+				$this->db->where("rkt.kode_ikk",$filiku);
 		}
 		//$this->db->from('tbl_kke1_2_e2');
 		//$this->db->select("select sasaran.deskripsi as sasaran_srategis, iku.deskripsi as indikator_kinerja, rkt.target",false);
-	//	$this->db->from('tbl_kke1_2_e2 kke inner join tbl_iku_eselon1 iku on kke.kode_iku_e1 = iku.kode_iku_e1 and kke.tahun=iku.tahun inner join tbl_sasaran_eselon1 sasaran on sasaran.kode_sasaran_e1 = iku.kode_sasaran_e1 and sasaran.tahun=iku.tahun', false);
-		$this->db->from('tbl_rkt_eselon1 rkt inner join tbl_iku_eselon1 iku on iku.kode_iku_e1 = rkt.kode_iku_e1 and rkt.tahun = iku.tahun
-inner join tbl_sasaran_eselon1 sasaran on sasaran.kode_sasaran_e1 = rkt.kode_sasaran_e1 and sasaran.tahun=rkt.tahun left join tbl_kke1_2_e2 lke on rkt.kode_sasaran_e1=lke.kode_sasaran_e1 and rkt.tahun=lke.tahun and rkt.kode_iku_e1=lke.kode_iku_e1', false);
+	//	$this->db->from('tbl_kke1_2_e2 kke inner join tbl_iku_eselon1 iku on kke.kode_ikk = iku.kode_ikk and kke.tahun=iku.tahun inner join tbl_sasaran_eselon1 sasaran on sasaran.kode_sasaran_e2 = iku.kode_sasaran_e2 and sasaran.tahun=iku.tahun', false);
+		$this->db->from('tbl_rkt_eselon2 rkt inner join tbl_ikk iku on iku.kode_ikk= rkt.kode_ikk and rkt.tahun = iku.tahun
+inner join tbl_sasaran_eselon2 sasaran on sasaran.kode_sasaran_e2 = rkt.kode_sasaran_e2 and sasaran.tahun=rkt.tahun left join tbl_kke1_2_e2 lke on rkt.kode_sasaran_e2=lke.kode_sasaran_e2 and rkt.tahun=lke.tahun and rkt.kode_ikk=lke.kode_ikk', false);
 		return $this->db->count_all_results();
 		$this->db->free_result();
 	}
@@ -244,8 +249,9 @@ inner join tbl_sasaran_eselon1 sasaran on sasaran.kode_sasaran_e1 = rkt.kode_sas
 	public function InsertOnDb($data,& $error) {
 		//query insert data		
 		$this->db->set('tahun',$data['tahun']);
-		$this->db->set('kode_sasaran_e1',$data['kode_sasaran_e1']);
-		$this->db->set('kode_iku_e1',$data['kode_iku_e1']);
+		$this->db->set('kode_e2',$data['kode_e2']);
+		$this->db->set('kode_sasaran_e2',$data['kode_sasaran_e2']);
+		$this->db->set('kode_ikk',$data['kode_ikk']);
 		
 		$this->db->set('sasaran_tepat',$data['sasaran_tepat']);
 		$this->db->set('sasaran_tepat_nilai',$data['sasaran_tepat_nilai']);
@@ -276,11 +282,12 @@ inner join tbl_sasaran_eselon1 sasaran on sasaran.kode_sasaran_e1 = rkt.kode_sas
 	//update data
 	public function UpdateOnDb($data, $kode) {
 		
-		$this->db->where('kke12_e1_id',$kode);
+		$this->db->where('kke12_e2_id',$kode);
 		
 		$this->db->set('tahun',$data['tahun']);
-		$this->db->set('kode_sasaran_e1',$data['kode_sasaran_e1']);
-		$this->db->set('kode_iku_e1',$data['kode_iku_e1']);
+		$this->db->set('kode_e2',$data['kode_e2']);
+		$this->db->set('kode_sasaran_e2',$data['kode_sasaran_e2']);
+		$this->db->set('kode_ikk',$data['kode_ikk']);
 		
 		$this->db->set('sasaran_tepat',$data['sasaran_tepat']);
 		$this->db->set('sasaran_tepat_nilai',$data['sasaran_tepat_nilai']);
@@ -341,8 +348,8 @@ inner join tbl_sasaran_eselon1 sasaran on sasaran.kode_sasaran_e1 = rkt.kode_sas
 		$this->db->flush_cache();
 		$this->db->select($field.' as idx',false);
 		$this->db->from('tbl_kke1_2_e2');
-		$this->db->where('kode_iku_e1', $kode_iku);
-		$this->db->where('kode_sasaran_e1', $kode_sasaran);
+		$this->db->where('kode_ikk', $kode_iku);
+		$this->db->where('kode_sasaran_e2', $kode_sasaran);
 		$this->db->where('tahun', $tahun);
 		$query = $this->db->get();
 		if ($query->num_rows()>0)
@@ -355,7 +362,7 @@ inner join tbl_sasaran_eselon1 sasaran on sasaran.kode_sasaran_e1 = rkt.kode_sas
 		$this->db->flush_cache();
 		$this->db->select('satuan');
 		$this->db->from('tbl_iku');
-		$this->db->where('kode_iku_e1', $id);
+		$this->db->where('kode_ikk', $id);
 		$query = $this->db->get();
 		
 		return $query->row()->satuan;

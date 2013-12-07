@@ -115,9 +115,8 @@ class Kke2b_model extends CI_Model
 	public function InsertOnDb($data,& $error) {
 		//query insert data		
 		$this->db->set('tahun',$data['tahun']);
-		$this->db->set('kode_sasaran_e1',$data['kode_sasaran_e1']);
-		
-		
+		$this->db->set('kode_e1',$data['kode_e1']);
+		$this->db->set('kode_sasaran_e1',$data['kode_sasaran_e1']);		
 		$this->db->set('renstra_a',$data['renstra_a']);
 		$this->db->set('renstra_a_nilai',$data['renstra_a_nilai']);
 		$this->db->set('rkt_a',$data['rkt_a']);
@@ -153,6 +152,7 @@ class Kke2b_model extends CI_Model
 		$this->db->where('kke2b_e1_id',$kode);
 		
 		$this->db->set('tahun',$data['tahun']);
+		$this->db->set('kode_e1',$data['kode_e1']);
 		$this->db->set('kode_sasaran_e1',$data['kode_sasaran_e1']);		
 		
 		$this->db->set('renstra_a',$data['renstra_a']);

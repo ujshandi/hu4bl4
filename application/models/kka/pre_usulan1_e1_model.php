@@ -144,6 +144,7 @@ class Pre_usulan1_e1_model extends CI_Model
 		$this->db->join('tbl_iku_eselon1 b', 'b.kode_iku_e1 = a.kode_iku_e1 and b.tahun = a.tahun');
 		$this->db->join('tbl_sasaran_eselon1 c', 'c.kode_sasaran_e1 = a.kode_sasaran_e1');
 		$this->db->join('tbl_eselon1 d', 'd.kode_e1 = a.kode_e1');
+		$this->db->join('tbl_kegiatan_kl k', 'k.kode_kegiatan = a.kode_kegiatan');
 		$this->db->order_by("a.tahun DESC, a.kode_sasaran_e1 ASC, a.kode_iku_e1 ASC");
 			
 		return $this->db->count_all_results();
@@ -172,7 +173,7 @@ class Pre_usulan1_e1_model extends CI_Model
 			$this->db->set('kode_sasaran_e1',	$data['kode_sasaran_e1']);
 			$this->db->set('kode_iku_e1',	$data['kode_iku_e1']);
 			$this->db->set('kode_kegiatan',		$dt['kode_kegiatan']);
-			$this->db->set('jumlah',			$dt['jumlah']);
+			$this->db->set('jumlah',			$this->utility->ourDeFormatNumber2($dt['jumlah']));
 			//$this->db->set('satuan',			$dt['satuan']);
 			//$this->db->set('status',			'0');
 			$this->db->set('log_insert', 		$this->session->userdata('user_id').';'.date('Y-m-d H:i:s'));
@@ -314,7 +315,7 @@ class Pre_usulan1_e1_model extends CI_Model
 					<td><input type="checkbox" name="detail['.$i.'][chk]" value="chk"/></td>					
 					<td><input type="hidden" name="detail['.$i.'][kode_kegiatan]" value="'.$r->kode_kegiatan.'"/>'.$r->kode_kegiatan.'</td>
 					<td>'.$r->nama_kegiatan.'</td>
-					<td align="right"><input name="detail['.$i.'][jumlah]" style="text-align:right" size="20" /></td>					
+					<td align="right"><input class="money" name="detail['.$i.'][jumlah]" style="text-align:right" size="20" /></td>					
 				</tr>';
 				$i++;
 		}
@@ -326,7 +327,7 @@ class Pre_usulan1_e1_model extends CI_Model
 		$this->db->where('preusulan1_e1_id', $data['preusulan1_e1_id']);
 		
 		$this->db->set('kode_iku_e1', $data['kode_iku_e1']);
-		$this->db->set('jumlah', $data['jumlah']);
+		$this->db->set('jumlah',$this->utility->ourDeFormatNumber2($dt['jumlah']));
 		$this->db->set('log_update', 		$this->session->userdata('user_id').';'.date('Y-m-d H:i:s'));
 		
 		$result = $this->db->update('tbl_pre_usulan1_e1');
