@@ -1,7 +1,7 @@
 <?php
 
-class kke1_2_e2_e2 extends CI_Controller {
-	var $objectId = 'kke1_2_e2_e2';
+class kke1_2_e2 extends CI_Controller {
+	var $objectId = 'kke1_2_e2';
 	function __construct()
 	{
 		parent::__construct();			
@@ -13,9 +13,10 @@ class kke1_2_e2_e2 extends CI_Controller {
 		//if ($this->session->userdata('logged_in') != TRUE) redirect('security/login');					
 		$this->load->model('/security/sys_menu_model');
 		$this->load->model('/lke/kke1_2_e2_model');
-		$this->load->model('/pengaturan/iku_e1_model');
+		$this->load->model('/pengaturan/ikk_model');
 		$this->load->model('/lke/lke_konversi_model');
 		$this->load->model('/rujukan/eselon1_model');
+		$this->load->model('/rujukan/eselon2_model');
 		$this->load->library("utility");
 		
 	}
@@ -23,29 +24,37 @@ class kke1_2_e2_e2 extends CI_Controller {
 	function index(){
 		$data['title'] = 'Kertas Kerja Evaluasi II';	
 		$data['objectId'] = $this->objectId;		
-		$data['sasarantepat_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke1_2_e2','unit_kerja'=>'e2'),true,"sasaran_tepat");
-		$data['iktepat_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke1_2_e2','unit_kerja'=>'e2'),true,"ik_tepat");
-		$data['targettercapai_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke1_2_e2','unit_kerja'=>'e2'),true,"target_tercapai");
-		$data['kinerjabaik_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke1_2_e2','unit_kerja'=>'e2'),true,"kinerja_baik");
-		$data['dataandal_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke1_2_e2','unit_kerja'=>'e2'),true,"data_andal");
-	  	$this->load->view('lke/kke1_2_e2_v',$data);
+		$data['sasarantepat_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke1_2','unit_kerja'=>'e2'),true,"sasaran_tepat");
+		$data['iktepat_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke1_2','unit_kerja'=>'e2'),true,"ik_tepat");
+		$data['targettercapai_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke1_2','unit_kerja'=>'e2'),true,"target_tercapai");
+		$data['kinerjabaik_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke1_2','unit_kerja'=>'e2'),true,"kinerja_baik");
+		$data['dataandal_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke1_2','unit_kerja'=>'e2'),true,"data_andal");
+	  
+		$data['listIndex_sasaran_tepat'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke1_2','unit_kerja'=>'e2'),true);
+		$data['listIndex_ik_tepat'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke1_2','unit_kerja'=>'e2'),true);
+		$data['listIndex_target_tercapai'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke1_2','unit_kerja'=>'e2'),true);
+		$data['listIndex_kinerja_baik'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke1_2','unit_kerja'=>'e2'),true);
+		$data['listIndex_data_andal'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke1_2','unit_kerja'=>'e2'),true);
+		
+		$this->load->view('lke/kke1_2_e2_v',$data);
 	}
 	
 	private function get_form_values() {
 		$dt['tahun'] = $this->input->post("tahun", TRUE); 
 		$dt['kke12_e2_id'] = $this->input->post("kke12_e2_id", TRUE); 
 		$dt['kode_sasaran_e2'] = $this->input->post("kode_sasaran_e2", TRUE); 
-		$dt['kode_iku_e2'] = $this->input->post("kode_iku_e2", TRUE); 
+		$dt['kode_e2'] = $this->input->post("kode_e2", TRUE); 
+		$dt['kode_ikk'] = $this->input->post("kode_ikk", TRUE); 
 		$dt['sasaran_tepat'] = $this->input->post("sasaran_tepat", TRUE); 
-		$dt['sasaran_tepat_nilai'] = $this->lke_konversi_model->getKonversi('kke1_2_e2',$dt['sasaran_tepat'],'e2');
+		$dt['sasaran_tepat_nilai'] = $this->lke_konversi_model->getKonversi('kke1_2',$dt['sasaran_tepat'],'e2');
 		$dt['ik_tepat'] = $this->input->post("ik_tepat", TRUE); 
-		$dt['ik_tepat_nilai'] = $this->lke_konversi_model->getKonversi('kke1_2_e2',$dt['ik_tepat'],'e2');
+		$dt['ik_tepat_nilai'] = $this->lke_konversi_model->getKonversi('kke1_2',$dt['ik_tepat'],'e2');
 		$dt['target_tercapai'] = $this->input->post("target_tercapai", TRUE); 
-		$dt['target_tercapai_nilai'] = $this->lke_konversi_model->getKonversi('kke1_2_e2',$dt['target_tercapai'],'e2');
+		$dt['target_tercapai_nilai'] = $this->lke_konversi_model->getKonversi('kke1_2',$dt['target_tercapai'],'e2');
 		$dt['kinerja_baik'] = $this->input->post("kinerja_baik", TRUE); 
-		$dt['kinerja_baik_nilai'] = $this->lke_konversi_model->getKonversi('kke1_2_e2',$dt['kinerja_baik'],'e2');
+		$dt['kinerja_baik_nilai'] = $this->lke_konversi_model->getKonversi('kke1_2',$dt['kinerja_baik'],'e2');
 		$dt['data_andal'] = $this->input->post("data_andal", TRUE); 
-		$dt['data_andal_nilai'] = $this->lke_konversi_model->getKonversi('kke1_2_e2',$dt['data_andal'],'e2');
+		$dt['data_andal_nilai'] = $this->lke_konversi_model->getKonversi('kke1_2',$dt['data_andal'],'e2');
 		return $dt;
     }
 	
@@ -61,7 +70,7 @@ class kke1_2_e2_e2 extends CI_Controller {
 		// validation
 		# rules
 		$this->form_validation->set_rules("tahun", 'Tahun', 'trim|required|numeric|exact_length[4]|xss_clean');
-		//$this->form_validation->set_rules("id_komponen", 'Komponen/Subkomponen', 'trim|required|xss_clean');
+		$this->form_validation->set_rules("kode_e2", 'Unit Kerja Eselon II', 'trim|required|xss_clean');
 	//	$this->form_validation->set_rules("index_mutu", 'Index Mutu', 'trim|required|xss_clean');
 		
 		# message rules
@@ -71,7 +80,7 @@ class kke1_2_e2_e2 extends CI_Controller {
 		
 		if ($this->form_validation->run() == FALSE){ // jika tidak valid
 			$data['pesan_error'].=(trim(form_error('tahun',' ',' '))==''?'':form_error('tahun',' ','<br>'));
-			//$data['pesan_error'].=(trim(form_error('id_komponen',' ',' '))==''?'':form_error('id_komponen',' ','<br>'));
+			$data['pesan_error'].=(trim(form_error('kode_e2',' ',' '))==''?'':form_error('kode_e2',' ','<br>'));
 			//$data['pesan_error'].=(trim(form_error('index_mutu',' ',' '))==''?'':form_error('index_mutu',' ','<br>'));
 			
 		}else{
@@ -106,20 +115,20 @@ class kke1_2_e2_e2 extends CI_Controller {
 		}
 	}
 	
-	function grid($filtahun=null,$file1=null,$filsasaran=null,$filiku=null){
-		if ($file1==null)
-			$file1 = $this->session->userdata('unit_kerja_e1');
-		echo $this->kke1_2_e2_model->easyGrid($filtahun,$file1,$filsasaran,$filiku);
+	function grid($filtahun=null,$file2=null,$filsasaran=null,$filiku=null){
+		if ($file2==null)
+			$file2 = $this->session->userdata('unit_kerja_e2');
+		echo $this->kke1_2_e2_model->easyGrid($filtahun,$file2,$filsasaran,$filiku);
 	}
 	
-	public function excel($filtahun=null,$file1=null,$filsasaran=null,$filiku=null,$page=null,$rows=null){
-		echo  $this->kke1_2_e2_model->easyGrid($filtahun,$file1,$filsasaran,$filiku,3,$page,$rows);
+	public function excel($filtahun=null,$file2=null,$filsasaran=null,$filiku=null,$page=null,$rows=null){
+		echo  $this->kke1_2_e2_model->easyGrid($filtahun,$file2,$filsasaran,$filiku,3,$page,$rows);
 	}
 	
-	public function pdf($filtahun=null,$file1=null,$filsasaran=null,$filiku=null,$page=null,$rows=null){
+	public function pdf($filtahun=null,$file2=null,$filsasaran=null,$filiku=null,$page=null,$rows=null){
 		$this->load->library('our_pdf','our_pdf');
 		$this->our_pdf->FPDF('L', 'mm', 'A4');             
-		$pdfdata = $this->kke1_2_e2_model->easyGrid($filtahun,$file1,$filsasaran,$filiku,2,$page,$rows);
+		$pdfdata = $this->kke1_2_e2_model->easyGrid($filtahun,$file2,$filsasaran,$filiku,2,$page,$rows);
 		define('FPDF_FONTPATH',APPPATH."libraries/fpdf/font/");
 		$this->our_pdf->Open();
 		$this->our_pdf->addPage();
@@ -135,8 +144,8 @@ class kke1_2_e2_e2 extends CI_Controller {
 		$posY = 11;
 		$posX = 10;
 		$e1='';
-		if (($file1 != null)&&($file1 != "-1"))
-			$e1=$this->eselon1_model->getNamaE1($file1);
+		if (($file2 != null)&&($file2 != "-1"))
+			$e1=$this->eselon2_model->getNamaE2($file2);
 		 $this->our_pdf->text($posX,$posY,'Rencana Kinerja '.($e1!=""?$e1:"Eselon I "));
 		//$this->fpdf->Line(10, 12, 280, 12);
 		if (($filtahun != null)&&($filtahun != "-1")){

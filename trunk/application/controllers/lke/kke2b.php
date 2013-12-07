@@ -43,8 +43,8 @@ class Kke2b extends CI_Controller {
 	private function get_form_values() {
 		$dt['tahun'] = $this->input->post("tahun", TRUE); 
 		$dt['kke2b_e1_id'] = $this->input->post("kke2b_e1_id", TRUE); 
-		$dt['kode_sasaran_e1'] = $this->input->post("kode_sasaran_e1", TRUE); 
-		
+		$dt['kode_e1'] = $this->input->post("kode_e1", TRUE); 		
+		$dt['kode_sasaran_e1'] = $this->input->post("kode_sasaran_e1", TRUE); 		
 		$dt['renstra_a'] = $this->input->post("renstra_a", TRUE); 
 		$dt['renstra_a_nilai'] = $this->lke_konversi_model->getKonversi('kke2b',$dt['renstra_a'],'e1');
 		$dt['rkt_a'] = $this->input->post("rkt_a", TRUE); 
@@ -72,7 +72,7 @@ class Kke2b extends CI_Controller {
 		// validation
 		# rules
 		$this->form_validation->set_rules("tahun", 'Tahun', 'trim|required|numeric|exact_length[4]|xss_clean');
-		//$this->form_validation->set_rules("id_komponen", 'Komponen/Subkomponen', 'trim|required|xss_clean');
+		$this->form_validation->set_rules("kode_e1", 'Unit Kerja Eselon I', 'trim|required|xss_clean');
 	//	$this->form_validation->set_rules("index_mutu", 'Index Mutu', 'trim|required|xss_clean');
 		
 		# message rules
@@ -82,7 +82,7 @@ class Kke2b extends CI_Controller {
 		
 		if ($this->form_validation->run() == FALSE){ // jika tidak valid
 			$data['pesan_error'].=(trim(form_error('tahun',' ',' '))==''?'':form_error('tahun',' ','<br>'));
-			//$data['pesan_error'].=(trim(form_error('id_komponen',' ',' '))==''?'':form_error('id_komponen',' ','<br>'));
+			$data['pesan_error'].=(trim(form_error('kode_e1',' ',' '))==''?'':form_error('kode_e1',' ','<br>'));
 			//$data['pesan_error'].=(trim(form_error('index_mutu',' ',' '))==''?'':form_error('index_mutu',' ','<br>'));
 			
 		}else{

@@ -67,6 +67,7 @@
 						url = base_url+'lke/kke1_2/save';  
 						$("#kke12_e1_id<?=$objectId?>").val(row.kke12_e1_id);
 						$("#tahun<?=$objectId?>").val(row.tahun);
+						$("#kode_e1<?=$objectId?>").val('<?=FILTER_E1?>');
 						$("#spanTahun<?=$objectId?>").text(row.tahun);
 						$("#kode_sasaran_e1<?=$objectId?>").val(row.kode_sasaran_e1);
 						$("#spanSasaran<?=$objectId?>").text(row.sasaran_strategis);
@@ -384,16 +385,16 @@
 	  </tr>
 	  </table>
 	  <div style="margin-bottom:5px">  
-	  <? if($this->sys_menu_model->cekAkses('ADD;',302,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+	  <? if($this->sys_menu_model->cekAkses('ADD;',304,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="newData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-ok" plain="true">Set Kinerja</a>  
 		<?}?>
 	
 		
 		
-			<? if($this->sys_menu_model->cekAkses('PRINT;',253,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+			<? if($this->sys_menu_model->cekAkses('PRINT;',304,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 				<a 	href="#" onclick="printData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-print" plain="true">Print</a>
 			<?}?>
-			<? if($this->sys_menu_model->cekAkses('EXCEL;',253,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+			<? if($this->sys_menu_model->cekAkses('EXCEL;',304,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 				<a href="#" onclick="toExcel<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-excel" plain="true">Excel</a>
 			<?}?>
 	  </div>
@@ -456,6 +457,14 @@
 				<input type="hidden" id="tahun<?=$objectId?>" name="tahun">
 				<input type="hidden" id="kke12_e1_id<?=$objectId?>" name="kke12_e1_id"/>				
 			</div>
+			<div class="fitem" >
+				<label style="width:130px">Unit Kerja Eselon I :</label>
+					<input type="hidden" name="kode_e1" id="kode_e1<?=$objectId?>" value="<? echo FILTER_E1?>"/>
+						<?php 
+							//$data['value'] = FILTER_E1;
+							echo $this->eselon1_model->getNamaE1(FILTER_E1);
+						?>
+			</div>	
 			<div class="fitem">
 				<label style="width:130px;vertical-align:top">Sasaran Eselon I :</label>					
 					<span id="spanSasaran<?=$objectId?>"></span>

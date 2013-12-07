@@ -22,7 +22,10 @@
 			});
 			
 			setE2Filter<?=$objectId?> = function(){
-				$("#divUnitKerjaFilter<?=$objectId;?>").load(base_url+"rujukan/eselon2/loadFilterE2/"+$("#filter_e1<?=$objectId?>").val()+"/<?=$objectId;?>",function(){
+				var e1=$("#filter_e1<?=$objectId?>").val();
+				if (e1==undefined)
+					e1="<?=FILTER_E1?>"
+				$("#divUnitKerjaFilter<?=$objectId;?>").load(base_url+"rujukan/eselon2/loadFilterE2/"+e1+"/<?=$objectId;?>",function(){
 				//	$('#unit_kerja_E2').val(valueE2);
 				});
 			}
@@ -146,7 +149,7 @@
 				});
 			}
 			//end saveData
-			
+			setE2Filter<?=$objectId?>('<?=FILTER_E1?>');
 			setTimeout(function(){
 				searchData<?=$objectId?>();
 			},100);
@@ -229,6 +232,7 @@
 						<td>
 							<?=$this->eselon1_model->getListFilterEselon1($objectId,$this->session->userdata('unit_kerja_e1'))?>
 						</td>
+						<td width="20px">&nbsp;</td>
 						 <td >
 				Level:
 			  </td>
@@ -241,12 +245,16 @@
 						<td><span class="fitem" id="divUnitKerjaFilter<?=$objectId;?>">
 							<?=$this->eselon2_model->getListFilterEselon2($objectId,$this->session->userdata('unit_kerja_e2'))?>
 						</span></td>
+						<td width="20px">&nbsp;</td>
 						<td>Grup:</td>				
 				  <td><?$this->user_model->getListGrupFilter($objectId,$this->session->userdata('app_type'),$this->session->userdata('level'),true)?>
 			  </td>
 			</tr>
+			<tr height="5px">
+				<td colspan="5">&nbsp;</td>
+			</tr>
 			<tr>
-			  <td align="right" valign="top" colspan="4">
+			  <td align="right" valign="top" colspan="5">
 				<a href="#" class="easyui-linkbutton" onclick="clearFilter<?=$objectId;?>();" iconCls="icon-reset">Reset</a>
 				<a href="#" class="easyui-linkbutton" onclick="searchData<?=$objectId;?>();" iconCls="icon-search">Search</a>
 			  </td>

@@ -379,7 +379,7 @@ class Sasaran_eselon2_model extends CI_Model
 		}
 	}
 	
-	public function getListFilterTahun($objectId){
+	public function getListFilterTahun($objectId,$withAll=true){
 		$e2 = $this->session->userdata('unit_kerja_e2');
 		if (($e2!="-1")&&($e2!=null)){
 			$this->db->where('kode_e2',$e2);
@@ -394,7 +394,8 @@ class Sasaran_eselon2_model extends CI_Model
 		$que = $this->db->get();
 		
 		$out = '<select name="filter_tahun'.$objectId.'" id="filter_tahun'.$objectId.'">';
-		$out .= '<option value="-1">Semua</option>';
+		if ($withAll)
+			$out .= '<option value="-1">Semua</option>';
 		foreach($que->result() as $r){
 			$out .= '<option value="'.$r->tahun.'">'.$r->tahun.'</option>';
 		}

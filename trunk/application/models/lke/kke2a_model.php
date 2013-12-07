@@ -109,9 +109,8 @@ class Kke2a_model extends CI_Model
 	public function InsertOnDb($data,& $error) {
 		//query insert data		
 		$this->db->set('tahun',$data['tahun']);
-		$this->db->set('kode_sasaran_e1',$data['kode_sasaran_e1']);
-		
-		
+		$this->db->set('kode_e1',$data['kode_e1']);
+		$this->db->set('kode_sasaran_e1',$data['kode_sasaran_e1']);		
 		$this->db->set('renstra_ip',$data['renstra_ip']);
 		$this->db->set('renstra_ip_nilai',$data['renstra_ip_nilai']);
 		$this->db->set('rkt_ip',$data['rkt_ip']);
@@ -140,6 +139,7 @@ class Kke2a_model extends CI_Model
 		$this->db->where('kke2a_e1_id',$kode);
 		
 		$this->db->set('tahun',$data['tahun']);
+		$this->db->set('kode_e1',$data['kode_e1']);
 		$this->db->set('kode_sasaran_e1',$data['kode_sasaran_e1']);		
 		
 		$this->db->set('renstra_ip',$data['renstra_ip']);

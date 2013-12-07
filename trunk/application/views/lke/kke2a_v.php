@@ -67,18 +67,34 @@
 						url = base_url+'lke/kke2a/save';  
 						$("#kke2a_e1_id<?=$objectId?>").val(row.kke2a_e1_id);
 						$("#tahun<?=$objectId?>").val(row.tahun);
+						$("#kode_e1<?=$objectId?>").val('<?=FILTER_E1?>');
 						$("#spanTahun<?=$objectId?>").text(row.tahun);
 						$("#kode_sasaran_e1<?=$objectId?>").val(row.kode_sasaran_e1);
 						$("#spanSasaran<?=$objectId?>").text(row.sasaran_strategis);						
 						
-						$('input:radio[name=renstra_ip]:nth(0)').prop('checked',(row.renstra_ip=='Y'));
+						<? $i=0;
+						foreach($listIndex_renstra_ip->result() as $r){?>
+							$('input:radio[name=renstra_ip]:nth(<?=$i?>)').prop('checked',(row.renstra_ip=='<?=$r->index_mutu?>'));
+						<? $i++;
+						}?>
+						<? $i=0;
+						foreach($listIndex_rkt_ip->result() as $r){?>
+							$('input:radio[name=rkt_ip]:nth(<?=$i?>)').prop('checked',(row.rkt_ip=='<?=$r->index_mutu?>'));
+						<? $i++;
+						}?>
+						<? $i=0;
+						foreach($listIndex_pk_ip->result() as $r){?>
+							$('input:radio[name=pk_ip]:nth(<?=$i?>)').prop('checked',(row.pk_ip=='<?=$r->index_mutu?>'));
+						<? $i++;
+						}?>
+						/* $('input:radio[name=renstra_ip]:nth(0)').prop('checked',(row.renstra_ip=='Y'));
 						$('input:radio[name=renstra_ip]:nth(1)').prop('checked',(row.renstra_ip=='T'));
 												
 						$('input:radio[name=rkt_ip]:nth(0)').prop('checked',(row.rkt_ip=='Y'));
 						$('input:radio[name=rkt_ip]:nth(1)').prop('checked',(row.rkt_ip=='T'));
 						
 						$('input:radio[name=pk_ip]:nth(0)').prop('checked',(row.pk_ip=='Y'));
-						$('input:radio[name=pk_ip]:nth(1)').prop('checked',(row.pk_ip=='T'));
+						$('input:radio[name=pk_ip]:nth(1)').prop('checked',(row.pk_ip=='T')); */
 					}	
 					else {
 						alert('Data sasaran belum dipilih!');
@@ -320,16 +336,16 @@
 	  </tr>
 	  </table>
 	  <div style="margin-bottom:5px">  
-	  <? if($this->sys_menu_model->cekAkses('ADD;',302,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+	  <? if($this->sys_menu_model->cekAkses('ADD;',306,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="newData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-ok" plain="true">Set Kinerja</a>  
 		<?}?>
 	
 		
 		
-			<? if($this->sys_menu_model->cekAkses('PRINT;',253,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+			<? if($this->sys_menu_model->cekAkses('PRINT;',306,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 				<a 	href="#" onclick="printData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-print" plain="true">Print</a>
 			<?}?>
-			<? if($this->sys_menu_model->cekAkses('EXCEL;',253,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+			<? if($this->sys_menu_model->cekAkses('EXCEL;',306,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 				<a href="#" onclick="toExcel<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-excel" plain="true">Excel</a>
 			<?}?>
 	  </div>
@@ -379,6 +395,14 @@
 				<input type="hidden" id="tahun<?=$objectId?>" name="tahun">
 				<input type="hidden" id="kke2a_e1_id<?=$objectId?>" name="kke2a_e1_id"/>				
 			</div>
+			<div class="fitem" >
+				<label style="width:130px">Unit Kerja Eselon I :</label>
+					<input type="hidden" name="kode_e1" id="kode_e1<?=$objectId?>" value="<? echo FILTER_E1?>"/>
+						<?php 
+							//$data['value'] = FILTER_E1;
+							echo $this->eselon1_model->getNamaE1(FILTER_E1);
+						?>
+			</div>	
 			<div class="fitem">
 				<label style="width:130px;vertical-align:top">Sasaran Eselon I :</label>					
 					<span id="spanSasaran<?=$objectId?>"></span>

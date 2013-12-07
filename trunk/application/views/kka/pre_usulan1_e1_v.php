@@ -1,7 +1,8 @@
+<script  type="text/javascript" src="<?=base_url()?>public/js/autoNumeric.js"></script>
 	<script  type="text/javascript" >
 				
 		$(function(){
-		
+			$('.year').autoNumeric('init',{aSep: '', aDec: ',',vMin:'0',aPad:"false",vMax:"9999"});
 		 	saveData<?=$objectId;?>=function(){
 			
 				$('#fm<?=$objectId;?>').form('submit',{
@@ -34,7 +35,7 @@
 							
 							// reload and close tab
 							$('#dg<?=$objectId;?>').datagrid('reload');
-							$('#tt').tabs('close', 'Add Pre Usulan 1 Eselon I');
+							$('#tt').tabs('close', 'Add Pra Usulan 1 Eselon I');
 						} else {
 							$.messager.show({
 								title: 'Error',
@@ -62,7 +63,10 @@
 				
 				tahun =  $('#tahun<?=$objectId;?>').val();
 				$("#tbodykegiatan<?=$objectId;?>").load(
-					base_url+"kka/pre_usulan1_e1/getKegiatan_e1/"+e1+"/"+tahun
+					base_url+"kka/pre_usulan1_e1/getKegiatan_e1/"+e1+"/"+tahun,
+					function(){
+						$('.money').autoNumeric('init',{aSep: '.', aDec: ',',vMin:'0',aPad:"false",vMax:"999999999999999"});
+					}
 				);
 			}
 			
@@ -154,159 +158,20 @@
 
 	</script>
 	
-	
-	<script language="javascript">
-        function addRow<?=$objectId;?>(tableID) {
-			
-			var table = document.getElementById(tableID);
-			var dataCount = table.rows.length;
-			
-			if(dataCount > 1){
-				var table = document.getElementById(tableID);
- 
-				var rowCount = table.rows.length;
-				var row = table.insertRow(rowCount);
-	 
-				var colCount = table.rows[1].cells.length;
-				
-				var newcell = row.insertCell(0);
-				newcell.innerHTML = table.rows[1].cells[0].innerHTML;
-				
-				newcell = row.insertCell(1);
-				newcell.innerHTML = rowCount;
-				
-				newcell = row.insertCell(2);
-				newcell.innerHTML = table.rows[1].cells[2].innerHTML;
-				newcell.childNodes[0].selectedIndex = 0;
-				newcell.childNodes[0].id = rowCount;
-				newcell.childNodes[0].name = "detail[" + rowCount + "][kode_iku_e1]";
-				
-				newcell = row.insertCell(3);
-				newcell.innerHTML = table.rows[1].cells[3].innerHTML;
-				newcell.childNodes[1].value = "";
-				newcell.childNodes[1].name = "detail[" + rowCount + "][target]";
-				
-				newcell = row.insertCell(4);
-				newcell.innerHTML = table.rows[1].cells[4].innerHTML;
-				newcell.childNodes[1].id = "satuan" + rowCount + '<?=$objectId;?>';
-				newcell.childNodes[1].value = "";
-				newcell.childNodes[1].name = "detail[" + rowCount + "][satuan]";
-				newcell.childNodes[1].readOnly = "true";
-			}else{
-				alert("Tidak terdapat data yang akan ditambah");
-			}
-			
-        }
- 
-        function deleteRow<?=$objectId;?>(tableID) {
-            try {
-				var table = document.getElementById(tableID);
-				var rowCount = table.rows.length;
-				
-				if(rowCount <= 2) {
-					alert("Cannot delete all the rows.");
-				}else{
-					//table.deleteRow(rowCount-1);
-					for(var i=0; i<rowCount; i++) {
-						if(rowCount <= 2){
-							//alert("Cannot delete all the rows.");
-							break;
-						}
-						var row = table.rows[i];
-						var chkbox = row.cells[0].childNodes[0];
-						if(null != chkbox && true == chkbox.checked) {
-							table.deleteRow(i);
-							rowCount--;
-							i--;
-						}
-					}
-					
-					for(var i=1; i<rowCount; i++) {
-						var row = table.rows[i];
-						row.cells[1].innerHTML = (i);
-						
-						row.cells[2].childNodes[0].id = i;
-						row.cells[2].childNodes[0].name = "detail[" + i + "][kode_iku_e1]";;
-						
-						row.cells[3].childNodes[1].name = "detail[" + i + "][target]";
-						
-						row.cells[4].childNodes[1].id = "satuan" + i + '<?=$objectId;?>';
-						row.cells[4].childNodes[1].name = "detail[" + i + "][satuan]";
-					}
-				}
-				
-            }catch(e) {
-                alert(e);
-            }
-        }
-		
-		function getSatuan<?=$objectId;?>(kode, idText){
-			var response = '';
-			$.ajax({ type: "GET",   
-					 url: base_url+'kka/pre_usulan1_e1/getSatuan/' + kode,   
-					 //url: base_url+'kka/pre_usulan1_e1/getSatuan/' + kode + '/' + idText,   
-					 async: false,
-					 success : function(text)
-					 {
-						 response = text;
-					 }
-			});
-			document.getElementById('satuan'+idText+'<?=$objectId;?>').value = response;
-		}
-		
-		
-		
-    </script>
-	
 	<!-- Dari Stef -->
-	<script type="text/javascript">
-		$(document).ready(function() {
-			/*chan-----------
-			if($("#drop<?=$objectId;?>").is(":visible")){
-				$("#drop<?=$objectId;?>").slideToggle("slow");
-			}
-			
-			$("#txtkode_sasaran_e1<?=$objectId;?>").click(function(){
-				$("#drop<?=$objectId;?>").slideToggle("slow");
-			});
-			
-			$("#drop<?=$objectId;?> li").click(function(e){
-				var chose = $(this).text();
-				$("#txtkode_sasaran_e1<?=$objectId;?>").text(chose);
-				$("#drop<?=$objectId;?>").slideToggle("slow");
-			});*/
-		});
-		
+	<script type="text/javascript">		
 		//chan-----------
-		function setSasaran<?=$objectId;?>(valu){
-			
+		function setSasaran<?=$objectId;?>(valu){			
 			if(valu != null){
 				document.getElementById('kode_sasaran_e1<?=$objectId;?>').value = valu;
-			}
-			
-			// set IKU E1 berdasarkan unit kerja eselon 1
-			/* var kode_e1 = $('#kode_e1<?=$objectId;?>').val();
-			var tahun = $('#tahun<?=$objectId;?>').val();
-			
-			if(tahun.length < 4){
-				$("#tbodykegiatan<?=$objectId;?>").html('<tr><td colspan="5">Isi Tahun dengan benar</td></tr>');
-			}else{
-			//	setSasaranE1<?=$objectId;?>(kode_e1, tahun);
-				$("#tbodykegiatan<?=$objectId;?>").load(
-					base_url+"kka/pre_usulan1_e1/getIKU_e1/"+kode_e1+"/"+tahun
-				);
-			} */
-			
+			}			
 		}
 		//chan-----------
-		function setIku<?=$objectId;?>(valu){
-			
+		function setIku<?=$objectId;?>(valu){			
 			if(valu != null){
 				document.getElementById('kode_iku_e1<?=$objectId;?>').value = valu;
-			}			
-			
-		}
-			
+			}						
+		}			
 	</script>
 	
 	<style type="text/css">
@@ -384,11 +249,11 @@
 			
 			<div class="easyui-layout" fit="true">  
 								
-				<div region="center" border="true" title="Tambah Data Pre Usulan 1 Eselon I">
+				<div region="center" border="true" title="Tambah Data Pra Usulan 1 Eselon I">
 				<form id="fm<?=$objectId;?>" method="post" style="margin:10px 5px 5px 10px;" onsubmit="return false">
 					<div class="fitem">
 						<label style="width:120px;vertical-align:top">Tahun :</label>
-						<input id="tahun<?=$objectId?>" name="tahun" class="easyui-validatebox" required="true" size="5" maxlength="4">
+						<input id="tahun<?=$objectId?>" name="tahun" class="easyui-validatebox year" required="true" size="5" maxlength="4">
 					</div>
 					<div class="fitem" >
 						<label style="width:120px">Unit Kerja Eselon I :</label>
@@ -432,8 +297,7 @@
 							</tbody>
 						</table>
 						<br>
-						<!--<a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="addRow<?=$objectId;?>('tbl<?=$objectId;?>')">Tambah IKU</a>
-						<a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="deleteRow<?=$objectId;?>('tbl<?=$objectId;?>')">Hapus IKU</a> -->
+						
 						<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveData<?=$objectId;?>()">Simpan</a> 
 					</div>
 				</form>

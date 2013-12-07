@@ -176,6 +176,7 @@ inner join tbl_sasaran_eselon1 sasaran on sasaran.kode_sasaran_e1 = rkt.kode_sas
 	public function InsertOnDb($data,& $error) {
 		//query insert data		
 		$this->db->set('tahun',$data['tahun']);
+		$this->db->set('kode_e1',$data['kode_e1']);
 		$this->db->set('kode_sasaran_e1',$data['kode_sasaran_e1']);
 		$this->db->set('kode_iku_e1',$data['kode_iku_e1']);
 		
@@ -227,6 +228,7 @@ inner join tbl_sasaran_eselon1 sasaran on sasaran.kode_sasaran_e1 = rkt.kode_sas
 		$this->db->where('kke3a_e1_id',$kode);
 		
 		$this->db->set('tahun',$data['tahun']);
+		$this->db->set('kode_e1',$data['kode_e1']);
 		$this->db->set('kode_sasaran_e1',$data['kode_sasaran_e1']);
 		$this->db->set('kode_iku_e1',$data['kode_iku_e1']);
 		

@@ -13,6 +13,7 @@ class kke3a extends CI_Controller {
 		//if ($this->session->userdata('logged_in') != TRUE) redirect('security/login');					
 		$this->load->model('/security/sys_menu_model');
 		$this->load->model('/lke/kke3a_model');
+		$this->load->model('/rujukan/eselon1_model');
 		$this->load->model('/pengaturan/iku_e1_model');
 		$this->load->model('/lke/lke_konversi_model');
 		$this->load->library("utility");
@@ -54,6 +55,7 @@ class kke3a extends CI_Controller {
 	private function get_form_values() {
 		$dt['tahun'] = $this->input->post("tahun", TRUE); 
 		$dt['kke3a_e1_id'] = $this->input->post("kke3a_e1_id", TRUE); 
+		$dt['kode_e1'] = $this->input->post("kode_e1", TRUE); 
 		$dt['kode_sasaran_e1'] = $this->input->post("kode_sasaran_e1", TRUE); 
 		$dt['kode_iku_e1'] = $this->input->post("kode_iku_e1", TRUE); 
 		$dt['renstra_ip'] = $this->input->post("renstra_ip", TRUE); 
@@ -99,7 +101,7 @@ class kke3a extends CI_Controller {
 		// validation
 		# rules
 		$this->form_validation->set_rules("tahun", 'Tahun', 'trim|required|numeric|exact_length[4]|xss_clean');
-		//$this->form_validation->set_rules("id_komponen", 'Komponen/Subkomponen', 'trim|required|xss_clean');
+		$this->form_validation->set_rules("kode_e1", 'Unit Kerja Eselon I', 'trim|required|xss_clean');
 	//	$this->form_validation->set_rules("index_mutu", 'Index Mutu', 'trim|required|xss_clean');
 		
 		# message rules
@@ -109,7 +111,7 @@ class kke3a extends CI_Controller {
 		
 		if ($this->form_validation->run() == FALSE){ // jika tidak valid
 			$data['pesan_error'].=(trim(form_error('tahun',' ',' '))==''?'':form_error('tahun',' ','<br>'));
-			//$data['pesan_error'].=(trim(form_error('id_komponen',' ',' '))==''?'':form_error('id_komponen',' ','<br>'));
+			$data['pesan_error'].=(trim(form_error('kode_e1',' ',' '))==''?'':form_error('kode_e1',' ','<br>'));
 			//$data['pesan_error'].=(trim(form_error('index_mutu',' ',' '))==''?'':form_error('index_mutu',' ','<br>'));
 			
 		}else{

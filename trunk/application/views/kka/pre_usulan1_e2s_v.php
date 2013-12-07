@@ -92,6 +92,28 @@
 					url:getUrl<?=$objectId;?>(1),
 					queryParams:{lastNo:'0'},	
 					pageNumber : 1,
+					onClickCell: function(rowIndex, field, value){
+						$('#dg<?=$objectId;?>').datagrid('selectRow', rowIndex);
+						var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
+						
+						switch(field){
+							case "kode_sasaran_e2":
+								showPopup('#popdesc<?=$objectId?>', row.deskripsi_sasaran_e1);
+								break;
+							case "kode_ikk":
+								showPopup('#popdesc<?=$objectId?>', row.deskripsi);
+								break;
+							case "kode_e1":
+								showPopup('#popdesc<?=$objectId?>', row.nama_e1);
+								break;	
+							case "kode_subkegiatan":
+								showPopup('#popdesc<?=$objectId?>', row.nama_subkegiatan);
+								break;
+							default:
+								closePopup('#popdesc<?=$objectId?>');
+								break;
+						}
+					},
 					onLoadSuccess:function(data){	
 						$('#dg<?=$objectId;?>').datagrid('options').queryParams.lastNo = data.lastNo;
 						//prepareMerge<?=$objectId;?>(data);
@@ -109,60 +131,6 @@
 				window.open(getUrl<?=$objectId;?>(3));;
 			}
 			
-			saveData<?=$objectId;?>=function(){
-				$('#fm<?=$objectId;?>').form('submit',{
-					url: url,
-					onSubmit: function(){
-						return $(this).form('validate');
-					},
-					success: function(result){
-						//alert(result);
-						var result = eval('('+result+')');
-						if (result.success){
-							/* $.messager.show({
-								title: 'Success',
-								msg: result.msg
-							}); */
-							$('#dlg<?=$objectId;?>').dialog('close');		// close the dialog
-							$('#dg<?=$objectId;?>').datagrid('reload');	// reload the user data
-						} else {
-							$.messager.show({
-								title: 'Error',
-								msg: result.msg
-							});
-						}
-					}
-				});
-			}
-			//end saveData
-			
-			saveDataEdit<?=$objectId;?>=function(){
-				$('#fmedit<?=$objectId;?>').form('submit',{
-					url: url,
-					onSubmit: function(){
-						return $(this).form('validate');
-					},
-					success: function(result){
-						//alert(result);
-						var result = eval('('+result+')');
-						if (result.success){
-							/* $.messager.show({
-								title: 'Success',
-								msg: result.msg
-							}); */
-							$('#dlg<?=$objectId;?>').dialog('close');		// close the dialog
-							$('#dg<?=$objectId;?>').datagrid('reload');	// reload the user data
-						} else {
-							$.messager.show({
-								title: 'Error',
-								msg: result.msg
-							});
-						}
-					}
-				});
-			}
-			//end saveData
-			
 			formatPrice=function (val,row){
 				return val;//($.fn.autoNumeric.Format("txtAmount"+idx,total,{aSep:".",aDec:",",mDec:2}));
 				/* if (val < 20){
@@ -172,39 +140,11 @@
 				} */
 			}
 
-			
 			setTimeout(function(){
 				searchData<?=$objectId;?> ();
-				//$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>kka/pre_usulan1_e2/grid"});
 			},50);
 			
-			
-			// yanto
-			$('#dg<?=$objectId;?>').datagrid({
-				onClickCell: function(rowIndex, field, value){
-					$('#dg<?=$objectId;?>').datagrid('selectRow', rowIndex);
-					var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
-					
-					switch(field){
-						case "kode_sasaran_e2":
-							showPopup('#popdesc<?=$objectId?>', row.deskripsi_sasaran_e1);
-							break;
-						case "kode_ikk":
-							showPopup('#popdesc<?=$objectId?>', row.deskripsi);
-							break;
-						case "kode_e1":
-							showPopup('#popdesc<?=$objectId?>', row.nama_e1);
-							break;	
-						case "kode_subkegiatan":
-							showPopup('#popdesc<?=$objectId?>', row.nama_subkegiatan);
-							break;
-						default:
-							closePopup('#popdesc<?=$objectId?>');
-							break;
-					}
-				}
-			});
-			
+		
 			$("#popdesc<?=$objectId?>").click(function(){
 				closePopup('#popdesc<?=$objectId?>');
 			});
@@ -297,16 +237,16 @@
 		</tr>
 		</table>
 	  <div style="margin-bottom:5px"> 
-		<? if($this->sys_menu_model->cekAkses('ADD;',52,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('ADD;',68,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="newData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-add" plain="true">Add</a>  
 		<?}?>
-		<? if($this->sys_menu_model->cekAkses('EDIT;',52,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('EDIT;',68,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="editData<?=$objectId;?>(true);" class="easyui-linkbutton" iconCls="icon-edit" plain="true">Edit</a>
 		<?}?>
-		<? if($this->sys_menu_model->cekAkses('VIEW;',52,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('VIEW;',68,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="editData<?=$objectId;?>(false);" class="easyui-linkbutton" iconCls="icon-view" plain="true">View</a>
 		<?}?>
-		<? if($this->sys_menu_model->cekAkses('DELETE;',52,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('DELETE;',68,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="deleteData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-remove" plain="true">Delete</a>
 		<?}?>
 		<!--
@@ -316,22 +256,20 @@
 	  </div>
 	</div>
 	
-	<table id="dg<?=$objectId;?>" class="easyui-datagrid" style="height:auto;width:auto" title="Data Pra Monev Pagu Usulan  Eselon II" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true">
+	<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Data Pra Monev Pagu Usulan  Eselon II" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true" noWrap="false">
 	  <thead>
 	  <tr>
 		<th field="preusulan1_e2_id" sortable="true" hidden="true" width="50px">preusulan1_e2_id</th>
-		<th field="tahun" sortable="true" width="50px">Tahun</th>
-		<th field="kode_e1" sortable="true" width="50px"<?=($this->session->userdata('unit_kerja_e1')=='-1'?'':'hidden="true"')?>>Kode Unit Kerja</th>
+		<th field="tahun" sortable="true" width="20px">Tahun</th>
+		<th field="kode_e1" sortable="true" width="20px"<?=($this->session->userdata('unit_kerja_e1')=='-1'?'':'hidden="true"')?>>Kode Unit Kerja</th>
 		<th field="nama_e1" hidden="true">nama e1</th>
-		<th field="kode_sasaran_e2" sortable="true" width="50px">Kode Sasaran</th>
+		<th field="kode_sasaran_e2" sortable="true" width="40px">Kode Sasaran</th>
 		<th field="deskripsi_sasaran_e2" hidden="true">deskripsi_sasaran_e1</th>
 		<th field="kode_ikk" sortable="true" width="50px">Kode IKK</th>
 		<th field="kode_subkegiatan" sortable="true" width="50px">Kode</th>
 		<th field="deskripsi" hidden="true">deskripsi_ikk</th>
-		<th field="nama_subkegiatan" hidden="true">nama_subkegiatan</th>
-		<th field="jumlah" sortable="true" width="50px" align="right" formatter="formatPrice">Jumlah</th>
-		
-		
+		<th field="nama_subkegiatan" sortable="true" width="250px">Kegiatan / Sub Kegiatan</th>
+		<th field="jumlah" sortable="true" width="50px" align="right" formatter="formatPrice">Jumlah</th>		
 	  </tr>
 	  </thead>  
 	</table>

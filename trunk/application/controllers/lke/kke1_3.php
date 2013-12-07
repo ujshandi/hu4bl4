@@ -41,6 +41,7 @@ class Kke1_3 extends CI_Controller {
 	private function get_form_values() {
 		$dt['tahun'] = $this->input->post("tahun", TRUE); 
 		$dt['kke13_e1_id'] = $this->input->post("kke13_e1_id", TRUE); 
+		$dt['kode_e1'] = $this->input->post("kode_e1", TRUE); 
 		$dt['kode_sasaran_e1'] = $this->input->post("kode_sasaran_e1", TRUE); 
 		$dt['kode_iku_e1'] = $this->input->post("kode_iku_e1", TRUE); 
 		$dt['catatan_keuangan'] = $this->input->post("catatan_keuangan", TRUE); 
@@ -67,7 +68,7 @@ class Kke1_3 extends CI_Controller {
 		// validation
 		# rules
 		$this->form_validation->set_rules("tahun", 'Tahun', 'trim|required|numeric|exact_length[4]|xss_clean');
-		//$this->form_validation->set_rules("id_komponen", 'Komponen/Subkomponen', 'trim|required|xss_clean');
+		$this->form_validation->set_rules("kode_e1", 'Unit Kerja Eselonn I', 'trim|required|xss_clean');
 	//	$this->form_validation->set_rules("index_mutu", 'Index Mutu', 'trim|required|xss_clean');
 		
 		# message rules
@@ -77,6 +78,7 @@ class Kke1_3 extends CI_Controller {
 		
 		if ($this->form_validation->run() == FALSE){ // jika tidak valid
 			$data['pesan_error'].=(trim(form_error('tahun',' ',' '))==''?'':form_error('tahun',' ','<br>'));
+			$data['pesan_error'].=(trim(form_error('kode_e1',' ',' '))==''?'':form_error('kode_e1',' ','<br>'));
 			//$data['pesan_error'].=(trim(form_error('id_komponen',' ',' '))==''?'':form_error('id_komponen',' ','<br>'));
 			//$data['pesan_error'].=(trim(form_error('index_mutu',' ',' '))==''?'':form_error('index_mutu',' ','<br>'));
 			
