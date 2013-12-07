@@ -35,6 +35,19 @@ class kke3a extends CI_Controller {
 		$data['kriteria_relevan_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke3a','unit_kerja'=>'e1'),true,"kriteria_relevan");
 		$data['kriteria_diukur_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke3a','unit_kerja'=>'e1'),true,"kriteria_diukur");
 		$data['pengukuran_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke3a','unit_kerja'=>'e1'),true,"pengukuran");
+		
+		$data['listIndex_renstra_ip'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke3a','unit_kerja'=>'e1'),true);
+		$data['listIndex_rkt_ip'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke3a','unit_kerja'=>'e1'),true);
+		$data['listIndex_pk_ip'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke3a','unit_kerja'=>'e1'),true);
+		$data['listIndex_iku_measurable'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke3a','unit_kerja'=>'e1'),true);
+		$data['listIndex_iku_hasil'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke3a','unit_kerja'=>'e1'),true);
+		$data['listIndex_iku_relevan'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke3a','unit_kerja'=>'e1'),true);
+		$data['listIndex_iku_diukur'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke3a','unit_kerja'=>'e1'),true);
+		$data['listIndex_kriteria_measurable'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke3a','unit_kerja'=>'e1'),true);
+		$data['listIndex_kriteria_hasil'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke3a','unit_kerja'=>'e1'),true);
+		$data['listIndex_kriteria_relevan'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke3a','unit_kerja'=>'e1'),true);
+		$data['listIndex_kriteria_diukur'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke3a','unit_kerja'=>'e1'),true);
+		$data['listIndex_pengukuran'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke3a','unit_kerja'=>'e1'),true);
 	  	$this->load->view('lke/kke3a_v',$data);
 	}
 	

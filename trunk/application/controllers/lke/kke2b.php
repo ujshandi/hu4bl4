@@ -29,7 +29,14 @@ class Kke2b extends CI_Controller {
 		$data['renstra_b_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke2b','unit_kerja'=>'e1'),true,"renstra_b");
 		$data['rkt_b_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke2b','unit_kerja'=>'e1'),true,"rkt_b");
 		$data['pk_b_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke2b','unit_kerja'=>'e1'),true,"pk_b");
-		//$data['formLookupTarif'] = $this->tarif_model->lookup('#winLookTarif'.$data['objectId'],"#medrek_id".$data['objectId']);
+		
+		$data['listIndex_renstra_a'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke2b','unit_kerja'=>'e1'),true);
+		$data['listIndex_renstra_b'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke2b','unit_kerja'=>'e1'),true);
+		$data['listIndex_rkt_a'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke2b','unit_kerja'=>'e1'),true);
+		$data['listIndex_rkt_b'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke2b','unit_kerja'=>'e1'),true);
+		$data['listIndex_pk_a'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke2b','unit_kerja'=>'e1'),true);
+		$data['listIndex_pk_b'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke2b','unit_kerja'=>'e1'),true);
+		
 	  	$this->load->view('lke/kke2b_v',$data);
 	}
 	

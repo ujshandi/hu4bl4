@@ -26,7 +26,10 @@ class Kke2a extends CI_Controller {
 		$data['renstra_ip_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke2a','unit_kerja'=>'e1'),true,"renstra_ip");
 		$data['rkt_ip_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke2a','unit_kerja'=>'e1'),true,"rkt_ip");
 		$data['pk_ip_radio'] = $this->lke_konversi_model->getListIndex($this->objectId,array('jenis_lke'=>'kke2a','unit_kerja'=>'e1'),true,"pk_ip");
-		//$data['formLookupTarif'] = $this->tarif_model->lookup('#winLookTarif'.$data['objectId'],"#medrek_id".$data['objectId']);
+		
+		$data['listIndex_renstra_ip'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke2a','unit_kerja'=>'e1'),true);
+		$data['listIndex_rkt_ip_ip'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke2a','unit_kerja'=>'e1'),true);
+		$data['listIndex_pk_ip_ip'] = $this->lke_konversi_model->getCountIndex(array('jenis_lke'=>'kke2a','unit_kerja'=>'e1'),true);
 	  	$this->load->view('lke/kke2a_v',$data);
 	}
 	
