@@ -314,19 +314,19 @@
 							//CHAN $this->sasaran_eselon2_model->getListSasaranE2($objectId)?>
 							</span>
 						</div>
-						<div class="fitem">							
+					<!--	<div class="fitem">							
 							<label style="width:120px">Satuan Kerja :</label>
 							<? 	$this->satker_model->getListSatker($objectId); ?>
-						</div>
+						</div> -->
 						<div class="fitem">
 							<br>
 							<table id="tbl<?=$objectId;?>" border="1" width="100%" border="1" cellpadding="2" cellspacing="0" bordercolor="#CCCCCC">
 								<tr>
 									<td width="18px" bgcolor="#F4F4F4">Kode Sub Kegiatan</td>
 									<td width="60px" bgcolor="#F4F4F4">Nama Sub Kegiatan</td>
-									<td width="20px" bgcolor="#F4F4F4">Lokasi</td>
+								<!--	<td width="20px" bgcolor="#F4F4F4">Lokasi</td>
 									<td width="20px" bgcolor="#F4F4F4">Volume</td>
-									<td width="20px" bgcolor="#F4F4F4">Satuan</td>
+									<td width="20px" bgcolor="#F4F4F4">Satuan</td> -->
 									<td width="20px" bgcolor="#F4F4F4">Total Anggaran (Rp)</td>
 								</tr>
 								<tr>
@@ -336,13 +336,13 @@
 									<td>
 										<input name="detail[1][nama_subkegiatan]" size="60">
 									</td>
-									<td>
+									<!--<td>
 										<input name="detail[1][lokasi]" size="20">
 									</td><td>
 										<input name="detail[1][volume]" size="20">
 									</td><td>
 										<input name="detail[1][satuan]" size="20">
-									</td>
+									</td> -->
 									<td>
 										<input name="detail[1][total]" size="20">
 									</td>

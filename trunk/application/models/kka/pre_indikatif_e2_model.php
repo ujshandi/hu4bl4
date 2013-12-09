@@ -32,12 +32,12 @@ class Pre_indikatif_e2_model extends CI_Model
 			if($filtahun != '' && $filtahun != '-1' && $filtahun != null) {
 				$this->db->where("a.tahun",$filtahun);
 			}	
-		/* 	if($file2 != '' && $file2 != '-1' && $file2 != null) {
+		 	if($file2 != '' && $file2 != '-1' && $file2 != null) {
 				$this->db->where("a.kode_e2",$file2);
-			} */
+			} 
 			$this->db->order_by($sort." ".$order );
 			if($purpose==1){$this->db->limit($limit,$offset);}
-			$this->db->select('a.preindikatif_e2_id, a.tahun, a.kode_ikk, a.kode_e2 as rkt_kode_e2, a.kode_sasaran_e2 AS kode_sasaran_e2, b.deskripsi, a.jumlah,k.kode_kegiatan,k.nama_kegiatan,subkl.kode_subkegiatan, subkl.nama_subkegiatan');
+			$this->db->select('distinct a.preindikatif_e2_id, a.tahun, a.kode_ikk, a.kode_e2 as rkt_kode_e2, a.kode_sasaran_e2 AS kode_sasaran_e2, b.deskripsi, a.jumlah,k.kode_kegiatan,k.nama_kegiatan,subkl.kode_subkegiatan, subkl.nama_subkegiatan',false);
 			$this->db->select("c.deskripsi as deskripsi_sasaran_e1, b.deskripsi AS deskripsi_iku_e1, d.nama_e2");
 			$this->db->from('tbl_pre_indikatif_e2 a');
 			$this->db->join('tbl_ikk b', 'b.kode_ikk = a.kode_ikk and b.tahun = a.tahun');
@@ -45,7 +45,7 @@ class Pre_indikatif_e2_model extends CI_Model
 			$this->db->join('tbl_eselon2 d', 'd.kode_e2 = a.kode_e2');
 			$this->db->join('tbl_subkegiatan_kl subkl', 'subkl.kode_subkegiatan = a.kode_subkegiatan','left');
 			$this->db->join('tbl_kegiatan_kl k', 'k.kode_kegiatan = a.kode_kegiatan','left');
-			$this->db->order_by("a.tahun DESC, a.kode_sasaran_e2 ASC, a.kode_ikk ASC");
+			$this->db->order_by("a.tahun DESC, a.kode_kegiatan DESC, a.kode_ikk ASC");
 			$query = $this->db->get();
 			
 			$i=0;
@@ -64,24 +64,10 @@ class Pre_indikatif_e2_model extends CI_Model
 				$response->rows[$i]['kode_ikk']=$row->kode_ikk;
 				$response->rows[$i]['deskripsi_ikk']=$row->deskripsi;
 				$response->rows[$i]['kode_kegiatan']=$row->kode_kegiatan;
-				$response->rows[$i]['kode_subkegiatan']=$row->kode_subkegiatan;
 				$response->rows[$i]['nama_kegiatan']=$row->nama_kegiatan;
-				$response->rows[$i]['nama_subkegiatan']=$row->nama_subkegiatan;
-/*
-				if(is_numeric($row->jumlah)){
-					if(strpos($row->jumlah, '.') || strpos($row->jumlah, ',')){
-						$response->rows[$i]['jumlah'] = number_format($row->jumlah, 4, ',', '.');
-					}else{
-						$response->rows[$i]['jumlah'] = number_format($row->jumlah, 0, ',', '.');
-					}
-				}else{
-					$response->rows[$i]['jumlah'] = $row->jumlah;
-				}
-*/
+				$response->rows[$i]['kode_subkegiatan']=($row->kode_subkegiatan!=""?$row->kode_subkegiatan:$row->kode_kegiatan);
+				$response->rows[$i]['nama_subkegiatan']=($row->nama_subkegiatan!=""?$row->nama_subkegiatan:$row->nama_kegiatan);
 				$response->rows[$i]['jumlah']=$this->utility->cekNumericFmt($row->jumlah);
-				///$response->rows[$i]['satuan']=$row->satuan;
-				//$response->rows[$i]['status']= $row->status;
-				
 				//utk kepentingan export excel ==========================
 				
 				//if($file1 == '-1'){unset($row->rkt_kode_sasaran_e2);}
@@ -139,9 +125,9 @@ class Pre_indikatif_e2_model extends CI_Model
 		if($filtahun != '' && $filtahun != '-1' && $filtahun != null) {
 			$this->db->where("a.tahun",$filtahun);
 		}	
-		/* if($file2 != '' && $file2 != '-1' && $file2 != null) {
+		 if($file2 != '' && $file2 != '-1' && $file2 != null) {
 			$this->db->where("a.kode_e2",$file2);
-		} */		
+		} 
 		$this->db->from('tbl_pre_indikatif_e2 a');
 		$this->db->join('tbl_ikk b', 'b.kode_ikk = a.kode_ikk and b.tahun = a.tahun');
 		$this->db->join('tbl_sasaran_eselon2 c', 'c.kode_sasaran_e2 = a.kode_sasaran_e2');
@@ -299,46 +285,52 @@ class Pre_indikatif_e2_model extends CI_Model
 	
 	public function getKegiatan_e2($objectId, $kode, $tahun){
 		$out = '';
-		/* $data['kode_sasaran_e2'] = $kode;
-		$data['tahun'] = $tahun;
-		$data['id'] = '1';
-		$data['name'] = 'detail[1][kode_kegiatan]';
-		$data['onclick'] = 'javascript:getSatuan'.$objectId.'(this.value, this.id)';
-		$data['name'] = 'detail[1][kode_ikk]'; */
 		$this->db->flush_cache();
-		$this->db->select('*');
-		$this->db->from('tbl_kegiatan_kl');
+		$this->db->select('k.*,pre.jumlah, pre.preusulan1_e2_id');
+		$this->db->from('tbl_kegiatan_kl k',false);
+		$this->db->join('tbl_pre_usulan1_e2 pre','k.kode_kegiatan=pre.kode_kegiatan and k.tahun=pre.tahun and pre.kode_e2=k.kode_e2','left');
 		$this->db->order_by('id_kegiatan_kl');
-		$this->db->where('tahun',$tahun);
-		$this->db->where('kode_e2',$kode);
+		$this->db->where('k.tahun',$tahun);
+		$this->db->where('k.kode_e2',$kode);
 		//if($e2!=''){$this->db->where('kode_e2',$e2);}
 		$que = $this->db->get();
 		$i=0;
 		foreach($que->result() as $r){
+			$idxKegiatan = $i;
+			
+			$this->db->flush_cache();
+			$this->db->select('s.*,pre.preusulan1_e2_id,pre.jumlah');
+			$this->db->from('tbl_subkegiatan_kl s',false);
+			$this->db->join('tbl_pre_usulan1_e2 pre','s.kode_subkegiatan=pre.kode_subkegiatan and s.tahun=pre.tahun','left');
+			$this->db->order_by('id_subkegiatan_kl');
+			$this->db->where('s.kode_kegiatan',$r->kode_kegiatan);
+			$this->db->where('s.tahun',$r->tahun);
+			//if($e2!=''){$this->db->where('kode_e2',$e2);}
+			$queSub = $this->db->get();
+			$max_sub_idx = 0;
+			if ($queSub!=null)
+				$max_sub_idx=$queSub->num_rows;		
+			$checked = ((int)$r->preusulan1_e2_id>0?"checked":"");	
 			$out .= '<tr>
 					<td>'.($i+1).'</td>
-					<td><input type="hidden" name="detail['.$i.'][tipe]" value="kegiatan"/><input type="checkbox" name="detail['.$i.'][chk]" value="chk"/></td>					
+					<td><input type="hidden" name="detail['.$i.'][tipe]" value="kegiatan"/><input type="checkbox" name="detail['.$i.'][chk]" value="chk" '.$checked.'/></td>					
 					<td><input type="hidden" name="detail['.$i.'][kode_kegiatan]" value="'.$r->kode_kegiatan.'"/>'.$r->kode_kegiatan.'</td>
 					<td>'.$r->nama_kegiatan.'</td>
-					<td align="right"><input class="money" name="detail['.$i.'][jumlah]" style="text-align:right" size="20" /></td>					
+					<td align="right"><input class="money" readonly id="jumlah_'.$i.'" name="detail['.$i.'][jumlah]" style="text-align:right" value="'.$r->jumlah.'" size="20" /><input type="hidden" id="max_sub_idx_'.$i.'" value="'.$max_sub_idx.'"/></td>					
 				</tr>';
 				
-				$this->db->flush_cache();
-				$this->db->select('*');
-				$this->db->from('tbl_subkegiatan_kl');
-				$this->db->order_by('id_subkegiatan_kl');
-				$this->db->where('kode_kegiatan',$r->kode_kegiatan);
-				//if($e2!=''){$this->db->where('kode_e2',$e2);}
-				$queSub = $this->db->get();
+			
 				$j=0;
 				$i++;
 				foreach($queSub->result() as $z){
+				//	var_dump((int)$z->preusulan1_e2_id);
+					$checked = ((int)$z->preusulan1_e2_id>0?"checked":"");
 					$out .= '<tr>
 					<td>'.($i+1).'</td>
-					<td><input type="hidden" name="detail['.$i.'][tipe]" value="subkegiatan"/><input type="checkbox" name="detail['.$i.'][chksub]" value="chksub"/></td>					
+					<td><input type="hidden" name="detail['.$i.'][tipe]" value="subkegiatan"/><input type="checkbox" name="detail['.$i.'][chksub]" value="chksub" '.$checked.'/></td>					
 					<td><input type="hidden" name="detail['.$i.'][kode_subkegiatan]" value="'.$z->kode_subkegiatan.'"/>'.$z->kode_subkegiatan.'</td>
 					<td>&nbsp;&nbsp;&nbsp;>> '.$z->nama_subkegiatan.'</td>
-					<td align="right"><input class="money" name="detail['.$i.'][jumlah]" style="text-align:right" size="20" /></td>					
+					<td align="right"><input class="money" name="detail['.$i.'][jumlah]" style="text-align:right" size="20" id="jumlah_'.$i.'"  value="'.$z->jumlah.'" onchange="calculateKegiatan'.$objectId.'('.$idxKegiatan.','.$max_sub_idx.')"/></td>					
 					</tr>';
 					$i++;
 				

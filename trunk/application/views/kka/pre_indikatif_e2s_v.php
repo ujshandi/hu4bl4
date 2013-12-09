@@ -68,21 +68,21 @@
 			//tipe 1=grid, 2=pdf, 3=excel
 			getUrl<?=$objectId;?> = function (tipe){
 				var filtahun = $("#filter_tahun<?=$objectId;?>").val();
-					<? if ($this->session->userdata('unit_kerja_e1')==-1){?>
-					var file1 = $("#filter_e1<?=$objectId;?>").val();
+					<? if ($this->session->userdata('unit_kerja_e2')==-1){?>
+					var file2 = $("#filter_e2<?=$objectId;?>").val();
 				<?} else {?>
-					var file1 = "<?=$this->session->userdata('unit_kerja_e1');?>";
+					var file2 = "<?=$this->session->userdata('unit_kerja_e2');?>";
 				<?}?>
 				if(filtahun==null) filtahun ="-1";
-				if (file1 == null) file1 = "-1";
+				if (file2 == null) file2 = "-1";
 			
 				if (tipe==1){
-					return "<?=base_url()?>kka/pre_indikatif_e2/grid/"+filtahun+"/"+file1;
+					return "<?=base_url()?>kka/pre_indikatif_e2/grid/"+filtahun+"/"+file2;
 				}
 				else if (tipe==2){
-					return "<?=base_url()?>kka/pre_indikatif_e2/pdf/"+filtahun+"/"+file1;
+					return "<?=base_url()?>kka/pre_indikatif_e2/pdf/"+filtahun+"/"+file2;
 				}else if (tipe==3){
-					return "<?=base_url()?>kka/pre_indikatif_e2/excel/"+filtahun+"/"+file1;
+					return "<?=base_url()?>kka/pre_indikatif_e2/excel/"+filtahun+"/"+file2;
 				}
 			}
 			
@@ -286,27 +286,47 @@
 					<td>
 					<?=$this->sasaran_eselon2_model->getListFilterTahun($objectId)?>
 					</td>
-					<td width="10px"></td>
+					
+				</tr><tr>
+					<td>Unit Kerja Eselon I :</td>
 					<td>
+					<?=$this->eselon1_model->getListFilterEselon1($objectId,$this->session->userdata('unit_kerja_e1'))?>
+					</td>
+				</tr>
+				<tr>
+					<td>Unit Kerja Eselon II :</td>
+					<td><span class="fitem" id="divUnitKerja<?=$objectId;?>">
+					<?=$this->eselon2_model->getListFilterEselon2($objectId,$this->session->userdata('unit_kerja_e1'),$this->session->userdata('unit_kerja_e2'),false)?>
+					</span>
+					</td>
+				</tr>
+				<tr style="height:10px">
+					  <td style="">
+					  </td>
+				</tr>
+				<tr>
+					<td align="right" colspan="2" valign="top">
+						<a href="#" class="easyui-linkbutton" onclick="clearFilter<?=$objectId;?>();" iconCls="icon-reset">Reset</a>
 						<a href="#" class="easyui-linkbutton" onclick="searchData<?=$objectId;?>();" iconCls="icon-search">Search</a>
 					</td>
 				</tr>
+				
 				</table>
 			</div>
 			</td>
 		</tr>
 		</table>
 	  <div style="margin-bottom:5px"> 
-		<? if($this->sys_menu_model->cekAkses('ADD;',52,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('ADD;',69,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="newData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-add" plain="true">Add</a>  
 		<?}?>
-		<? if($this->sys_menu_model->cekAkses('EDIT;',52,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('EDIT;',69,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="editData<?=$objectId;?>(true);" class="easyui-linkbutton" iconCls="icon-edit" plain="true">Edit</a>
 		<?}?>
-		<? if($this->sys_menu_model->cekAkses('VIEW;',52,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('VIEW;',69,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="editData<?=$objectId;?>(false);" class="easyui-linkbutton" iconCls="icon-view" plain="true">View</a>
 		<?}?>
-		<? if($this->sys_menu_model->cekAkses('DELETE;',52,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('DELETE;',69,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="deleteData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-remove" plain="true">Delete</a>
 		<?}?>
 		<!--
@@ -328,7 +348,7 @@
 		<th field="kode_ikk" sortable="true" width="50px">Kode IKK</th>
 		<th field="kode_subkegiatan" sortable="true" width="50px">Kode</th>
 		<th field="deskripsi" hidden="true">deskripsi_ikk</th>
-		<th field="nama_subkegiatan" hidden="true">nama_subkegiatan</th>
+		<th field="nama_subkegiatan" sortable="true"  width="250px">Kegiatan / Sub Kegiatan</th>
 		<th field="jumlah" sortable="true" width="50px" align="right" formatter="formatPrice">Jumlah</th>
 		
 		

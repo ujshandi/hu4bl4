@@ -148,8 +148,20 @@
 				
 			}
 			
-			calculateKegiatan<?=$objectId?>=function(kegiatanJumlahId){
+			calculateKegiatan<?=$objectId?>=function(idxKegiatan,max_sub_idx){
+				$('.money').autoNumeric('init',{aSep: '.', aDec: ',',vMin:'0',aPad:"false",vMax:"999999999999999"});
+				//alert($("#"+kegiatanJumlahId).val());
+				//alert($("#jumlah_"+idx).val());
+				var jumlahSubkegiatan=0, jumlahKegiatan = 0, idkegiatan;
 				
+				//jumlahKegiatan = parseFloat($("#jumlah_"+idxKegiatan).autoNumeric('get'));
+				//if (!jumlahKegiatan) jumlahKegiatan = parseFloat(0);
+				for (idx=(idxKegiatan+1);idx<max_sub_idx;idx++){
+					jumlahSubkegiatan = parseFloat($("#jumlah_"+idx).autoNumeric('get'));
+					if (!jumlahSubkegiatan) jumlahSubkegiatan = parseFloat(0);
+					jumlahKegiatan = jumlahKegiatan + jumlahSubkegiatan;
+				}
+		        $("#jumlah_"+idxKegiatan).autoNumeric('set',(jumlahKegiatan));	
 			}
 			
 			

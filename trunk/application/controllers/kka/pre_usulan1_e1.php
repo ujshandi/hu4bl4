@@ -19,6 +19,7 @@ class Pre_usulan1_e1 extends CI_Controller {
 		$this->load->model('/kka/pre_usulan1_e1_model');
 		
 		$this->load->model('/rujukan/eselon1_model');
+		$this->load->model('/rujukan/kegiatankl_model');
 		$this->load->model('/pengaturan/sasaran_eselon1_model');
 		$this->load->model('/pengaturan/iku_e1_model');
 		$this->load->library("utility");
@@ -54,6 +55,19 @@ class Pre_usulan1_e1 extends CI_Controller {
 		if (($file1==null)&&($this->session->userdata('unit_kerja_e1'))!=-1)
 			$file1= $this->session->userdata('unit_kerja_e1');
 		echo $this->pre_usulan1_e1_model->easyGrid($filtahun,$file1);
+	}
+	
+	function gridMonev($filtahun=null,$kodekegiatan=null){
+		
+		echo $this->pre_usulan1_e1_model->easySubGrid($filtahun,$kodekegiatan);
+	}
+	
+	function gridKegiatan($filtahun=null,$file1=null,$file2=null){
+		if (($file1==null)&&($this->session->userdata('unit_kerja_e1'))!=-1)
+			$file1= $this->session->userdata('unit_kerja_e1');
+		if (($file2==null)&&($this->session->userdata('unit_kerja_e2'))!=-1)
+			$file2= $this->session->userdata('unit_kerja_e2');
+		echo $this->kegiatankl_model->easyGrid($file1,$file2,$filtahun,1,'usulan');
 	}
 	
 	

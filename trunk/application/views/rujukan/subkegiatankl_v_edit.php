@@ -193,10 +193,10 @@
 							//CHAN $this->sasaran_eselon2_model->getListSasaranE2($objectId)?>
 							</span>
 						</div>
-						<div class="fitem">							
+						<!--<div class="fitem">							
 								<label style="width:120px">Satuan Kerja :</label>
 								<? 	$this->satker_model->getListSatker($objectId); ?>
-						</div>
+						</div> -->
 						<div class="fitem">
 							<label style="width:120px">Kode Sub Kegiatan :</label>
 							<input name="kode_subkegiatan" class="easyui-validatebox" required="true" value="<?=$result->kode_subkegiatan?>" >
@@ -205,7 +205,7 @@
 							<label style="width:120px; vertical-align:top">Nama Sub Kegiatan :</label>
 							<textarea name="nama_subkegiatan" class="easyui-validatebox" required="true" cols="50"><?=$result->nama_subkegiatan?></textarea>
 						</div>
-						<div class="fitem">
+					<!--	<div class="fitem">
 							<label style="width:120px; vertical-align:top">Lokasi :</label>
 							<input name="lokasi" class="easyui-validatebox" required="true" value="<?=$result->lokasi?>" >
 						</div>
@@ -216,7 +216,7 @@
 						<div class="fitem">
 							<label style="width:120px; vertical-align:top">Satuan :</label>
 							<input name="satuan" class="easyui-validatebox" required="true" value="<?=$result->satuan?>" >
-						</div>
+						</div> -->
 						<div class="fitem" >
 							<label style="width:120px">Total Anggaran (Rp) :</label>
 							<input name="total" class="easyui-validatebox" required="true" value="<?=$result->total?>" >

@@ -77,7 +77,7 @@
 				if (file1 == null) file1 = "-1";
 			
 				if (tipe==1){
-					return "<?=base_url()?>kka/pre_usulan1_e1/grid/"+filtahun+"/"+file1;
+					return "<?=base_url()?>kka/pre_usulan1_e1/gridKegiatan/"+filtahun+"/"+file1;
 				}
 				else if (tipe==2){
 					return "<?=base_url()?>kka/pre_usulan1_e1/pdf/"+filtahun+"/"+file1;
@@ -123,12 +123,12 @@
 		
 			printData<?=$objectId;?>=function(){			
 				//$.jqURL.loc(getUrl<?=$objectId;?>(2),{w:800,h:600,wintype:"_blank"});
-			window.open(getUrl<?=$objectId;?>(2));;
-			//alert("Sedang dalam pengerjaan");
+			//window.open(getUrl<?=$objectId;?>(2));;
+				alert("Fungsi ini belum tersedia");
 			}
 			toExcel<?=$objectId;?>=function(){
-				// alert("Sedang dalam pengerjaan");	
-				window.open(getUrl<?=$objectId;?>(3));;
+				alert("Fungsi ini belum tersedia");
+				//window.open(getUrl<?=$objectId;?>(3));;
 			}
 			
 			
@@ -219,6 +219,12 @@
 			width:84px;
 			margin-bottom:5px;
 		}
+		
+		
+		.datagrid-header .datagrid-cell{
+			height:auto;
+			line-height:auto;
+		}
 	</style>
 	<div id="tb<?=$objectId;?>" style="height:auto">
 	 <table border="0" cellpadding="1" cellspacing="1" width="100%">
@@ -242,26 +248,125 @@
 		</tr>
 		</table>
 	  <div style="margin-bottom:5px"> 
-		<? if($this->sys_menu_model->cekAkses('ADD;',64,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<!--<? if($this->sys_menu_model->cekAkses('ADD;',64,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="newData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-add" plain="true">Add</a>  
 		<?}?>
 		<? if($this->sys_menu_model->cekAkses('EDIT;',64,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="editData<?=$objectId;?>(true);" class="easyui-linkbutton" iconCls="icon-edit" plain="true">Edit</a>
 		<?}?>
+		
 		<? if($this->sys_menu_model->cekAkses('VIEW;',64,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="editData<?=$objectId;?>(false);" class="easyui-linkbutton" iconCls="icon-view" plain="true">View</a>
-		<?}?>
+		<?}?>-->
+		<!--
 		<? if($this->sys_menu_model->cekAkses('DELETE;',64,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="deleteData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-remove" plain="true">Delete</a>
-		<?}?>
-		<!--
+		<?}?> -->
+		
 		<a href="#" onclick="printData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-print" plain="true">Print</a>
 		<a href="#" onclick="toExcel<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-excel" plain="true">Excel</a>
-		-->
+		
 	  </div>
 	</div>
 	
-	<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Data Pre Usulan 1 Eselon I" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true" noWrap="false">
+	
+<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Data Kegiatan" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true" nowrap="false">
+	<thead>
+	<tr>
+		<th field="id_kegiatan_kl" sortable="true" width="5px" hidden="true">No.</th>
+		<th field="tahun" sortable="true" width="10px">Tahun</th>
+		<th field="kode_program" sortable="true" width="20px">Kode Program</th>
+		<th field="nama_program" hidden="true">Nama Program</th>
+		<th field="kode_kegiatan" sortable="true" width="20px">Kode Kegiatan</th>
+		<th field="nama_kegiatan" sortable="true" width="75px">Nama Kegiatan</th>
+		<th field="total" sortable="true" width="25px" align="right" formatter="formatPrice">Total Rencana <br>Anggaran (Rp)</th>
+		<th field="total_kumulatif" sortable="true" width="25px" align="right" formatter="formatPrice">Akumulasi Anggaran<br> Sub Kegiatan (Rp)</th>
+		<th field="kode_e2" sortable="true" width="20px"<?=($this->session->userdata('unit_kerja_e2')=='-1'?'':'hidden="true"')?>>Kode Bidang</th>
+		<th field="nama_e2" hidden="true">Nama Eselon II</th>
+	</tr>
+	</thead>  
+</table>
+
+
+<script type="text/javascript">
+        $(function(){
+			var parentId;
+			// chan
+			$('#dg<?=$objectId;?>').datagrid({
+				url:getUrl<?=$objectId;?>(1),	
+				view: detailview,
+				 detailFormatter:function(index,row){
+                    return '<div style="padding:2px"><table id="ddv<?=$objectId;?>-' + index + '"></table></div>';
+                //  return "tes";
+                },
+                onExpandRow: function(index,row){
+				//	alert(row.id_pk_e1);
+
+                    $('#ddv<?=$objectId;?>-'+index).datagrid({
+                        url:'<?=base_url()?>kka/pre_usulan1_e1/gridMonev/'+row.tahun+'/'+row.kode_kegiatan+'/?parentIndex='+index,
+                        fitColumns:true,
+                        singleSelect:true,
+                        rownumbers:true,
+						nowrap:false,
+                        loadMsg:'',
+                        height:'auto',		
+                        columns:[[
+                            {field:'preusulan1_e1_id',title:'id',hidden:true},
+                            {field:'tahun',title:'Tahun',width:30},                            
+                            {field:'deskripsi_sasaran_e1',title:'Deskripsi Sasaran',width:200},
+                            {field:'deskripsi_iku_e1',title:'Deskripsi IKK',width:200},
+                            {field:'kode_subkegiatan',title:'Kode',width:100},
+                            {field:'nama_subkegiatan',title:'Kegiatan / Sub Kegiatan',width:200},
+                            {field:'jumlah',title:'Jumlah',width:80,align:'right'}
+                        ]],
+                        onResize:function(){
+                            $('#dg<?=$objectId;?>').datagrid('fixDetailRowHeight',index);
+                        },
+                       onClickCell:function(rowIndex, field, value){
+							 $('#ddv<?=$objectId;?>-'+index).datagrid('selectRow', rowIndex);
+							//var row = $('#ddv<?=$objectId;?>-'+index).datagrid('getSelected');
+							//idCheckpoint<?=$objectId;?> = row.id_checkpoint_e1;
+							//rowIndexDetail = index;
+							//alert(idCheckpoint);
+					   },
+                        onLoadSuccess:function(){
+                            setTimeout(function(){
+                                $('#dg<?=$objectId;?>').datagrid('fixDetailRowHeight',index);
+                            },0);
+                        }
+                    });
+                    $('#dg<?=$objectId;?>').datagrid('fixDetailRowHeight',index);
+
+	
+                },
+				onClickCell: function(rowIndex, field, value){
+					$('#dg<?=$objectId;?>').datagrid('selectRow', rowIndex);
+					//var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
+					//idCheckpoint<?=$objectId;?> = null;
+					//alert(row.deskripsi_iku_e1);
+					/* switch(field){
+						case "kode_e1":
+							showPopup('#popdesc<?=$objectId?>', row.nama_e1);
+							break;
+						case "kode_sasaran_e1":
+							showPopup('#popdesc<?=$objectId?>', row.deskripsi_sasaran_e1);
+							break;
+						case "kode_iku_e1":
+							showPopup('#popdesc<?=$objectId?>', row.deskripsi_iku_e1);
+							break;
+						
+						default:
+							closePopup('#popdesc<?=$objectId?>');
+							break;
+					} */
+				}
+			});
+			
+			
+            ;
+        });
+    </script>
+<!--	<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Data Pre Usulan 1 Eselon I" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true" noWrap="false">
 	  <thead>
 	  <tr>
 		<th field="preusulan1_e1_id" sortable="true" hidden="true" width="50px">preusulan1_e1_id</th>
@@ -280,5 +385,5 @@
 	  </tr>
 	  </thead>  
 	</table>
-	
+	-->
 	<div class="popdesc" id="popdesc<?=$objectId?>">&nbsp;</div>

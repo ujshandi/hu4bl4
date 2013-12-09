@@ -148,9 +148,22 @@
 				
 			}
 			
-			calculateKegiatan<?=$objectId?>=function(kegiatanJumlahId){
+			calculateKegiatan<?=$objectId?>=function(idxKegiatan,max_sub_idx){
+				$('.money').autoNumeric('init',{aSep: '.', aDec: ',',vMin:'0',aPad:"false",vMax:"999999999999999"});
+				//alert($("#"+kegiatanJumlahId).val());
+				//alert($("#jumlah_"+idx).val());
+				var jumlahSubkegiatan=0, jumlahKegiatan = 0, idkegiatan;
 				
+				//jumlahKegiatan = parseFloat($("#jumlah_"+idxKegiatan).autoNumeric('get'));
+				//if (!jumlahKegiatan) jumlahKegiatan = parseFloat(0);
+				for (idx=(idxKegiatan+1);idx<max_sub_idx;idx++){
+					jumlahSubkegiatan = parseFloat($("#jumlah_"+idx).autoNumeric('get'));
+					if (!jumlahSubkegiatan) jumlahSubkegiatan = parseFloat(0);
+					jumlahKegiatan = jumlahKegiatan + jumlahSubkegiatan;
+				}
+		        $("#jumlah_"+idxKegiatan).autoNumeric('set',(jumlahKegiatan));	
 			}
+			
 			
 			
 			$("#kode_e2<?=$objectId?>").change(function(){
@@ -277,7 +290,7 @@
 			
 			<div class="easyui-layout" fit="true">  
 								
-				<div region="center" border="true" title="Tambah Data Pre Usulan 1 Eselon I">
+				<div region="center" border="true" title="Tambah Data Pra Definitif Eselon II">
 				<form id="fm<?=$objectId;?>" method="post" style="margin:10px 5px 5px 10px;" onsubmit="return false">
 					<div class="fitem">
 						<label style="width:120px;vertical-align:top">Tahun :</label>

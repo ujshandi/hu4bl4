@@ -60,7 +60,7 @@ class Subkegiatankl extends CI_Controller {
 	private function get_form_values() {
 		$dt['tahun'] 			= $this->input->post("tahun", TRUE);
 		$dt['kode_kegiatan'] 	= $this->input->post("kode_kegiatan", TRUE);
-		$dt['kode_satker']		= $this->input->post("kode_satker", TRUE);
+		//$dt['kode_satker']		= $this->input->post("kode_satker", TRUE);
 		$dt['detail'] 			= $this->input->post("detail", TRUE);
 		return $dt;
     }

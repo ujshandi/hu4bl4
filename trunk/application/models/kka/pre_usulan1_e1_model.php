@@ -64,17 +64,6 @@ class Pre_usulan1_e1_model extends CI_Model
 				$response->rows[$i]['deskripsi_iku_e1']=$row->deskripsi_iku_e1;
 				$response->rows[$i]['kode_kegiatan']=$row->kode_kegiatan;
 				$response->rows[$i]['nama_kegiatan']=$row->nama_kegiatan;
-/*
-				if(is_numeric($row->jumlah)){
-					if(strpos($row->jumlah, '.') || strpos($row->jumlah, ',')){
-						$response->rows[$i]['jumlah'] = number_format($row->jumlah, 4, ',', '.');
-					}else{
-						$response->rows[$i]['jumlah'] = number_format($row->jumlah, 0, ',', '.');
-					}
-				}else{
-					$response->rows[$i]['jumlah'] = $row->jumlah;
-				}
-*/
 				$response->rows[$i]['jumlah']=$this->utility->cekNumericFmt($row->jumlah);
 				///$response->rows[$i]['satuan']=$row->satuan;
 				//$response->rows[$i]['status']= $row->status;
@@ -133,6 +122,104 @@ class Pre_usulan1_e1_model extends CI_Model
 		}
 	}
 	
+	public function easySubGrid($filtahun=null,$filkegiatan=null){
+		$lastNo = isset($_POST['lastNo']) ? intval($_POST['lastNo']) : 0;  
+		$page = isset($_POST['page']) ? intval($_POST['page']) : 1;  
+		$limit = isset($_POST['rows']) ? intval($_POST['rows']) : 10;  
+		
+		$count = $this->GetRecordCountSubgrid($filtahun,$filkegiatan);
+		$response = new stdClass();
+		$response->total = $count;
+		$sort = isset($_POST['sort']) ? strval($_POST['sort']) : 'a.kode_subkegiatan';  
+		$order = isset($_POST['order']) ? strval($_POST['order']) : 'desc';
+		$offset = ($page-1)*$limit;  
+		
+		if ($count>0){
+			//filter
+			if($filtahun != '' && $filtahun != '-1' && $filtahun != null) {
+				$this->db->where("a.tahun",$filtahun);
+			}	
+			if($filkegiatan != '' && $filkegiatan != '-1' && $filkegiatan != null) {
+				$this->db->where("k.kode_kegiatan",$filkegiatan);
+			}
+			$this->db->order_by($sort." ".$order );
+			//if($purpose==1){$this->db->limit($limit,$offset);}
+			$this->db->select('a.preusulan1_e2_id, a.tahun, a.kode_ikk, a.kode_e2 as rkt_kode_e2, a.kode_sasaran_e2 AS kode_sasaran_e2, b.deskripsi, a.jumlah,skk.kode_subkegiatan,skk.nama_subkegiatan');
+			$this->db->select("c.deskripsi as deskripsi_sasaran_e2, b.deskripsi AS deskripsi_iku_e2, d.nama_e2");
+			$this->db->from('tbl_pre_usulan1_e2 a');
+			$this->db->join('tbl_ikk b', 'b.kode_ikk = a.kode_ikk and b.tahun = a.tahun');
+			$this->db->join('tbl_sasaran_eselon2 c', 'c.kode_sasaran_e2 = a.kode_sasaran_e2 and c.tahun = a.tahun');
+			$this->db->join('tbl_eselon2 d', 'd.kode_e2 = a.kode_e2');
+			$this->db->join('tbl_subkegiatan_kl skk', 'skk.kode_subkegiatan = a.kode_subkegiatan');
+			$this->db->join('tbl_kegiatan_kl k', 'k.kode_kegiatan = skk.kode_kegiatan and k.tahun=skk.tahun');
+			$this->db->order_by("a.tahun DESC, a.kode_subkegiatan ASC");
+			$query = $this->db->get();
+			
+			$i=0;
+			$no =$lastNo;
+			foreach ($query->result() as $row)
+			{
+				$no++;
+				$response->rows[$i]['no']= $no;
+				$response->rows[$i]['preusulan1_e1_id']=$row->preusulan1_e2_id;
+				$response->rows[$i]['tahun']=$row->tahun;
+				$response->rows[$i]['kode_e1']=$row->rkt_kode_e2;
+				$response->rows[$i]['nama_e1']=$row->nama_e2;
+				$response->rows[$i]['kode_sasaran_e1']=$row->kode_sasaran_e2;
+				$response->rows[$i]['deskripsi_sasaran_e1']=$row->deskripsi_sasaran_e2;
+				$response->rows[$i]['deskripsi']=$row->deskripsi;
+				$response->rows[$i]['kode_iku']=$row->kode_ikk;
+				$response->rows[$i]['deskripsi_iku_e1']=$row->deskripsi_iku_e2;
+				$response->rows[$i]['kode_subkegiatan']=$row->kode_subkegiatan;
+				$response->rows[$i]['nama_subkegiatan']=$row->nama_subkegiatan;
+
+				$response->rows[$i]['jumlah']=$this->utility->cekNumericFmt($row->jumlah);
+				///$response->rows[$i]['satuan']=$row->satuan;
+				//$response->rows[$i]['status']= $row->status;
+				
+				//utk kepentingan export excel ==========================
+				// $row->keterangan = str_replace("<br>",", ",$response->rows[$i]['pejabat']);
+				// $row->indikator_kinerja=$response->rows[$i]['indikator_kinerja'];
+
+				unset($row->preusulan1_e2_id);
+				unset($row->tahun);
+				//unset($row->status);
+				unset($row->kode_iku_e1);
+				//============================================================
+					
+				//utk kepentingan export pdf===================
+			/* 	if($file1 != '' && $file1 != '-1' && $file1 != null)
+					$pdfdata[] = array($no,$response->rows[$i]['kode_sasaran_e1'],$response->rows[$i]['deskripsi'],$response->rows[$i]['jumlah']);
+				else
+					$pdfdata[] = array($no,$response->rows[$i]['kode_e1'],$response->rows[$i]['kode_sasaran_e1'],$response->rows[$i]['deskripsi'],$response->rows[$i]['jumlah']); */
+				//============================================================
+				$i++;
+			} 
+			
+			$response->lastNo = $no;
+			// $query->free_result();
+		}else {
+				$response->rows[$count]['no']= "";
+				$response->rows[$count]['id_rkt_kl']='';
+				$response->rows[$count]['tahun']='';
+				$response->rows[$count]['kode_e2']='';
+				$response->rows[$count]['nama_e2']='';
+				$response->rows[$count]['kode_sasaran_e2']='';
+				$response->rows[$count]['deskripsi_sasaran_e2']='';
+				$response->rows[$count]['kode_ikk']='';
+				$response->rows[$count]['deskripsi_iku_e2']='';
+				$response->rows[$count]['kode_subkegiatan']='';
+				$response->rows[$count]['nama_subkegiatan']='';
+				$response->rows[$count]['jumlah']='';
+				//$response->rows[$count]['satuan']='';
+				$response->lastNo = 0;
+		}
+		
+		
+			return json_encode($response);
+		
+	}
+	
 	public function GetRecordCount($filtahun=null,$file1){
 		if($filtahun != '' && $filtahun != '-1' && $filtahun != null) {
 			$this->db->where("a.tahun",$filtahun);
@@ -146,6 +233,25 @@ class Pre_usulan1_e1_model extends CI_Model
 		$this->db->join('tbl_eselon1 d', 'd.kode_e1 = a.kode_e1');
 		$this->db->join('tbl_kegiatan_kl k', 'k.kode_kegiatan = a.kode_kegiatan');
 		$this->db->order_by("a.tahun DESC, a.kode_sasaran_e1 ASC, a.kode_iku_e1 ASC");
+			
+		return $this->db->count_all_results();
+		$this->db->free_result();
+	}
+	
+	public function GetRecordCountSubGrid($filtahun=null,$filkegiatan){
+		if($filtahun != '' && $filtahun != '-1' && $filtahun != null) {
+			$this->db->where("a.tahun",$filtahun);
+		}	
+		if($filkegiatan != '' && $filkegiatan != '-1' && $filkegiatan != null) {
+			$this->db->where("k.kode_kegiatan",$filkegiatan);
+		}		
+		$this->db->from('tbl_pre_usulan1_e2 a');
+		$this->db->join('tbl_ikk b', 'b.kode_ikk = a.kode_ikk and b.tahun = a.tahun');
+		$this->db->join('tbl_sasaran_eselon2 c', 'c.kode_sasaran_e2 = a.kode_sasaran_e2');
+		$this->db->join('tbl_eselon2 d', 'd.kode_e2 = a.kode_e2');
+		$this->db->join('tbl_subkegiatan_kl skk', 'skk.kode_subkegiatan = a.kode_subkegiatan');
+		$this->db->join('tbl_kegiatan_kl k', 'k.kode_kegiatan = skk.kode_kegiatan and k.tahun=skk.tahun');
+		$this->db->order_by("a.tahun DESC, a.kode_subkegiatan ASC");
 			
 		return $this->db->count_all_results();
 		$this->db->free_result();
