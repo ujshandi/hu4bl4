@@ -232,13 +232,13 @@ class Subkegiatankl_model extends CI_Model
 		foreach($data['detail'] as $dt){
 			$this->db->set('tahun', 			$data['tahun']);
 			$this->db->set('kode_kegiatan',		$data['kode_kegiatan']);
-			$this->db->set('kode_satker',		$data['kode_satker']);
+		//	$this->db->set('kode_satker',		$data['kode_satker']);
 			
 			$this->db->set('kode_subkegiatan',	$dt['kode_subkegiatan']);
 			$this->db->set('nama_subkegiatan',	$dt['nama_subkegiatan']);
-			$this->db->set('lokasi',			$dt['lokasi']);
+			/* $this->db->set('lokasi',			$dt['lokasi']);
 			$this->db->set('volume',			$dt['volume']);
-			$this->db->set('satuan',			$dt['satuan']);
+			$this->db->set('satuan',			$dt['satuan']); */
 			$this->db->set('total',				$dt['total']);
 			
 			$result = $this->db->insert('tbl_subkegiatan_kl');
@@ -262,12 +262,12 @@ class Subkegiatankl_model extends CI_Model
 		$this->db->set('tahun', $data['tahun']);
 		$this->db->set('kode_subkegiatan',$data['kode_subkegiatan']);
 		$this->db->set('nama_subkegiatan',$data['nama_subkegiatan']);
-		$this->db->set('lokasi',$data['lokasi']);
+		/* $this->db->set('lokasi',$data['lokasi']);
 		$this->db->set('volume',$data['volume']);
 		$this->db->set('satuan',$data['satuan']);
+		$this->db->set('kode_satker',$data['kode_satker']); */
 		$this->db->set('total',$data['total']);
 		$this->db->set('kode_kegiatan',$data['kode_kegiatan']);
-		$this->db->set('kode_satker',$data['kode_satker']);
 		
 		$this->db->where('id_subkegiatan_kl', $data['id_subkegiatan_kl']);
 		

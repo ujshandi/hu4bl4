@@ -24,7 +24,7 @@
 			}
 			
 			deleteData<?=$objectId;?> = function (){
-				<? if ($this->session->userdata('unit_kerja_e1')=='-1'){?>				
+				<? if ($this->session->userdata('unit_kerja_e2')=='-1'){?>				
 					var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
 					if(row){
 						if(confirm("Apakah yakin akan menghapus data '" + row.kode_ikk_e1 + "'?")){
@@ -61,28 +61,28 @@
 			
 			clearFilter<?=$objectId;?> = function (){
 				$("#filter_tahun<?=$objectId;?>").val('');
-				$("#filter_e1<?=$objectId;?>").val('');
+				$("#filter_e2<?=$objectId;?>").val('');
 				searchData<?=$objectId;?>();
 			}
 			
 			//tipe 1=grid, 2=pdf, 3=excel
 			getUrl<?=$objectId;?> = function (tipe){
 				var filtahun = $("#filter_tahun<?=$objectId;?>").val();
-					<? if ($this->session->userdata('unit_kerja_e1')==-1){?>
-					var file1 = $("#filter_e1<?=$objectId;?>").val();
+					<? if ($this->session->userdata('unit_kerja_e2')==-1){?>
+					var file2 = $("#filter_e2<?=$objectId;?>").val();
 				<?} else {?>
-					var file1 = "<?=$this->session->userdata('unit_kerja_e1');?>";
+					var file2 = "<?=$this->session->userdata('unit_kerja_e2');?>";
 				<?}?>
 				if(filtahun==null) filtahun ="-1";
-				if (file1 == null) file1 = "-1";
+				if (file2 == null) file2 = "-1";
 			
 				if (tipe==1){
-					return "<?=base_url()?>kka/pre_usulan1_e2/grid/"+filtahun+"/"+file1;
+					return "<?=base_url()?>kka/pre_usulan1_e2/grid/"+filtahun+"/"+file2;
 				}
 				else if (tipe==2){
-					return "<?=base_url()?>kka/pre_usulan1_e2/pdf/"+filtahun+"/"+file1;
+					return "<?=base_url()?>kka/pre_usulan1_e2/pdf/"+filtahun+"/"+file2;
 				}else if (tipe==3){
-					return "<?=base_url()?>kka/pre_usulan1_e2/excel/"+filtahun+"/"+file1;
+					return "<?=base_url()?>kka/pre_usulan1_e2/excel/"+filtahun+"/"+file2;
 				}
 			}
 			
@@ -226,8 +226,28 @@
 					<td>
 					<?=$this->sasaran_eselon2_model->getListFilterTahun($objectId)?>
 					</td>
-					<td width="10px"></td>
+					
+				</tr>
+				<tr>
+					<td>Unit Kerja Eselon I :</td>
 					<td>
+					<?=$this->eselon1_model->getListFilterEselon1($objectId,$this->session->userdata('unit_kerja_e1'))?>
+					</td>
+				</tr>
+				<tr>
+					<td>Unit Kerja Eselon II :</td>
+					<td><span class="fitem" id="divUnitKerja<?=$objectId;?>">
+					<?=$this->eselon2_model->getListFilterEselon2($objectId,$this->session->userdata('unit_kerja_e1'),$this->session->userdata('unit_kerja_e2'),false)?>
+					</span>
+					</td>
+				</tr>
+				<tr style="height:10px">
+					  <td style="">
+					  </td>
+				</tr>
+				<tr>
+					<td align="right" colspan="2" valign="top">
+						<a href="#" class="easyui-linkbutton" onclick="clearFilter<?=$objectId;?>();" iconCls="icon-reset">Reset</a>
 						<a href="#" class="easyui-linkbutton" onclick="searchData<?=$objectId;?>();" iconCls="icon-search">Search</a>
 					</td>
 				</tr>
@@ -261,7 +281,7 @@
 	  <tr>
 		<th field="preusulan1_e2_id" sortable="true" hidden="true" width="50px">preusulan1_e2_id</th>
 		<th field="tahun" sortable="true" width="20px">Tahun</th>
-		<th field="kode_e1" sortable="true" width="20px"<?=($this->session->userdata('unit_kerja_e1')=='-1'?'':'hidden="true"')?>>Kode Unit Kerja</th>
+		<th field="kode_e1" sortable="true" width="20px"<?=($this->session->userdata('unit_kerja_e2')=='-1'?'':'hidden="true"')?>>Kode Unit Kerja</th>
 		<th field="nama_e1" hidden="true">nama e1</th>
 		<th field="kode_sasaran_e2" sortable="true" width="40px">Kode Sasaran</th>
 		<th field="deskripsi_sasaran_e2" hidden="true">deskripsi_sasaran_e1</th>

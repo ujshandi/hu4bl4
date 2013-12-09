@@ -51,10 +51,10 @@ class Pre_indikatif_e2 extends CI_Controller {
 	  	$this->load->view('kka/pre_indikatif_e2_v_edit',$data);
 	}
 	
-	function grid($filtahun=null,$file1=null){
-		if (($file1==null)&&($this->session->userdata('unit_kerja_e1'))!=-1)
-			$file1= $this->session->userdata('unit_kerja_e1');
-		echo $this->pre_indikatif_e2_model->easyGrid($filtahun,$file1);
+	function grid($filtahun=null,$file2=null){
+		if (($file2==null)&&($this->session->userdata('unit_kerja_e2'))!=-1)
+			$file2= $this->session->userdata('unit_kerja_e2');
+		echo $this->pre_indikatif_e2_model->easyGrid($filtahun,$file2);
 	}
 	
 	

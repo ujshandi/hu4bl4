@@ -242,9 +242,9 @@
 		<th field="kode_kegiatan" sortable="true" hidden="true" width="20px">kode Kegiatan</th>
 		<th field="kode_subkegiatan" sortable="true" width="30px">Kode Sub Kegiatan</th>
 		<th field="nama_subkegiatan" sortable="true" width="75px">Nama Sub Kegiatan</th>
-		<th field="lokasi" sortable="true" width="25px">Lokasi</th>
-		<th field="volume" sortable="true" width="15px">Volume</th>
-		<th field="satuan" sortable="true" width="15px">Satuan</th>
+		<th field="lokasi"  hidden="true" sortable="true" width="25px">Lokasi</th>
+		<th field="volume"  hidden="true" sortable="true" width="15px">Volume</th>
+		<th field="satuan" hidden="true"  sortable="true" width="15px">Satuan</th>
 		<th field="total" sortable="true" width="20px" align="right" formatter="formatPrice">Total</th>		
 	  </tr>
 	  </thead>  

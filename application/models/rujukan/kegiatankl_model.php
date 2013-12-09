@@ -14,7 +14,8 @@ class Kegiatankl_model extends CI_Model
 		//$this->CI =& get_instance();
     }
 	// purpose : 1=buat grid, 2=buat pdf, 3=buat excel
-	public function easyGrid($file1=null, $file2=null, $filtahun=null,$purpose=1){
+	//modelMonev : pra,ongoing, post buat kebutuhan reporting menu Monev eslon 1 (root node)
+	public function easyGrid($file1=null, $file2=null, $filtahun=null,$purpose=1,$modelMonev=null){
 		$lastNo = isset($_POST['lastNo']) ? intval($_POST['lastNo']) : 0;  
 		$page = isset($_POST['page']) ? intval($_POST['page']) : 1;  
 		$limit = isset($_POST['rows']) ? intval($_POST['rows']) : 10;  
@@ -63,6 +64,9 @@ class Kegiatankl_model extends CI_Model
 				$response->rows[$i]['nama_program']		=$row->nama_program;
 				$response->rows[$i]['kode_kegiatan']	=$row->kode_kegiatan;
 				$response->rows[$i]['nama_kegiatan']	=$row->nama_kegiatan;
+				if ($modelMonev!=null){
+					$response->rows[$i]['total_kumulatif']	=$this->utility->cekNumericFmt($this->getAnggaranSubkegiatan($row->kode_kegiatan,$row->tahun,$modelMonev));
+				}
 				$response->rows[$i]['total']			=number_format( $row->total, 0, ',', '.');;
 
 				//utk kepentingan export excel ============================
@@ -252,6 +256,22 @@ class Kegiatankl_model extends CI_Model
 		$this->db->where('id_kegiatan_kl', $id_kegiatan_kl);
 		
 		return $this->db->get()->row()->nama_kegiatan;
+	}
+	
+	public function getAnggaranSubkegiatan($kodekegiatan,$tahun,$modelMonev){
+		$this->db->flush_cache();
+		$this->db->select('sum(jumlah) as  jumlah',false);
+		switch ($modelMonev) {
+			case "indikatif" : $this->db->from('tbl_pre_indikatif_e2');break;
+			case "definitif" : $this->db->from('tbl_pre_definitif_e2');break;
+			default : $this->db->from('tbl_pre_usulan1_e2');
+		}
+		//model monev belum terpakai
+		
+		$this->db->where('tahun', $tahun);
+		$this->db->where('kode_kegiatan', $kodekegiatan);
+		
+		return $this->db->get()->row()->jumlah;
 	}
 	
 	public function getListKegiatan($objectId="",$e2="",$data=""){
