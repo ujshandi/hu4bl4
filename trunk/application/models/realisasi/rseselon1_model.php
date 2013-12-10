@@ -56,31 +56,10 @@ class rseselon1_model extends CI_Model
 				$response->rows[$i]['deskripsi_sasaran_e1']=$row->deskripsi_sasaran_e1;
 				$response->rows[$i]['kode_iku_e1']=$row->kode_iku_e1;
 				$response->rows[$i]['deskripsi_iku_e1']=$row->deskripsi_iku_e1;
-				
-/*
-				if(is_numeric($row->penetapan)){
-					if(strpos($row->penetapan, '.') || strpos($row->penetapan, ',')){
-						$response->rows[$i]['target'] = number_format($row->penetapan, 4, ',', '.');
-					}else{
-						$response->rows[$i]['target'] = number_format($row->penetapan, 0, ',', '.');
-					}
-				}else{
-					$response->rows[$i]['target'] = $row->penetapan;
-				}				
-*/
+
 				$response->rows[$i]['target']=$this->utility->cekNumericFmt($row->penetapan);
 				$response->rows[$i]['satuan']=$row->satuan;
-/*
-				if(is_numeric($row->realisasi)){
-					if(strpos($row->realisasi, '.') || strpos($row->realisasi, ',')){
-						$response->rows[$i]['realisasi'] = number_format($row->realisasi, 4, ',', '.');
-					}else{
-						$response->rows[$i]['realisasi'] = number_format($row->realisasi, 0, ',', '.');
-					}
-				}else{
-					$response->rows[$i]['realisasi'] = $row->realisasi;
-				}						
-*/
+
 				$response->rows[$i]['realisasi']=$this->utility->cekNumericFmt($row->realisasi);
 				$response->rows[$i]['realisasi_persen']=$this->utility->cekNumericFmt($row->realisasi_persen);
 				//$response->rows[$i]['realisasi_persen']=$this->utility->cekNumericFmt($row->realisasi_persen);
