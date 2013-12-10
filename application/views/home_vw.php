@@ -80,6 +80,7 @@
 			overflow: scroll;
 			overflow-x: hidden;
 			max-height: 200px;
+			z-index: 1000;
 		}
 		
 		ul.dropdown li{
