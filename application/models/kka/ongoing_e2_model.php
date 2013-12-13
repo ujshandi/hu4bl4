@@ -291,7 +291,7 @@ class Ongoing_e2_model extends CI_Model
 		$i = 1;
 		$response = new stdClass();
 		$this->db->flush_cache();
-		$this->db->select('c.kode_ikk, c.deskripsi as deskripsi_ikk,rkt.target,capaian.realisasi',false);
+		$this->db->select('c.kode_ikk, c.deskripsi as deskripsi_ikk,d.target,a.realisasi',false);
 		$this->db->from('tbl_kinerja_eselon2 a');
 		$this->db->join('tbl_sasaran_eselon2 b', 'b.kode_sasaran_e2 = a.kode_sasaran_e2 and b.tahun = a.tahun');
 		$this->db->join('tbl_ikk c', 'c.kode_ikk = a.kode_ikk and c.tahun = a.tahun');

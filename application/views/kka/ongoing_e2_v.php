@@ -320,7 +320,7 @@
 			
 			<div class="easyui-layout" fit="true">  
 								
-				<div region="center" border="true" title="Tambah Data Pra Definitif Eselon II">
+				<div region="center" border="true" title="Tambah Data Ongoing Monev Eselon II">
 				<form id="fm<?=$objectId;?>" method="post" style="margin:10px 5px 5px 10px;" onsubmit="return false">
 					<div class="fitem">
 						<label style="width:120px;vertical-align:top">Tahun :</label>
