@@ -37,6 +37,7 @@ class Subkegiatankl extends CI_Controller {
 		$data['title'] = 'Edit Data Sub Kegiatan';	
 		$data['objectId'] = 'subkegiatankl';
 		$data['result'] = $this->subkegiatankl_model->getDataEdit($id);
+		//var_dump($data['result']);
 	  	$this->load->view('rujukan/subkegiatankl_v_edit',$data);
 	}
 	

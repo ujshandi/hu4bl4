@@ -99,6 +99,40 @@
 			}
 			//end saveData
 			
+			deleteData<?=$objectId;?> = function (){
+				
+					var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
+					if(row){
+						if(confirm("Apakah yakin akan menghapus data '" + row.nama_subkegiatan + "'?")){
+							var response = '';
+							$.ajax({ type: "GET",
+									 url: base_url+'rujukan/subkegiatankl/delete/' + row.id_subkegiatan_kl,
+									 async: false,
+									 success : function(response)
+									 {
+										var response = eval('('+response+')');
+										if (response.success){
+											$.messager.show({
+												title: 'Success',
+												msg: 'Data Berhasil Dihapus'
+											});
+											
+											// reload and close tab
+											$('#dg<?=$objectId;?>').datagrid('reload');
+										} else {
+											$.messager.show({
+												title: 'Error',
+												msg: response.msg
+											});
+										}
+									 }
+							});
+						}
+					}
+				
+			}
+			//end deleteData	
+			
 			formatPrice=function (val,row){
 				return val;//($.fn.autoNumeric.Format("txtAmount"+idx,total,{aSep:".",aDec:",",mDec:2}));
 				/* if (val < 20){
@@ -114,7 +148,7 @@
 			});
 			
 			setTimeout(function(){
-				$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>rujukan/subkegiatankl/grid"});
+				searchData<?=$objectId;?>();
 			},0);
 		 });
 	</script>
@@ -225,21 +259,34 @@
 	  </tr>
 	  </table>
 	  <div style="margin-bottom:5px">  
-		<a href="#" onclick="newData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-add" plain="true">Add</a>  
-		<a href="#" onclick="editData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-edit" plain="true">Edit</a>
+		<? if($this->sys_menu_model->cekAkses('ADD;',8,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+			<a href="#" onclick="newData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-add" plain="true">Add</a>  
+		<?}?>
+		<? if($this->sys_menu_model->cekAkses('EDIT;',8,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+			<a href="#" onclick="editData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-edit" plain="true">Edit</a>
+		<?}?>
+		<? if($this->sys_menu_model->cekAkses('DELETE;',8,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+			<a href="#" onclick="deleteData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-remove" plain="true">Delete</a>
+		<?}?>
+		<? if($this->sys_menu_model->cekAkses('PRINT;',8,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+			<a href="#" onclick="printData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-print" plain="true">Print</a>
+		<?}?>
+		<? if($this->sys_menu_model->cekAkses('EXCEL;',8,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+			<a href="#" onclick="toExcel<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-excel" plain="true">Excel</a>
+		<?}?>
 		<!--
 		<a href="#" onclick="printData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-print" plain="true">Print</a>
 		-->
 	  </div>
 	</div>
 	
-	<table id="dg<?=$objectId;?>" class="easyui-datagrid" style="height:auto;width:auto" title="Sub Kegiatan Kementerian" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true">
+	<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Sub Kegiatan Kementerian" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true">
 	  <thead>
 	  <tr>
 		<th field="id_subkegiatan_kl" hidden="true" sortable="true" width="15px">No</th>
 		<th field="tahun" sortable="true" width="10px">Tahun</th>
 		<th field="kode_satker" sortable="true" hidden="true" width="15px">Kode Satker</th>
-		<th field="kode_kegiatan" sortable="true" hidden="true" width="20px">kode Kegiatan</th>
+		<th field="kode_kegiatan" sortable="true" width="20px">Kode Kegiatan</th>
 		<th field="kode_subkegiatan" sortable="true" width="30px">Kode Sub Kegiatan</th>
 		<th field="nama_subkegiatan" sortable="true" width="75px">Nama Sub Kegiatan</th>
 		<th field="lokasi"  hidden="true" sortable="true" width="25px">Lokasi</th>

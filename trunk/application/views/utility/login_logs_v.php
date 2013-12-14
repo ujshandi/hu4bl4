@@ -13,20 +13,22 @@
 			
 			//tipe 1=grid, 2=pdf, 3=excel
 			getUrl<?=$objectId;?> = function (tipe){
-				var filtahun = $("#filter_tahun<?=$objectId;?>").val();
+				var filawal =  $('#periode_awal<?=$objectId;?>').datebox('getValue');	
+				var filakhir = $("#periode_akhir<?=$objectId;?>").datebox('getValue');	
 				var file1 = $("#filter_e1<?=$objectId;?>").val();
 				var file2 = $("#filter_e2<?=$objectId;?>").val();
 				var unit = $("#unit<?=$objectId;?>").val();
 				
-				filtahun = (filtahun=="")?"-1":filtahun;
+				file1 = ((file1=="undefined")||(file1=="")||(file1==null))?"-1":file1;
+				file2 = ((file2=="undefined")||(file2=="")||(file1==null))?"-1":file2;
 				
 				if (tipe==1){
-					return "<?=base_url()?>utility/login_log/grid/"+filtahun+"/"+file1+"/"+file2;
+					return "<?=base_url()?>utility/login_log/grid/"+filawal+"/"+filakhir+"/"+file1+"/"+file2;
 				}
 				else if (tipe==2){
-					return "<?=base_url()?>utility/login_log/pdf/"+filtahun+"/"+file1+"/"+file2;
+					return "<?=base_url()?>utility/login_log/pdf/"+filawal+"/"+filakhir+"/"+file1+"/"+file2;
 				}else if (tipe==3){
-					return "<?=base_url()?>utility/login_log/excel/"+filtahun+"/"+file1+"/"+file2;
+					return "<?=base_url()?>utility/login_log/excel/"+filawal+"/"+filakhir+"/"+file1+"/"+file2;
 				}
 			}
 			
@@ -51,27 +53,6 @@
 
 			//initialize
 
-			$("#filter_e1<?=$objectId;?>").attr({disabled:true});
-			$("#filter_e2<?=$objectId;?>").attr({disabled:true});
-			$("#unit<?=$objectId;?>").change(function(){
-				var unit = $(this).val();
-				$("#filter_e1<?=$objectId;?>").val('');
-				$("#filter_e2<?=$objectId;?>").val('');
-				switch(unit){
-					case "KL":	
-						$("#filter_e1<?=$objectId;?>").attr({disabled:true});
-						$("#filter_e2<?=$objectId;?>").attr({disabled:true});
-						break;
-					case "E1":
-						$("#filter_e1<?=$objectId;?>").attr({disabled:false});
-						$("#filter_e2<?=$objectId;?>").attr({disabled:true});
-						break;
-					case "E2":
-						$("#filter_e1<?=$objectId;?>").attr({disabled:false});
-						$("#filter_e2<?=$objectId;?>").attr({disabled:false});
-						break;
-				}
-			});
 			
 			$("#filter_e1<?=$objectId;?>").change(function(){
 				var unit = $("#unit<?=$objectId;?>").val();
@@ -83,58 +64,26 @@
 			setTimeout(function(){
 				url = getUrl<?=$objectId;?>(1);
 				
-				
-				$('#dg<?=$objectId;?>').datagrid({
+				searchData<?=$objectId;?>();
+				/* $('#dg<?=$objectId;?>').datagrid({
 					url:url
 					
-				});
+				}); */
 			},0);
 			
-			// yanto
-			$('#dg<?=$objectId;?>').datagrid({
-				onClickCell: function(rowIndex, field, value){
-					$('#dg<?=$objectId;?>').datagrid('selectRow', rowIndex);
-					var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
-					
-					switch(field){
-						case "kode_kl":
-							showPopup('#popdesc<?=$objectId?>', row.nama_kl);
-							break;
-						case "kode_sasaran_kl":
-							showPopup('#popdesc<?=$objectId?>', row.deskripsi_sasaran_kl);
-							break;
-						case "kode_iku_kl":
-							showPopup('#popdesc<?=$objectId?>', row.deskripsi_iku_kl);
-							break;
-						case "kode_e1":
-							showPopup('#popdesc<?=$objectId?>', row.nama_e1);
-							break;
-						case "kode_sasaran_e1":
-							showPopup('#popdesc<?=$objectId?>', row.deskripsi_sasaran_e1);
-							break;
-						case "kode_iku_e1":
-							showPopup('#popdesc<?=$objectId?>', row.deskripsi_iku_e1);
-							break;
-						case "kode_e2":
-							showPopup('#popdesc<?=$objectId?>', row.nama_e2);
-							break;
-						case "kode_sasaran_e2":
-							showPopup('#popdesc<?=$objectId?>', row.deskripsi_sasaran_e2);
-							break;
-						case "kode_ikk":
-							showPopup('#popdesc<?=$objectId?>', row.deskripsi_ikk);
-							break;
-						default:
-							closePopup('#popdesc<?=$objectId?>');
-							break;
-					}
-				}
-			});
 			
 			$("#popdesc<?=$objectId?>").click(function(){
 				closePopup('#popdesc<?=$objectId?>');
 			});
-		 });
+			
+			
+			$.fn.datebox.defaults.formatter = function(date){
+					var y = date.getFullYear();
+					var m = date.getMonth()+1;
+					var d = date.getDate();
+					return d+'-'+m+'-'+y;
+			}
+	});
 	</script>
 	<style type="text/css">
 		
@@ -207,34 +156,30 @@
 			<tr>
 				<td>
 				<div class="fsearch">
-					<table border="0" cellpadding="1" cellspacing="1">
+					<table border="0" cellpadding="1" cellspacing="4"  width="100%">
 					<tr>
-						<td width="60px">Tahun :</td>
-						<td width="130px">
+						<td width="60px">Periode :</td>
+						<td width="300px">
+							<input name="periode_awal" value="<?=date('d-m-Y');?>" id="periode_awal<?=$objectId;?>" type="text" size="13" class="easyui-datebox" required="required"> &nbsp;&nbsp;s/d&nbsp;&nbsp;
+							<input id="periode_akhir<?=$objectId;?>" name="periode_akhir" value="<?=date('d-m-Y');?>" type="text" size="13" class="easyui-datebox" required="required">
 						</td>
 						<td width="130px">Unit Kerja Eselon I :</td>
 						<td>
-							<?=$this->eselon1_model->getListFilterEselon1($objectId,$this->session->userdata('unit_kerja_e1'))?>				
+							<?=$this->eselon1_model->getListFilterEselon1($objectId,$this->session->userdata('unit_kerja_e1'))?>
 						</td>
 					</tr>
 					<tr>
-						<td width="60px">Unit :</td>
-						<td width="130px">
-							<select id="unit<?=$objectId?>" name="unit">
-								<option value="KL">Kementerian</option>
-								<option value="E1">Eselon 1</option>
-								<option value="E2">Eselon 2</option>
-							</select>
-						</td>
+						<td colspan="2">&nbsp;</td>
+						
 						<td width="130px";>Unit Kerja Eselon II : </td>
 						<td><span class="fitem" id="divUnitKerja<?=$objectId;?>">
-							<?=$this->eselon2_model->getListFilterEselon2($objectId,$this->session->userdata('unit_kerja_e2'))?>
+							<?=$this->eselon2_model->getListFilterEselon2($objectId,$this->session->userdata('unit_kerja_e1'),$this->session->userdata('unit_kerja_e2'),true)?>
 							</span>
 						</td>
 					</tr>
-					<tr><td>&nbsp;</td></tr>
+					
 					<tr>
-						<td align="right" colspan="4" valign="top">
+						<td align="left" colspan="4" valign="top">
 							<a href="#" class="easyui-linkbutton" onclick="clearFilter<?=$objectId;?>();" iconCls="icon-reset">Reset</a>
 							<a href="#" class="easyui-linkbutton" onclick="searchData<?=$objectId;?>();" iconCls="icon-search">Search</a>
 						</td>
@@ -254,15 +199,15 @@
 		</div>
 	</div>
 	
-	<table id="dg<?=$objectId;?>" class="easyui-datagrid" style="height:auto;width:auto" title="Data Log Realisasi Kinerja" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true">
+	<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Data Login Log" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true">
 	  <thead>
 	  <tr>
 		<th field="login_time" sortable="true" width="15">Login Time</th>
 		<th field="ip" sortable="true" width="15">Ip Address</th>
 		<th field="user_info" sortable="true" width="15" hidden="true">User Info</th>
-		<th field="log_user_name" sortable="true" width="15">User Name</th>
-		<th field="log_e1" sortable="true" width="15">Eselon I</th>
-		<th field="log_e2" sortable="true" width="15">Eselon II</th>
+		<th field="log_user_name" sortable="false" width="15">User Name</th>
+		<th field="log_e1" sortable="false" width="15">Eselon I</th>
+		<th field="log_e2" sortable="false" width="15">Eselon II</th>
 	  </tr>
 	  </thead>  
 	</table>

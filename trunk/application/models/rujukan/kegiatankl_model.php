@@ -180,7 +180,7 @@ class Kegiatankl_model extends CI_Model
 		$this->db->set('kode_program',$data['kode_program']);
 		$this->db->set('kode_kegiatan',$data['kode_kegiatan']);
 		$this->db->set('nama_kegiatan',$data['nama_kegiatan']);
-		$this->db->set('total',$data['total']);
+		$this->db->set('total',$this->utility->ourDeFormatNumber2($data['total']));
 		//$kd = $this->GetKodee2($data['kode_program']);
 		//$this->db->set('kode_e2',$kd->row()->kode_e2);
 		$this->db->set('kode_e2',$data['kode_e2']);
@@ -208,7 +208,7 @@ class Kegiatankl_model extends CI_Model
 		$this->db->set('kode_program',$data['kode_program']);
 		$this->db->set('kode_kegiatan',$data['kode_kegiatan']);
 		$this->db->set('nama_kegiatan',$data['nama_kegiatan']);
-		$this->db->set('total',$data['total']);
+		$this->db->set('total',$this->utility->ourDeFormatNumber2($data['total']));
 		$this->db->set('kode_e2',$data['kode_e2']);
 		$this->db->set('log_update', 		$this->session->userdata('user_id').';'.date('Y-m-d H:i:s'));
 		

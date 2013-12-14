@@ -218,9 +218,11 @@ class Subkegiatankl_model extends CI_Model
 		$this->db->flush_cache();
 		$this->db->select('*');
 		$this->db->from('tbl_subkegiatan_kl a');
-		$this->db->join('tbl_satker b', 'b.kode_satker = a.kode_satker');
-		$this->db->join('tbl_eselon1 c', 'c.kode_e1 = b.kode_e1');
-		$this->db->join('tbl_kegiatan_kl d', 'd.kode_kegiatan = a.kode_kegiatan');
+	//	$this->db->join('tbl_satker b', 'b.kode_satker = a.kode_satker');
+	//	$this->db->join('tbl_eselon1 c', 'c.kode_e1 = b.kode_e1');
+		$this->db->join('tbl_kegiatan_kl d', 'd.kode_kegiatan = a.kode_kegiatan and d.tahun=a.tahun','left');
+		$this->db->join('tbl_eselon2 e', 'e.kode_e2= d.kode_e2','left');
+		$this->db->join('tbl_eselon1 f', 'f.kode_e1= e.kode_e1','left');
 		$this->db->where('a.id_subkegiatan_kl', $id);
 		
 		return $this->db->get()->row();
@@ -239,7 +241,7 @@ class Subkegiatankl_model extends CI_Model
 			/* $this->db->set('lokasi',			$dt['lokasi']);
 			$this->db->set('volume',			$dt['volume']);
 			$this->db->set('satuan',			$dt['satuan']); */
-			$this->db->set('total',				$dt['total']);
+			$this->db->set('total',$this->utility->ourDeFormatNumber2($dt['total']));
 			
 			$result = $this->db->insert('tbl_subkegiatan_kl');
 			
@@ -266,7 +268,7 @@ class Subkegiatankl_model extends CI_Model
 		$this->db->set('volume',$data['volume']);
 		$this->db->set('satuan',$data['satuan']);
 		$this->db->set('kode_satker',$data['kode_satker']); */
-		$this->db->set('total',$data['total']);
+		$this->db->set('total',$this->utility->ourDeFormatNumber2($data['total']));
 		$this->db->set('kode_kegiatan',$data['kode_kegiatan']);
 		
 		$this->db->where('id_subkegiatan_kl', $data['id_subkegiatan_kl']);
@@ -287,12 +289,10 @@ class Subkegiatankl_model extends CI_Model
 	}
 	
 	//hapus data
-	public function DeleteOnDb($tindak_id, $unit_id, $klas_id) {
-		$this->db->where('tindak_id',$tindak_id);
-		$this->db->where('unit_id',$unit_id);
-		$this->db->where('klas_id',$klas_id);
+	public function DeleteOnDb($id) {		
+		$this->db->where('id_subkegiatan_kl',$id);
 		
-		$result = $this->db->delete('mst_tindakan_unit');
+		$result = $this->db->delete('tbl_subkegiatan_kl');
 		
 		if($result) {
 			return TRUE;
