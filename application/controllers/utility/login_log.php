@@ -29,8 +29,10 @@ class login_log extends CI_Controller {
 	}
 	
 	
-	function grid($filtahun=null){
-		echo $this->login_log_model->easyGrid($filtahun,1);
+	function grid($fileawal=null,$fileakhir=null,$file1=null,$file2=null){
+		$fileawal = $this->utility->ourDeFormatSQLDate($fileawal);
+		$fileakhir = $this->utility->ourDeFormatSQLDate($fileakhir);
+		echo $this->login_log_model->easyGrid($fileawal,$fileakhir,$file1,$file2,1);
 	}
 	
 	function pdf($filtahun=null){

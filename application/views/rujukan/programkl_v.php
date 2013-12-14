@@ -1,7 +1,9 @@
+<script  type="text/javascript" src="<?=base_url()?>public/js/autoNumeric.js"></script>
 	<script  type="text/javascript" >
 				
 		$(function(){
-		
+			$('.year').autoNumeric('init',{aSep: '', aDec: ',',vMin:'0',aPad:"false",vMax:"9999"});
+			$('.money').autoNumeric('init',{aSep: '.', aDec: ',',vMin:'0',aPad:"false",vMax:"999999999999999"});
 		 	saveData<?=$objectId;?>=function(){
 				$('#fm<?=$objectId;?>').form('submit',{
 					url: base_url+'rujukan/programkl/save',
@@ -64,7 +66,7 @@
 			newcell_3.childNodes[1].value = "";
 			newcell_3.childNodes[1].name = "detail[" + rowCount + "][total]";
 			//newcell_3.childNodes[1].readOnly = "true";
-			
+			$('.money').autoNumeric('init',{aSep: '.', aDec: ',',vMin:'0',aPad:"false",vMax:"999999999999999"});
 			// var newcell_4 = row.insertCell(3);
 			// newcell_4.innerHTML = table.rows[1].cells[1].innerHTML;
 			// newcell_4.childNodes[1].value = "";
@@ -147,7 +149,7 @@
 					<form id="fm<?=$objectId;?>" method="post">		
 						<div class="fitem">
 							<label style="width:120px">Tahun :</label>
-							<input name="tahun" class="easyui-validatebox" required="true" size="5" >
+							<input name="tahun" class="easyui-validatebox year" required="true" size="5" >
 						</div>					
 						<div class="fitem" >
 							<label style="width:120px">Unit Kerja Eselon I :</label>
@@ -167,10 +169,10 @@
 									</td>
 									<td>
 										<!--<input name="detail[1][nama_program]" size="120"> -->
-										<textarea name="detail[1][nama_program]" cols="80" rows="0"></textarea>
+										<textarea name="detail[1][nama_program]" cols="100" rows="0"></textarea>
 									</td>
 									<td>
-										<input name="detail[1][total]" size="20">
+										<input name="detail[1][total]" class="money" style="text-align:right" size="25">
 									</td>
 								</tr>
 							</table>

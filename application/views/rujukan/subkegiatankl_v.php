@@ -1,5 +1,7 @@
+		<script  type="text/javascript" src="<?=base_url()?>public/js/autoNumeric.js"></script>
 	<script  type="text/javascript" >
-				
+		$('.year').autoNumeric('init',{aSep: '', aDec: ',',vMin:'0',aPad:"false",vMax:"9999"});
+			$('.money').autoNumeric('init',{aSep: '.', aDec: ',',vMin:'0',aPad:"false",vMax:"999999999999999"});		
 		$(function(){
 		//chan=============================================
 			 function setListE2<?=$objectId?>(){
@@ -295,7 +297,7 @@
 					<form id="fm<?=$objectId;?>" method="post">		
 						<div class="fitem">
 							<label style="width:120px">Tahun :</label>
-							<input name="tahun" size="5" class="easyui-validatebox" id="tahun<?=$objectId?>" required="true">
+							<input name="tahun" size="5" class="easyui-validatebox year" id="tahun<?=$objectId?>" required="true">
 						</div>					
 						<div class="fitem" >
 							<label style="width:120px">Unit Kerja Eselon I :</label>
@@ -344,7 +346,7 @@
 										<input name="detail[1][satuan]" size="20">
 									</td> -->
 									<td>
-										<input name="detail[1][total]" size="20">
+										<input name="detail[1][total]" class="money" style="text-align:right" size="20">
 									</td>
 								</tr>
 							</table>

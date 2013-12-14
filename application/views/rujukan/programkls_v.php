@@ -46,6 +46,19 @@
 					url:getUrl<?=$objectId;?>(1),
 					queryParams:{lastNo:'0'},	
 					pageNumber : 1,
+					onClickCell: function(rowIndex, field, value){
+						$('#dg<?=$objectId;?>').datagrid('selectRow', rowIndex);
+						var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
+						
+						switch(field){
+							case "kode_e1":
+								showPopup('#popdesc<?=$objectId?>', row.nama_e1);
+								break;
+							default:
+								closePopup('#popdesc<?=$objectId?>');
+								break;
+						}
+					},
 					onLoadSuccess:function(data){	
 						$('#dg<?=$objectId;?>').datagrid('options').queryParams.lastNo = data.lastNo;
 						//prepareMerge<?=$objectId;?>(data);
@@ -104,26 +117,11 @@
 		}
 			
 		setTimeout(function(){
-			$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>rujukan/programkl/grid"});
+			searchData<?=$objectId;?>();
 		},0);
 
 			
-		// yanto
-		$('#dg<?=$objectId;?>').datagrid({
-			onClickCell: function(rowIndex, field, value){
-				$('#dg<?=$objectId;?>').datagrid('selectRow', rowIndex);
-				var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
-				
-				switch(field){
-					case "kode_e1":
-						showPopup('#popdesc<?=$objectId?>', row.nama_e1);
-						break;
-					default:
-						closePopup('#popdesc<?=$objectId?>');
-						break;
-				}
-			}
-		});
+		
 		
 		$("#popdesc<?=$objectId?>").click(function(){
 			closePopup('#popdesc<?=$objectId?>');
@@ -241,7 +239,7 @@
 	</div>
 </div>
 	
-<table id="dg<?=$objectId;?>" class="easyui-datagrid" style="height:auto;width:auto" title="Data Program" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true" nowrap="false">
+<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Data Program" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true" nowrap="false">
 	<thead>
 	<tr>
 		<!-- <th field="id_program_kl" sortable="true" width="5px">No.</th> -->

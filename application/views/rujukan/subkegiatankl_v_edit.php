@@ -1,5 +1,7 @@
+	<script  type="text/javascript" src="<?=base_url()?>public/js/autoNumeric.js"></script>
 	<script  type="text/javascript" >
-				
+		$('.year').autoNumeric('init',{aSep: '', aDec: ',',vMin:'0',aPad:"false",vMax:"9999"});
+			$('.money').autoNumeric('init',{aSep: '.', aDec: ',',vMin:'0',aPad:"false",vMax:"999999999999999"});		
 		$(function(){
 		//chan=============================================
 			 function setListE2<?=$objectId?>(){
@@ -45,7 +47,7 @@
 			}  
 			
 			  //inisialisasi
-			$("#kode_e1<?=$objectId?>").val('<?=$result->kode_e1;?>');
+			$("#kode_e1<?=$objectId?>").val('<?=$result->kode_e1?>');
 			setListE2<?=$objectId?>();
 			 
 			//end-------------------------------------
@@ -162,18 +164,12 @@
 						<input name="id_subkegiatan_kl" type="hidden" value="<?=$result->id_subkegiatan_kl?>">
 						<div class="fitem">
 							<label style="width:120px">Tahun :</label>
-							<input name="tahun" class="easyui-validatebox" required="true" value="<?=$result->tahun?>" size="5">
+							<input name="tahun" class="easyui-validatebox year" required="true" value="<?=$result->tahun?>" size="5">
 						</div>					
-						<? if ($this->session->userdata('unit_kerja_e1')=='-1'){?>
-							<div class="fitem">							
-								<label style="width:120px">Unit Kerja Eselon I :</label>
-								<? if ($this->session->userdata('unit_kerja_e1')=='-1'){
-									$this->eselon1_model->getListEselon1($objectId);
-								} else { 
-									echo $this->eselon1_model->getNamaE1($this->session->userdata('unit_kerja_e1'));
-								 } ?>
-							</div>
-						<?}?>
+						<div class="fitem" >
+							<label style="width:120px">Unit Kerja Eselon I :</label>
+							<?=$this->eselon1_model->getListEselon1($objectId)?>
+						</div>
 						<div class="fitem">
 							<label style="width:120px">Unit Kerja Eselon II :</label>
 							<span id="divEselon2<?=$objectId?>">
@@ -219,7 +215,7 @@
 						</div> -->
 						<div class="fitem" >
 							<label style="width:120px">Total Anggaran (Rp) :</label>
-							<input name="total" class="easyui-validatebox" required="true" value="<?=$result->total?>" >
+							<input name="total" class="easyui-validatebox money" style="text-align:right" required="true" value="<?=$result->total?>" >
 						</div>
 						<br>
 						<div class="fitem">

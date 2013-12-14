@@ -15,12 +15,12 @@ class login_log_model extends CI_Model
     }
 	
 	// purpose : 1=buat grid, 2=buat pdf, 3=buat excel
-	public function easyGrid($filtahun=null,$purpose=1){
+	public function easyGrid($fileawal=null,$fileakhir=null,$file1=null,$file2=null,$purpose=1){
 		$lastNo = isset($_POST['lastNo']) ? intval($_POST['lastNo']) : 0;
 		$page = isset($_POST['page']) ? intval($_POST['page']) : 1;  
 		$limit = isset($_POST['rows']) ? intval($_POST['rows']) : 10;  
 		
-		$count = $this->getrecord_count($filtahun);
+		$count = $this->getrecord_count($fileawal,$fileakhir,$file1,$file2);
 		$response = new stdClass();
 		$response->total = $count;
 		$sort = isset($_POST['sort']) ? strval($_POST['sort']) : 'login_time';  
@@ -28,10 +28,17 @@ class login_log_model extends CI_Model
 		$offset = ($page-1)*$limit;  
 		$pdfdata = array();
 		if ($count>0){
-			/* if($filtahun != '' && $filtahun != '-1' && $filtahun != null) {
-				$this->db->where("tahun",$filtahun);
-			} */
-			$this->db->order_by($sort." ".$order );
+			if($fileawal != '' && $fileawal != '-1' && $fileawal != null) {
+				$this->db->where("date(login_time) between '$fileawal' and '$fileakhir'");
+			} 
+			if($file1 != '' && $file1 != '-1' && $file1 != null) {
+				$this->db->like("user_info",$file1);
+			} 
+			
+			if($file2 != '' && $file2 != '-1' && $file2 != null) {
+				$this->db->like("user_info",$file2);
+			}  
+			//$this->db->order_by($sort." ".$order );
 			if($purpose==1){$this->db->limit($limit,$offset);}
 			$this->db->select("l.*",false);
 			$this->db->from('login_log l');			
@@ -44,7 +51,7 @@ class login_log_model extends CI_Model
 			{
 				$no++;
 				$response->rows[$i]['no']= $no;
-				$response->rows[$i]['login_time']=$row->login_time;
+				$response->rows[$i]['login_time']=strftime("%d-%m-%Y %H:%M:%S",strtotime($row->login_time));
 				$response->rows[$i]['ip']=$row->ip;
 				$response->rows[$i]['user_info']=$row->user_info;
 				
@@ -54,6 +61,9 @@ class login_log_model extends CI_Model
 				$response->rows[$i]['log_user_name']=str_replace("name=","",$xlog[1]);
 				$response->rows[$i]['log_e1']=str_replace("e1=","",$xlog[2]);
 				$response->rows[$i]['log_e2']=str_replace("e2=","",$xlog[3]);
+				
+				$response->rows[$i]['log_e1'] = ($response->rows[$i]['log_e1']=='-1'?'-':$response->rows[$i]['log_e1']);
+				$response->rows[$i]['log_e2'] = ($response->rows[$i]['log_e2']=='-1'?'-':$response->rows[$i]['log_e2']);
 			//utk kepentingan export excel ==========================
 				
 				
@@ -97,10 +107,17 @@ class login_log_model extends CI_Model
 	
 	}
 	
-	public function getrecord_count($filtahun=null){		
-		/* if($filtahun != '' && $filtahun != '-1' && $filtahun != null) {
-			$this->db->where("tahun",$filtahun);
-		} */
+	public function getrecord_count($fileawal=null,$fileakhir=null,$file1=null,$file2=null){		
+		if($fileawal != '' && $fileawal != '-1' && $fileawal != null) {
+				$this->db->where("date(login_time) between '$fileawal' and '$fileakhir'");
+			} 
+			if($file1 != '' && $file1 != '-1' && $file1 != null) {
+				$this->db->like("user_info",$file1);
+			} 
+			
+			if($file2 != '' && $file2 != '-1' && $file2 != null) {
+				$this->db->like("user_info",$file2);
+			} 
 		$query=$this->db->from('login_log');
 		return $this->db->count_all_results();
 		$this->db->free_result();
