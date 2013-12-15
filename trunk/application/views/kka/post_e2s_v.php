@@ -2,7 +2,7 @@
 		$(function(){
 			var url;
 			newData<?=$objectId;?> = function (){  			
-				addTab("Add Pra Monev Eselon II Pagu Definitif","kka/pre_definitif_e2/add");
+				addTab("Add Data Post Monev Eselon II","kka/post_e2/add");
 			}
 			//end newData 
 			
@@ -10,24 +10,21 @@
 				var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
 				//alert(row.dokter_kode);
 				if (row){
-					if(editmode){
-						addTab("Edit Pra Monev Eselon II Pagu Definitif", "kka/pre_definitif_e2/edit/"+row.predefinitif_e2_id);
-
+					if(editmode){						
+						addTab("Edit Data Post Monev Eselon II", "kka/post_e2/edit/"+row.poste2_id);						
 					}else{
-						addTab("View Pra Monev Eselon II Pagu Definitif", "kka/pre_definitif_e2/edit/"+row.predefinitif_e2_id+"/"+editmode);
-					}
-					
+						addTab("View Data Post Monev Eselon II", "kka/post_e2/edit/"+row.poste2_id+"/"+editmode);
+					}					
 				}
 			}
 			
-			deleteData<?=$objectId;?> = function (){
-				<? if ($this->session->userdata('unit_kerja_e1')=='-1'){?>				
+			deleteData<?=$objectId;?> = function (){				
 					var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
 					if(row){
 						if(confirm("Apakah yakin akan menghapus data '" + row.nama_subkegiatan + "'?")){
 							var response = '';
 							$.ajax({ type: "GET",
-									 url: base_url+'kka/pre_definitif_e2/delete/' + row.predefinitif_e2_id,
+									 url: base_url+'kka/post_e2/delete/' + row.poste2_id,
 									 async: false,
 									 success : function(response)
 									 {
@@ -50,9 +47,7 @@
 							});
 						}
 					}
-				<?} else { ?>	
-					alert("Silahkan Login sebagai Superadmin");
-				<?} ?>
+				
 			}
 			//end deleteData			
 			
@@ -74,12 +69,12 @@
 				if (file2 == null) file2 = "-1";
 			
 				if (tipe==1){
-					return "<?=base_url()?>kka/pre_definitif_e2/grid/"+filtahun+"/"+file2;
+					return "<?=base_url()?>kka/post_e2/grid/"+filtahun+"/"+file2;
 				}
 				else if (tipe==2){
-					return "<?=base_url()?>kka/pre_definitif_e2/pdf/"+filtahun+"/"+file2;
+					return "<?=base_url()?>kka/post_e2/pdf/"+filtahun+"/"+file2;
 				}else if (tipe==3){
-					return "<?=base_url()?>kka/pre_definitif_e2/excel/"+filtahun+"/"+file2;
+					return "<?=base_url()?>kka/post_e2/excel/"+filtahun+"/"+file2;
 				}
 			}
 			
@@ -202,10 +197,11 @@
 			
 			setTimeout(function(){
 				searchData<?=$objectId;?> ();
-				//$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>kka/pre_definitif_e2/grid"});
+				//$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>kka/post_e2/grid"});
 			},50);
 			
 			
+		
 			$("#popdesc<?=$objectId?>").click(function(){
 				closePopup('#popdesc<?=$objectId?>');
 			});
@@ -318,16 +314,16 @@
 		</tr>
 		</table>
 	  <div style="margin-bottom:5px"> 
-		<? if($this->sys_menu_model->cekAkses('ADD;',260,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('ADD;',264,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="newData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-add" plain="true">Add</a>  
 		<?}?>
-		<? if($this->sys_menu_model->cekAkses('EDIT;',260,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('EDIT;',264,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="editData<?=$objectId;?>(true);" class="easyui-linkbutton" iconCls="icon-edit" plain="true">Edit</a>
 		<?}?>
-		<? if($this->sys_menu_model->cekAkses('VIEW;',260,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('VIEW;',264,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="editData<?=$objectId;?>(false);" class="easyui-linkbutton" iconCls="icon-view" plain="true">View</a>
 		<?}?>
-		<? if($this->sys_menu_model->cekAkses('DELETE;',260,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('DELETE;',264,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="deleteData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-remove" plain="true">Delete</a>
 		<?}?>
 		<!--
@@ -337,10 +333,10 @@
 	  </div>
 	</div>
 	
-	<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Data Pra Monev Pagu Definitif  Eselon II" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true">
+	<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Data Post Monev Eselon II" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true">
 	  <thead>
 	  <tr>
-		<th field="predefinitif_e2_id" sortable="true" hidden="true" width="50px">predefinitif_e2_id</th>
+		<th field="poste2_id" sortable="true" hidden="true" width="50px">poste2_id</th>
 		<th field="kode_kegiatan_tahun" sortable="true"  hidden="true">kode_kegiatan_tahun</th>
 		<th field="tahun" sortable="true" width="50px">Tahun</th>
 		<th field="kode_e1" sortable="true" width="50px"<?=($this->session->userdata('unit_kerja_e1')=='-1'?'':'hidden="true"')?>>Kode Unit Kerja</th>
@@ -352,6 +348,7 @@
 		<th field="deskripsi" hidden="true">deskripsi_ikk</th>
 		<th field="nama_kegiatan" hidden="true">nama_kegiatan</th>
 		<th field="nama_subkegiatan" sortable="true" width="250px">Kegiatan / Sub Kegiatan</th>
+		<th field="anggaran" sortable="true" width="50px" align="right" formatter="formatPrice">Anggaran</th>
 		<th field="jumlah" sortable="true" width="50px" align="right" formatter="formatPrice">Jumlah</th>
 		
 		
@@ -359,4 +356,4 @@
 	  </thead>  
 	</table>
 	
-	<div class="popdesc" id="popdesc<?=$objectId?>">indriyanto</div>
+	<div class="popdesc" id="popdesc<?=$objectId?>">&nbsp;</div>

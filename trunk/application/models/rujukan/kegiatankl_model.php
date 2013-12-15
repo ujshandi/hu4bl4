@@ -264,6 +264,8 @@ class Kegiatankl_model extends CI_Model
 		switch ($modelMonev) {
 			case "indikatif" : $this->db->from('tbl_pre_indikatif_e2');break;
 			case "definitif" : $this->db->from('tbl_pre_definitif_e2');break;
+			case "ongoing" : $this->db->from('tbl_ongoing_e2');break;
+			case "post" : $this->db->from('tbl_post_e2');break;
 			default : $this->db->from('tbl_pre_usulan1_e2');
 		}
 		//model monev belum terpakai

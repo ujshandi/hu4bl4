@@ -1,8 +1,8 @@
 <?php
 
-class Pre_usulan1_e2 extends CI_Controller {
+class Post_e2 extends CI_Controller {
 	
-	var $objectId = 'preusulan1e2';
+	var $objectId = 'poste2';
 	
 	function __construct()
 	{
@@ -16,7 +16,7 @@ class Pre_usulan1_e2 extends CI_Controller {
 				
 		//if ($this->session->userdata('logged_in') != TRUE) redirect('security/login');					
 		$this->load->model('/security/sys_menu_model');
-		$this->load->model('/kka/pre_usulan1_e2_model');
+		$this->load->model('/kka/post_e2_model');
 		
 		$this->load->model('/rujukan/eselon1_model');
 		$this->load->model('/rujukan/eselon2_model');
@@ -27,34 +27,40 @@ class Pre_usulan1_e2 extends CI_Controller {
 	}
 	
 	function index(){
-		$data['title'] = 'Data Pra Monev Eselon II Pagu Usulan';	
+		$data['title'] = 'Data Post Monev Eselon II';	
 		$data['objectId'] = $this->objectId;
 		//$data['formLookupTarif'] = $this->tarif_model->lookup('#winLookTarif'.$data['objectId'],"#medrek_id".$data['objectId']);
-	  	$this->load->view('kka/pre_usulan1_e2s_v',$data);
+	  	$this->load->view('kka/post_e2s_v',$data);
 	}
 	
 	public function add(){
-		$data['title'] = 'Add Data Pra Monev Eselon II Pagu Usulan';	
+		$data['title'] = 'Add Data Post Monev Eselon II';	
 		$data['objectId'] = $this->objectId;
 		//$data['formLookupTarif'] = $this->tarif_model->lookup('#winLookTarif'.$data['objectId'],"#medrek_id".$data['objectId']);
-	  	$this->load->view('kka/pre_usulan1_e2_v',$data);
+	  	$this->load->view('kka/post_e2_v',$data);
 	}
 	
 	public function edit($id, $editmode='true'){
 		$editmode = ($editmode=='true'?TRUE:FALSE);	
 		$data['editmode'] = $editmode;
-		$data['title'] = ($editmode==TRUE?'Edit':'View').' Data Pra Monev Eselon II Pagu Usulan';
+		$data['title'] = ($editmode==TRUE?'Edit':'View').' Data Post Monev Eselon II';
 		$data['objectId'] = $this->objectId;
 		
-		$data['result'] = $this->pre_usulan1_e2_model->getDataEdit($id);
+		$data['result'] = $this->post_e2_model->getDataEdit($id);
 		
-	  	$this->load->view('kka/pre_usulan1_e2_edit_v',$data);
+	  	$this->load->view('kka/post_e2_edit_v',$data);
 	}
 	
-	function grid($filtahun=null,$file2=null){
+	function grid($filtahun=null,$file1=null){
+		if (($file1==null)&&($this->session->userdata('unit_kerja_e1'))!=-1)
+			$file1= $this->session->userdata('unit_kerja_e1');
+		echo $this->post_e2_model->easyGrid($filtahun,$file1);
+	}
+
+	function getpendukung($filtahun=null,$filtriwulan,$file2=null,$filsasaran=null, $filikk=null){
 		if (($file2==null)&&($this->session->userdata('unit_kerja_e2'))!=-1)
 			$file2= $this->session->userdata('unit_kerja_e2');
-		echo $this->pre_usulan1_e2_model->easyGrid($filtahun,$file2);
+		echo $this->post_e2_model->getPendukung($filtahun,$filtriwulan,$file2,$filsasaran,$filikk);
 	}
 	
 	
@@ -127,7 +133,7 @@ class Pre_usulan1_e2 extends CI_Controller {
 			else {
 			
 				if($this->check_detail($data, $pesan)){
-					$result = $this->pre_usulan1_e2_model->InsertOnDb($data);
+					$result = $this->post_e2_model->InsertOnDb($data);
 				}else{
 					$data['pesan_error'].= $pesan;
 				}
@@ -147,15 +153,10 @@ class Pre_usulan1_e2 extends CI_Controller {
 		$terpilih = 0;
 		foreach($data['detail'] as $r){
 			
-			//kegiatan selalu tersimpan utk mempermudah perhitungan ga usah dikalkulasi ulang nantinya
-			//ga jadi if ($r['tipe']=="kegiatan") $r['chk']=true;
-			
-			
-		    //ga jadi if(!isset($r['chk'])){
+		   // if(!isset($r['chk'])){
 				if (!isset($r['chksub'])) continue;
-			//ga jadi }
+			//}
 			$terpilih++;
-			//ga jadi 
 			/* if (isset($r['chk'])){
 				if($r['kode_kegiatan'] == '0'){ // cek kode iku
 					$pesan = 'Kode Kegiatan pada no. '.$i.' harus diisi.';
@@ -169,13 +170,18 @@ class Pre_usulan1_e2 extends CI_Controller {
 				}
 			}
 			
+			if($r['anggaran'] == ''){ // nilai target null
+				$pesan = 'Anggaran pada no. '.$i.' harus diisi.';
+				return FALSE;
+			}
+			
 			if($r['jumlah'] == ''){ // nilai target null
 				$pesan = 'Jumlah pada no. '.$i.' harus diisi.';
 				return FALSE;
 			}
 			
 		/* 	// cek ke database
-			if($this->pre_usulan1_e2_model->data_exist($data['tahun'], $data['kode_e1'], $data['kode_sasaran_e1'], $r['kode_ikk'])){ 
+			if($this->post_e2_model->data_exist($data['tahun'], $data['kode_e1'], $data['kode_sasaran_e1'], $r['kode_ikk'])){ 
 				$pesan = 'Kode IKU pada no. '.$i.' sudah terdapat di dalam database.';
 				//$pesan = 'Kode IKU '.$r['kode_iku_kl'].' sudah terdapat di database';
 				return FALSE;
@@ -207,22 +213,21 @@ class Pre_usulan1_e2 extends CI_Controller {
 		$result = "";
 		$error = '';
 		
-		$data['preusulan1_e2_id'] 			= $this->input->post('preusulan1_e2_id');
+		$data['poste2_id'] 			= $this->input->post('poste2_id');
 		$data['tahun'] 				= $this->input->post('tahun');
 		$data['kode_e2']			= $this->input->post('kode_e2');
 		$data['kode_sasaran_e2'] 	= $this->input->post('kode_sasaran_e2');
 		$data['kode_ikk'] 		= $this->input->post('kode_ikk');
 		//$data['old_kode_ikk'] 	= $this->input->post('old_kode_ikk');
 		$data['jumlah'] 			= $this->input->post('jumlah');
+		$data['anggaran'] 			= $this->input->post('anggaran');
 		
 		// validation
 		if($data['jumlah'] == '' || $data['jumlah'] == null){
 			$result = false;
 			$error = 'Isi jumlah dengan benar.';
 		}else{
-			
-			$result = $this->pre_usulan1_e2_model->UpdateOnDb($data);
-			
+			$result = $this->post_e2_model->UpdateOnDb($data);			
 		}
 		
 		if ($result){
@@ -234,7 +239,7 @@ class Pre_usulan1_e2 extends CI_Controller {
 	
 	function delete($id=''){
 		if($id != ''){
-			$result = $this->pre_usulan1_e2_model->DeleteOnDb($id);
+			$result = $this->post_e2_model->DeleteOnDb($id);
 			if ($result){
 				echo json_encode(array('success'=>true, 'haha'=>''));
 			} else {
@@ -245,19 +250,19 @@ class Pre_usulan1_e2 extends CI_Controller {
 	
 	function getSatuan($id){
 		if($id != '0'){
-			echo $this->pre_usulan1_e2_model->getSatuan($id);
+			echo $this->post_e2_model->getSatuan($id);
 		}
 	}
 	
 	function getikk($kode, $tahun=""){
 		if($kode != '0' && $tahun != ""){
-			echo $this->pre_usulan1_e2_model->getikk($this->objectId, $kode, $tahun);
+			echo $this->post_e2_model->getikk($this->objectId, $kode, $tahun);
 		}
 	}
 	
 	function getKegiatan_e2($kode, $tahun=""){
 		if($kode != '0' && $tahun != ""){
-			echo $this->pre_usulan1_e2_model->getKegiatan_e2($this->objectId, $kode, $tahun,true);
+			echo $this->post_e2_model->getKegiatan_e2($this->objectId, $kode, $tahun,true);
 		}
 	}
 	
@@ -268,7 +273,7 @@ class Pre_usulan1_e2 extends CI_Controller {
 	
 	public function pdf($file1=null){
 		$this->load->library('cezpdf');	
-		$pdfdata = $this->pre_usulan1_e2_model->easyGrid($file1,2);
+		$pdfdata = $this->post_e2_model->easyGrid($file1,2);
 		
 		//$pdfdata = $pdfdata->rows;
 		if (($file1 != null)&&($file1 != "-1"))
@@ -327,7 +332,7 @@ class Pre_usulan1_e2 extends CI_Controller {
 	}
 	
 	public function excel($file1=null){
-		echo  $this->pre_usulan1_e2_model->easyGrid($file1,3);
+		echo  $this->post_e2_model->easyGrid($file1,3);
 	}
 }
 ?>
