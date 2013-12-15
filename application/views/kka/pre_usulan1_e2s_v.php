@@ -1,3 +1,4 @@
+  
 	<script  type="text/javascript" >
 		$(function(){
 			var url;
@@ -11,11 +12,9 @@
 				//alert(row.dokter_kode);
 				if (row){
 					if(editmode){
-						if(row.status == '0'){
+						
 							addTab("Edit Pra Monev Eselon II Pagu Usulan", "kka/pre_usulan1_e2/edit/"+row.preusulan1_e2_id);
-						}else{
-							alert('Maaf data tidak bisa diedit, karena sudah ditetapkan di PK.');
-						}
+						
 					}else{
 						addTab("View Pra Monev Eselon II Pagu Usulan", "kka/pre_usulan1_e2/edit/"+row.preusulan1_e2_id+"/"+editmode);
 					}
@@ -24,10 +23,10 @@
 			}
 			
 			deleteData<?=$objectId;?> = function (){
-				<? if ($this->session->userdata('unit_kerja_e2')=='-1'){?>				
+				
 					var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
 					if(row){
-						if(confirm("Apakah yakin akan menghapus data '" + row.kode_ikk_e1 + "'?")){
+						if(confirm("Apakah yakin akan menghapus data '" + row.nama_subkegiatan + "'?")){
 							var response = '';
 							$.ajax({ type: "GET",
 									 url: base_url+'kka/pre_usulan1_e2/delete/' + row.preusulan1_e2_id,
@@ -53,9 +52,7 @@
 							});
 						}
 					}
-				<?} else { ?>	
-					alert("Silahkan Login sebagai Superadmin");
-				<?} ?>
+				
 			}
 			//end deleteData			
 			
@@ -91,11 +88,18 @@
 				$('#dg<?=$objectId;?>').datagrid({
 					url:getUrl<?=$objectId;?>(1),
 					queryParams:{lastNo:'0'},	
-					pageNumber : 1,
+					pageNumber : 1,					
+	                view:groupview,
+	                groupField:'kode_kegiatan_tahun',
+	                groupFormatter:function(value,rows){
+						if (value!=null){
+							return value + ' - ' +rows[rows.length-1].nama_kegiatan+' ('+ rows.length + ' Sub Kegiatan) : <b>'+rows[rows.length-1].jumlah_kegiatan+'</b>';
+						}
+	                },
 					onClickCell: function(rowIndex, field, value){
 						$('#dg<?=$objectId;?>').datagrid('selectRow', rowIndex);
 						var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
-						
+						if (row==null) return;	
 						switch(field){
 							case "kode_sasaran_e2":
 								showPopup('#popdesc<?=$objectId?>', row.deskripsi_sasaran_e1);
@@ -257,18 +261,18 @@
 		</tr>
 		</table>
 	  <div style="margin-bottom:5px"> 
-		<? if($this->sys_menu_model->cekAkses('ADD;',68,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('ADD;',258,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="newData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-add" plain="true">Add</a>  
 		<?}?>
-	<!--	<? if($this->sys_menu_model->cekAkses('EDIT;',68,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('EDIT;',258,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="editData<?=$objectId;?>(true);" class="easyui-linkbutton" iconCls="icon-edit" plain="true">Edit</a>
 		<?}?>
-		<? if($this->sys_menu_model->cekAkses('VIEW;',68,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('VIEW;',258,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="editData<?=$objectId;?>(false);" class="easyui-linkbutton" iconCls="icon-view" plain="true">View</a>
 		<?}?>
-		<? if($this->sys_menu_model->cekAkses('DELETE;',68,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?> 
+		<? if($this->sys_menu_model->cekAkses('DELETE;',258,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?> 
 			<a href="#" onclick="deleteData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-remove" plain="true">Delete</a>
-		<?}?>-->
+		<?}?>
 		<!--
 		<a href="#" onclick="printData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-print" plain="true">Print</a>
 		<a href="#" onclick="toExcel<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-excel" plain="true">Excel</a>
@@ -281,17 +285,19 @@
 	  <tr>
 		<th field="preusulan1_e2_id" sortable="true" hidden="true" width="50px">preusulan1_e2_id</th>
 		<th field="tahun" sortable="true" width="20px">Tahun</th>
-		<th field="kode_e1" sortable="true" width="20px"<?=($this->session->userdata('unit_kerja_e2')=='-1'?'':'hidden="true"')?>>Kode Unit Kerja</th>
+		<th field="kode_kegiatan_tahun" sortable="true"  hidden="true">kode_kegiatan_tahun</th>
+		<th field="kode_e1" sortable="true"  width="20px" hidden="true">Kode Unit Kerja</th>
 		<th field="nama_e1" hidden="true">nama e1</th>
 		<th field="kode_sasaran_e2" sortable="true" width="40px">Kode Sasaran</th>
 		<th field="deskripsi_sasaran_e2" hidden="true">deskripsi_sasaran_e1</th>
 		<th field="kode_ikk" sortable="true" width="50px">Kode IKK</th>
 		<th field="kode_subkegiatan" sortable="true" width="50px">Kode</th>
 		<th field="deskripsi" hidden="true">deskripsi_ikk</th>
+		<th field="nama_kegiatan" hidden="true">nama_kegiatan</th>
 		<th field="nama_subkegiatan" sortable="true" width="250px">Kegiatan / Sub Kegiatan</th>
 		<th field="jumlah" sortable="true" width="50px" align="right" formatter="formatPrice">Jumlah</th>		
 	  </tr>
 	  </thead>  
 	</table>
 	
-	<div class="popdesc" id="popdesc<?=$objectId?>">indriyanto</div>
+	<div class="popdesc" id="popdesc<?=$objectId?>">&nbsp;</div>

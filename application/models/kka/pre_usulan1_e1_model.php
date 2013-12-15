@@ -150,7 +150,7 @@ class Pre_usulan1_e1_model extends CI_Model
 			$this->db->join('tbl_ikk b', 'b.kode_ikk = a.kode_ikk and b.tahun = a.tahun');
 			$this->db->join('tbl_sasaran_eselon2 c', 'c.kode_sasaran_e2 = a.kode_sasaran_e2 and c.tahun = a.tahun');
 			$this->db->join('tbl_eselon2 d', 'd.kode_e2 = a.kode_e2');
-			$this->db->join('tbl_subkegiatan_kl skk', 'skk.kode_subkegiatan = a.kode_subkegiatan');
+			$this->db->join('tbl_subkegiatan_kl skk', 'skk.kode_subkegiatan = a.kode_subkegiatan and skk.tahun=a.tahun');
 			$this->db->join('tbl_kegiatan_kl k', 'k.kode_kegiatan = skk.kode_kegiatan and k.tahun=skk.tahun');
 			$this->db->order_by("a.tahun DESC, a.kode_subkegiatan ASC");
 			$query = $this->db->get();
@@ -247,9 +247,9 @@ class Pre_usulan1_e1_model extends CI_Model
 		}		
 		$this->db->from('tbl_pre_usulan1_e2 a');
 		$this->db->join('tbl_ikk b', 'b.kode_ikk = a.kode_ikk and b.tahun = a.tahun');
-		$this->db->join('tbl_sasaran_eselon2 c', 'c.kode_sasaran_e2 = a.kode_sasaran_e2');
+		$this->db->join('tbl_sasaran_eselon2 c', 'c.kode_sasaran_e2 = a.kode_sasaran_e2 and c.tahun = a.tahun');
 		$this->db->join('tbl_eselon2 d', 'd.kode_e2 = a.kode_e2');
-		$this->db->join('tbl_subkegiatan_kl skk', 'skk.kode_subkegiatan = a.kode_subkegiatan');
+		$this->db->join('tbl_subkegiatan_kl skk', 'skk.kode_subkegiatan = a.kode_subkegiatan and skk.tahun=a.tahun');
 		$this->db->join('tbl_kegiatan_kl k', 'k.kode_kegiatan = skk.kode_kegiatan and k.tahun=skk.tahun');
 		$this->db->order_by("a.tahun DESC, a.kode_subkegiatan ASC");
 			

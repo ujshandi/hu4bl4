@@ -270,7 +270,7 @@
 	</div>
 	
 	
-<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Data Kegiatan" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true" nowrap="false">
+<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Data Pra Monev Usulan Eselon I" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true" nowrap="false">
 	<thead>
 	<tr>
 		<th field="id_kegiatan_kl" sortable="true" width="5px" hidden="true">No.</th>

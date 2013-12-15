@@ -3,7 +3,7 @@
  *INVISI
 */
 
-class Ongoing_e2_model extends CI_Model
+class Post_e2_model extends CI_Model
 {	
 	/**
 	* constructor
@@ -37,9 +37,9 @@ class Ongoing_e2_model extends CI_Model
 			} 
 			
 			if($purpose==1){$this->db->limit($limit,$offset);}
-			$this->db->select('distinct a.ongoinge2_id, a.tahun, a.kode_ikk, a.kode_e2 as rkt_kode_e2, a.kode_sasaran_e2 AS kode_sasaran_e2, b.deskripsi,a.anggaran, a.jumlah,k.kode_kegiatan,k.nama_kegiatan,subkl.kode_subkegiatan, subkl.nama_subkegiatan',false);
+			$this->db->select('distinct a.poste2_id, a.tahun, a.kode_ikk, a.kode_e2 as rkt_kode_e2, a.kode_sasaran_e2 AS kode_sasaran_e2, b.deskripsi,a.anggaran, a.jumlah,k.kode_kegiatan,k.nama_kegiatan,subkl.kode_subkegiatan, subkl.nama_subkegiatan',false);
 			$this->db->select("c.deskripsi as deskripsi_sasaran_e1, b.deskripsi AS deskripsi_iku_e1, d.nama_e2");
-			$this->db->from('tbl_ongoing_e2 a');
+			$this->db->from('tbl_post_e2 a');
 			$this->db->join('tbl_ikk b', 'b.kode_ikk = a.kode_ikk and b.tahun = a.tahun');
 			$this->db->join('tbl_sasaran_eselon2 c', 'c.kode_sasaran_e2 = a.kode_sasaran_e2 and c.tahun = a.tahun');
 			$this->db->join('tbl_eselon2 d', 'd.kode_e2 = a.kode_e2');
@@ -64,7 +64,7 @@ class Ongoing_e2_model extends CI_Model
 				}
 				$no++;
 				$response->rows[$i]['no']= $no;
-				$response->rows[$i]['ongoinge2_id']=$row->ongoinge2_id;
+				$response->rows[$i]['poste2_id']=$row->poste2_id;
 				$response->rows[$i]['tahun']=$row->tahun;
 				$response->rows[$i]['kode_e2']=$row->rkt_kode_e2;
 				$response->rows[$i]['nama_e2']=$row->nama_e2;
@@ -88,7 +88,7 @@ class Ongoing_e2_model extends CI_Model
 				//utk kepentingan export excel ==========================
 				
 				//if($file1 == '-1'){unset($row->rkt_kode_sasaran_e2);}
-				unset($row->ongoinge2_id);
+				unset($row->poste2_id);
 				unset($row->tahun);
 				//unset($row->status);
 				unset($row->kode_ikk);
@@ -145,7 +145,7 @@ class Ongoing_e2_model extends CI_Model
 		 if($file2 != '' && $file2 != '-1' && $file2 != null) {
 			$this->db->where("a.kode_e2",$file2);
 		} 
-		$this->db->from('tbl_ongoing_e2 a');
+		$this->db->from('tbl_post_e2 a');
 		$this->db->join('tbl_ikk b', 'b.kode_ikk = a.kode_ikk and b.tahun = a.tahun');
 		$this->db->join('tbl_sasaran_eselon2 c', 'c.kode_sasaran_e2 = a.kode_sasaran_e2 and c.tahun = a.tahun');
 		$this->db->join('tbl_eselon2 d', 'd.kode_e2 = a.kode_e2');
@@ -160,12 +160,12 @@ class Ongoing_e2_model extends CI_Model
 	public function getDataEdit($id){
 		$this->db->flush_cache();
 		$this->db->select('*, b.deskripsi as sasaran, c.deskripsi as ikk,e.nama_e1, d.nama_e2');
-		$this->db->from('tbl_ongoing_e2 a');
+		$this->db->from('tbl_post_e2 a');
 		$this->db->join('tbl_sasaran_eselon2 b', 'b.kode_sasaran_e2 = a.kode_sasaran_e2 and b.tahun=a.tahun');
 		$this->db->join('tbl_ikk c', 'c.kode_ikk = a.kode_ikk and c.tahun = a.tahun');
 		$this->db->join('tbl_eselon2 d', 'd.kode_e2 = a.kode_e2');
 		$this->db->join('tbl_eselon1 e', 'e.kode_e1 = d.kode_e1');
-		$this->db->where('a.ongoinge2_id', $id);
+		$this->db->where('a.poste2_id', $id);
 		
 		return $this->db->get()->row();
 	}
@@ -189,7 +189,7 @@ class Ongoing_e2_model extends CI_Model
 			//$this->db->set('status',			'0');
 			$this->db->set('log_insert', 		$this->session->userdata('user_id').';'.date('Y-m-d H:i:s'));
 			
-			$this->db->insert('tbl_ongoing_e2');
+			$this->db->insert('tbl_post_e2');
 			
 			# insert to log
 			/* $this->db->flush_cache();
@@ -200,7 +200,7 @@ class Ongoing_e2_model extends CI_Model
 			$this->db->set('jumlah',			$dt['jumlah']);
 			//$this->db->set('status',			'0');
 			$this->db->set('log',				'INSERT;'.$this->session->userdata('user_id').';'.date('Y-m-d H:i:s'));
-			$this->db->insert('tbl_ongoing_e2_log'); */
+			$this->db->insert('tbl_post_e2_log'); */
 			
 		}
 		/*
@@ -211,7 +211,7 @@ class Ongoing_e2_model extends CI_Model
 		$this->db->set('kode_ikk',$data['kode_iku']);
 		$this->db->set('jumlah',$data['jumlah']);
 		try {
-			$result = $this->db->insert('tbl_ongoing_e2');
+			$result = $this->db->insert('tbl_post_e2');
 		}
 		catch(Exception $e){
 			$errNo   = $this->db->_error_number();
@@ -367,18 +367,18 @@ class Ongoing_e2_model extends CI_Model
 			$idxKegiatan = $i;
 			
 			$this->db->flush_cache();
-			$this->db->select('s.*,pre.predefinitif_e2_id,pre.jumlah, 0 as anggaran',false);
+			$this->db->select('s.*,pre.ongoinge2_id,pre.jumlah, 0 as anggaran',false);
 			$this->db->from('tbl_subkegiatan_kl s',false);
-			$this->db->join('tbl_pre_definitif_e2 pre','s.kode_subkegiatan=pre.kode_subkegiatan and s.tahun=pre.tahun','left');
+			$this->db->join('tbl_ongoing_e2 pre','s.kode_subkegiatan=pre.kode_subkegiatan and s.tahun=pre.tahun','left');
 			$this->db->order_by('id_subkegiatan_kl');
 			$this->db->where('s.kode_kegiatan',$r->kode_kegiatan);
 			$this->db->where('s.tahun',$r->tahun);
 			if ($exclude){
-				$this->db->where("s.kode_subkegiatan not in (select kode_subkegiatan from tbl_ongoing_e2 where tahun = $r->tahun) ");
+				$this->db->where("s.kode_subkegiatan not in (select kode_subkegiatan from tbl_post_e2 where tahun = $r->tahun) ");
 			}
 			//if($e2!=''){$this->db->where('kode_e2',$e2);}
 			$queSub = $this->db->get();
-			$jumlah = $this->getJumlahSubkegiatan('tbl_pre_definitif_e2',$r->tahun,$r->kode_kegiatan,'tbl_ongoing_e2');
+			$jumlah = $this->getJumlahSubkegiatan('tbl_ongoing_e2',$r->tahun,$r->kode_kegiatan,'tbl_post_e2');
 			$max_sub_idx = 0;
 			if ($queSub!=null)
 				$max_sub_idx=$queSub->num_rows;		
@@ -398,7 +398,7 @@ class Ongoing_e2_model extends CI_Model
 				$i++;
 				foreach($queSub->result() as $z){
 				//	var_dump((int)$z->preusulan1_e2_id);
-					$checked = ((int)$z->predefinitif_e2_id>0?"checked":"");
+					$checked = ((int)$z->ongoinge2_id>0?"checked":"");
 					$out .= '<tr>
 					<td>'.($i+1).'</td>
 					<td><input type="hidden" name="detail['.$i.'][tipe]" value="subkegiatan"/><input type="checkbox" name="detail['.$i.'][chksub]" value="chksub" '.$checked.'/></td>					
@@ -417,20 +417,20 @@ class Ongoing_e2_model extends CI_Model
 	
 	public function UpdateOnDb($data){
 		$this->db->flush_cache();
-		$this->db->where('ongoinge2_id', $data['ongoinge2_id']);
+		$this->db->where('poste2_id', $data['poste2_id']);
 		
 	//	$this->db->set('kode_ikk', $data['kode_ikk']);
 		$this->db->set('anggaran',$this->utility->ourDeFormatNumber2($data['anggaran']));
 		$this->db->set('jumlah',$this->utility->ourDeFormatNumber2($data['jumlah']));
 		$this->db->set('log_update', 		$this->session->userdata('user_id').';'.date('Y-m-d H:i:s'));
 		
-		$result = $this->db->update('tbl_ongoing_e2');
+		$result = $this->db->update('tbl_post_e2');
 		
 		/* # insert to log
 		$this->db->flush_cache();
 		$this->db->select("*");
-		$this->db->from("tbl_ongoing_e2");
-		$this->db->where('ongoinge2_id', $data['ongoinge2_id']);
+		$this->db->from("tbl_post_e2");
+		$this->db->where('poste2_id', $data['poste2_id']);
 		$qt = $this->db->get();
 		
 		$this->db->flush_cache();
@@ -440,7 +440,7 @@ class Ongoing_e2_model extends CI_Model
 		$this->db->set('kode_ikk',		$qt->row()->kode_ikk);
 		$this->db->set('jumlah',			$qt->row()->jumlah);
 		$this->db->set('log',				'UPDATE;'.$this->session->userdata('user_id').';'.date('Y-m-d H:i:s'));
-		$this->db->insert('tbl_ongoing_e2_log'); */
+		$this->db->insert('tbl_post_e2_log'); */
 		
 		$errNo   = $this->db->_error_number();
 	    $errMess = $this->db->_error_message();
@@ -461,8 +461,8 @@ class Ongoing_e2_model extends CI_Model
 		# insert to log
 		/* $this->db->flush_cache();
 		$this->db->select("*");
-		$this->db->from("tbl_ongoing_e2");
-		$this->db->where('ongoinge2_id', $id);
+		$this->db->from("tbl_post_e2");
+		$this->db->where('poste2_id', $id);
 		$qt = $this->db->get();
 		
 		$this->db->flush_cache();
@@ -472,11 +472,11 @@ class Ongoing_e2_model extends CI_Model
 		$this->db->set('kode_ikk',		$qt->row()->kode_ikk);
 		$this->db->set('jumlah',			$qt->row()->jumlah);
 		$this->db->set('log',				'DELETE;'.$this->session->userdata('user_id').';'.date('Y-m-d H:i:s'));
-		$this->db->insert('tbl_ongoing_e2_log');
+		$this->db->insert('tbl_post_e2_log');
 		 */
 		$this->db->flush_cache();
-		$this->db->where('ongoinge2_id', $id);
-		$result = $this->db->delete('tbl_ongoing_e2'); 
+		$this->db->where('poste2_id', $id);
+		$result = $this->db->delete('tbl_post_e2'); 
 		
 		
 		$errNo   = $this->db->_error_number();
@@ -503,7 +503,7 @@ class Ongoing_e2_model extends CI_Model
 			$this->db->where('kode_sasaran_e2',$e1);
 			//$value = $e1;
 		}
-		$this->db->from('tbl_ongoing_e2');
+		$this->db->from('tbl_post_e2');
 		$this->db->group_by('tahun');
 		
 		$que = $this->db->get();
@@ -528,7 +528,7 @@ class Ongoing_e2_model extends CI_Model
 		
 		$this->db->flush_cache();
 		$this->db->select('distinct tahun',false);
-		$this->db->from('tbl_ongoing_e2');
+		$this->db->from('tbl_post_e2');
 		$e1 = $this->session->userdata('unit_kerja_e1');
 		if (($e1!="-1")&&($e1!=null)){
 			$this->db->where('kode_sasaran_e2',$e1);
@@ -578,7 +578,7 @@ class Ongoing_e2_model extends CI_Model
 	public function data_exist($tahun, $kode_sasaran_e2, $kode_sasaran_e2, $kode_ikk){
 		$this->db->flush_cache();
 		$this->db->select('*');
-		$this->db->from('tbl_ongoing_e2');
+		$this->db->from('tbl_post_e2');
 		$this->db->where('tahun', $tahun);
 		$this->db->where('kode_sasaran_e2', $kode_sasaran_e2);
 		$this->db->where('kode_sasaran_e2', $kode_sasaran_e2);

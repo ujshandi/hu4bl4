@@ -3,7 +3,7 @@
  *INVISI
 */
 
-class Pre_definitif_e1_model extends CI_Model
+class Post_e1_model extends CI_Model
 {	
 	/**
 	* constructor
@@ -53,7 +53,7 @@ class Pre_definitif_e1_model extends CI_Model
 			{
 				$no++;
 				$response->rows[$i]['no']= $no;
-				$response->rows[$i]['preusulan1_e1_id']=$row->preusulan1_e1_id;
+				$response->rows[$i]['poste2_id']=$row->poste2_id;
 				$response->rows[$i]['tahun']=$row->tahun;
 				$response->rows[$i]['kode_e1']=$row->rkt_kode_e1;
 				$response->rows[$i]['nama_e1']=$row->nama_e1;
@@ -72,7 +72,7 @@ class Pre_definitif_e1_model extends CI_Model
 				// $row->keterangan = str_replace("<br>",", ",$response->rows[$i]['pejabat']);
 				// $row->indikator_kinerja=$response->rows[$i]['indikator_kinerja'];
 				if($file1 == '-1'){unset($row->rkt_kode_e1);}
-				unset($row->preusulan1_e1_id);
+				unset($row->poste2_id);
 				unset($row->tahun);
 				//unset($row->status);
 				unset($row->kode_iku_e1);
@@ -144,9 +144,9 @@ class Pre_definitif_e1_model extends CI_Model
 			}
 			$this->db->order_by($sort." ".$order );
 			//if($purpose==1){$this->db->limit($limit,$offset);}
-			$this->db->select('a.predefinitif_e2_id, a.tahun, a.kode_ikk, a.kode_e2 as rkt_kode_e2, a.kode_sasaran_e2 AS kode_sasaran_e2, b.deskripsi, a.jumlah,skk.kode_subkegiatan,skk.nama_subkegiatan');
+			$this->db->select('a.poste2_id, a.tahun, a.kode_ikk, a.kode_e2 as rkt_kode_e2, a.kode_sasaran_e2 AS kode_sasaran_e2, b.deskripsi,a.anggaran, a.jumlah,skk.kode_subkegiatan,skk.nama_subkegiatan');
 			$this->db->select("c.deskripsi as deskripsi_sasaran_e2, b.deskripsi AS deskripsi_iku_e2, d.nama_e2");
-			$this->db->from('tbl_pre_definitif_e2 a');
+			$this->db->from('tbl_post_e2 a');
 			$this->db->join('tbl_ikk b', 'b.kode_ikk = a.kode_ikk and b.tahun = a.tahun');
 			$this->db->join('tbl_sasaran_eselon2 c', 'c.kode_sasaran_e2 = a.kode_sasaran_e2 and c.tahun = a.tahun');
 			$this->db->join('tbl_eselon2 d', 'd.kode_e2 = a.kode_e2');
@@ -161,7 +161,7 @@ class Pre_definitif_e1_model extends CI_Model
 			{
 				$no++;
 				$response->rows[$i]['no']= $no;
-				$response->rows[$i]['preusulan1_e1_id']=$row->predefinitif_e2_id;
+				$response->rows[$i]['poste2_id']=$row->poste2_id;
 				$response->rows[$i]['tahun']=$row->tahun;
 				$response->rows[$i]['kode_e1']=$row->rkt_kode_e2;
 				$response->rows[$i]['nama_e1']=$row->nama_e2;
@@ -174,6 +174,7 @@ class Pre_definitif_e1_model extends CI_Model
 				$response->rows[$i]['nama_subkegiatan']=$row->nama_subkegiatan;
 
 				$response->rows[$i]['jumlah']=$this->utility->cekNumericFmt($row->jumlah);
+				$response->rows[$i]['anggaran']=$this->utility->cekNumericFmt($row->anggaran);
 				///$response->rows[$i]['satuan']=$row->satuan;
 				//$response->rows[$i]['status']= $row->status;
 				
@@ -181,7 +182,7 @@ class Pre_definitif_e1_model extends CI_Model
 				// $row->keterangan = str_replace("<br>",", ",$response->rows[$i]['pejabat']);
 				// $row->indikator_kinerja=$response->rows[$i]['indikator_kinerja'];
 
-				unset($row->preusulan1_e2_id);
+				unset($row->poste2_id);
 				unset($row->tahun);
 				//unset($row->status);
 				unset($row->kode_iku_e1);
@@ -245,7 +246,7 @@ class Pre_definitif_e1_model extends CI_Model
 		if($filkegiatan != '' && $filkegiatan != '-1' && $filkegiatan != null) {
 			$this->db->where("k.kode_kegiatan",$filkegiatan);
 		}		
-		$this->db->from('tbl_pre_definitif_e2 a');
+		$this->db->from('tbl_post_e2 a');
 		$this->db->join('tbl_ikk b', 'b.kode_ikk = a.kode_ikk and b.tahun = a.tahun');
 		$this->db->join('tbl_sasaran_eselon2 c', 'c.kode_sasaran_e2 = a.kode_sasaran_e2 and c.tahun=a.tahun');
 		$this->db->join('tbl_eselon2 d', 'd.kode_e2 = a.kode_e2');
@@ -264,7 +265,7 @@ class Pre_definitif_e1_model extends CI_Model
 		$this->db->join('tbl_sasaran_eselon1 b', 'b.kode_sasaran_e1 = a.kode_sasaran_e1');
 		$this->db->join('tbl_iku_eselon1 c', 'c.kode_iku_e1 = a.kode_iku_e1 and c.tahun = a.tahun');
 		$this->db->join('tbl_eselon1 d', 'd.kode_e1 = a.kode_e1');
-		$this->db->where('a.preusulan1_e1_id', $id);
+		$this->db->where('a.poste2_id', $id);
 		
 		return $this->db->get()->row();
 	}
@@ -430,7 +431,7 @@ class Pre_definitif_e1_model extends CI_Model
 	
 	public function UpdateOnDb($data){
 		$this->db->flush_cache();
-		$this->db->where('preusulan1_e1_id', $data['preusulan1_e1_id']);
+		$this->db->where('poste2_id', $data['poste2_id']);
 		
 		$this->db->set('kode_iku_e1', $data['kode_iku_e1']);
 		$this->db->set('jumlah',$this->utility->ourDeFormatNumber2($dt['jumlah']));
@@ -442,7 +443,7 @@ class Pre_definitif_e1_model extends CI_Model
 		$this->db->flush_cache();
 		$this->db->select("*");
 		$this->db->from("tbl_pre_usulan1_e1");
-		$this->db->where('preusulan1_e1_id', $data['preusulan1_e1_id']);
+		$this->db->where('poste2_id', $data['poste2_id']);
 		$qt = $this->db->get();
 		
 		$this->db->flush_cache();
@@ -474,7 +475,7 @@ class Pre_definitif_e1_model extends CI_Model
 		$this->db->flush_cache();
 		$this->db->select("*");
 		$this->db->from("tbl_pre_usulan1_e1");
-		$this->db->where('preusulan1_e1_id', $id);
+		$this->db->where('poste2_id', $id);
 		$qt = $this->db->get();
 		
 		$this->db->flush_cache();
@@ -487,7 +488,7 @@ class Pre_definitif_e1_model extends CI_Model
 		$this->db->insert('tbl_pre_usulan1_e1_log');
 		
 		$this->db->flush_cache();
-		$this->db->where('preusulan1_e1_id', $id);
+		$this->db->where('poste2_id', $id);
 		$result = $this->db->delete('tbl_pre_usulan1_e1'); 
 		
 		

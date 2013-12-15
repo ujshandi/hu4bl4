@@ -2,7 +2,7 @@
 		$(function(){
 			var url;
 			newData<?=$objectId;?> = function (){  			
-				addTab("Add Pra Indikatif Eselon I","kka/pre_indikatif_e1/add");
+				addTab("Add Ongoing Monev Eselon I","kka/ongoing_e1/add");
 			}
 			//end newData 
 			
@@ -12,12 +12,12 @@
 				if (row){
 					if(editmode){
 						if(row.status == '0'){
-							addTab("Edit Pra Indikatif Eselon I", "kka/pre_indikatif_e1/edit/"+row.preusulan1_e1_id);
+							addTab("Edit Ongoing Monev Eselon I", "kka/ongoing_e1/edit/"+row.predefinitif_e1_id);
 						}else{
 							alert('Maaf data tidak bisa diedit, karena sudah ditetapkan di PK.');
 						}
 					}else{
-						addTab("View Pra Indikatif Eselon I", "kka/pre_indikatif_e1/edit/"+row.preusulan1_e1_id+"/"+editmode);
+						addTab("View Ongoing Monev Eselon I", "kka/ongoing_e1/edit/"+row.predefinitif_e1_id+"/"+editmode);
 					}
 					
 				}
@@ -30,7 +30,7 @@
 						if(confirm("Apakah yakin akan menghapus data '" + row.kode_iku_e1 + "'?")){
 							var response = '';
 							$.ajax({ type: "GET",
-									 url: base_url+'kka/pre_indikatif_e1/delete/' + row.preusulan1_e1_id,
+									 url: base_url+'kka/ongoing_e1/delete/' + row.predefinitif_e1_id,
 									 async: false,
 									 success : function(response)
 									 {
@@ -77,12 +77,12 @@
 				if (file1 == null) file1 = "-1";
 			
 				if (tipe==1){
-					return "<?=base_url()?>kka/pre_indikatif_e1/gridKegiatan/"+filtahun+"/"+file1;
+					return "<?=base_url()?>kka/ongoing_e1/gridKegiatan/"+filtahun+"/"+file1;
 				}
 				else if (tipe==2){
-					return "<?=base_url()?>kka/pre_indikatif_e1/pdf/"+filtahun+"/"+file1;
+					return "<?=base_url()?>kka/ongoing_e1/pdf/"+filtahun+"/"+file1;
 				}else if (tipe==3){
-					return "<?=base_url()?>kka/pre_indikatif_e1/excel/"+filtahun+"/"+file1;
+					return "<?=base_url()?>kka/ongoing_e1/excel/"+filtahun+"/"+file1;
 				}
 			}
 			
@@ -145,7 +145,7 @@
 			
 			setTimeout(function(){
 				searchData<?=$objectId;?> ();
-				//$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>kka/pre_indikatif_e1/grid"});
+				//$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>kka/ongoing_e1/grid"});
 			},50);
 			
 			
@@ -270,7 +270,7 @@
 	</div>
 	
 	
-<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Data Pra Monev Indikatif Eselon I" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true" nowrap="false">
+<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Data Ongoing Monev Eselon I" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true" nowrap="false">
 	<thead>
 	<tr>
 		<th field="id_kegiatan_kl" sortable="true" width="5px" hidden="true">No.</th>
@@ -303,7 +303,7 @@
 				//	alert(row.id_pk_e1);
 
                     $('#ddv<?=$objectId;?>-'+index).datagrid({
-                        url:'<?=base_url()?>kka/pre_indikatif_e1/gridMonev/'+row.tahun+'/'+row.kode_kegiatan+'/?parentIndex='+index,
+                        url:'<?=base_url()?>kka/ongoing_e1/gridMonev/'+row.tahun+'/'+row.kode_kegiatan+'/?parentIndex='+index,
                         fitColumns:true,
                         singleSelect:true,
                         rownumbers:true,
@@ -311,7 +311,7 @@
                         loadMsg:'',
                         height:'auto',		
                         columns:[[
-                            {field:'preusulan1_e1_id',title:'id',hidden:true},
+                            {field:'predefinitif_e1_id',title:'id',hidden:true},
                             {field:'tahun',title:'Tahun',width:30},                            
                             {field:'deskripsi_sasaran_e1',title:'Deskripsi Sasaran',width:200},
                             {field:'deskripsi_iku_e1',title:'Deskripsi IKK',width:200},
@@ -366,10 +366,10 @@
             ;
         });
     </script>
-<!--	<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Data Pre Indikatif Eselon I" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true" noWrap="false">
+<!--	<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Data Pre Definitif Eselon I" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true" noWrap="false">
 	  <thead>
 	  <tr>
-		<th field="preusulan1_e1_id" sortable="true" hidden="true" width="50px">preusulan1_e1_id</th>
+		<th field="predefinitif_e1_id" sortable="true" hidden="true" width="50px">predefinitif_e1_id</th>
 		<th field="tahun" sortable="true" width="20px">Tahun</th>
 		<th field="kode_e1" sortable="true" width="20px"<?=($this->session->userdata('unit_kerja_e1')=='-1'?'':'hidden="true"')?>>Kode Unit Kerja</th>
 		<th field="nama_e1" hidden="true">nama e1</th>

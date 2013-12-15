@@ -43,12 +43,12 @@ class Pre_indikatif_e2 extends CI_Controller {
 	public function edit($id, $editmode='true'){
 		$editmode = ($editmode=='true'?TRUE:FALSE);	
 		$data['editmode'] = $editmode;
-		$data['title'] = ($editmode==TRUE?'Edit':'View').' Data Pra Monev Eselon II Pagu Usulan';
+		$data['title'] = ($editmode==TRUE?'Edit':'View').' Data Pra Monev Eselon II Pagu Indikatif';
 		$data['objectId'] = $this->objectId;
 		
 		$data['result'] = $this->pre_indikatif_e2_model->getDataEdit($id);
 		
-	  	$this->load->view('kka/pre_indikatif_e2_v_edit',$data);
+	  	$this->load->view('kka/pre_indikatif_e2_edit_v',$data);
 	}
 	
 	function grid($filtahun=null,$file2=null){
@@ -147,16 +147,17 @@ class Pre_indikatif_e2 extends CI_Controller {
 		$terpilih = 0;
 		foreach($data['detail'] as $r){
 			
-		    if(!isset($r['chk'])){
+		   /*  if(!isset($r['chk'])){
 				if (!isset($r['chksub'])) continue;
-			}
+			} */
+			if (!isset($r['chksub'])) continue;
 			$terpilih++;
-			if (isset($r['chk'])){
+			/* if (isset($r['chk'])){
 				if($r['kode_kegiatan'] == '0'){ // cek kode iku
 					$pesan = 'Kode Kegiatan pada no. '.$i.' harus diisi.';
 					return FALSE;
 				}
-			}
+			} */
 			if (isset($r['chksub'])){
 				if($r['kode_subkegiatan'] == '0'){ // cek kode iku
 					$pesan = 'Kode Sub Kegiatan pada no. '.$i.' harus diisi.';
@@ -202,33 +203,24 @@ class Pre_indikatif_e2 extends CI_Controller {
 		$result = "";
 		$error = '';
 		
-		$data['id_rkt_e1'] 			= $this->input->post('id_rkt_e1');
+		$data['preindikatif_e2_id'] 			= $this->input->post('preindikatif_e2_id');
 		$data['tahun'] 				= $this->input->post('tahun');
-		$data['kode_e1']			= $this->input->post('kode_e1');
-		$data['kode_sasaran_e1'] 	= $this->input->post('kode_sasaran_e1');
+		$data['kode_e2']			= $this->input->post('kode_e2');
+		$data['kode_sasaran_e2'] 	= $this->input->post('kode_sasaran_e2');
 		$data['kode_ikk'] 		= $this->input->post('kode_ikk');
-		$data['old_kode_ikk'] 	= $this->input->post('old_kode_ikk');
-		$data['target'] 			= $this->input->post('target');
+		//$data['old_kode_ikk'] 	= $this->input->post('old_kode_ikk');
+		$data['jumlah'] 			= $this->input->post('jumlah');
 		
 		// validation
-		if($data['target'] == '' || $data['target'] == null){
+		if($data['jumlah'] == '' || $data['jumlah'] == null){
 			$result = false;
-			$error = 'Isi target dengan benar.';
+			$error = 'Isi jumlah dengan benar.';
 		}else{
-			if($data['old_kode_ikk'] != $data['kode_ikk']){ // jika ada perubahan kode iku
-				if(!$this->pre_indikatif_e2_model->data_exist($data['tahun'], $data['kode_e1'], $data['kode_sasaran_e1'], $data['kode_ikk'])){
-					$result = $this->pre_indikatif_e2_model->UpdateOnDb($data);
-				}else{
-					$result = false;
-					$error = 'IKU sudah digunakan, ganti dengan yang lain';
-				}
-			}else{
-				$result = $this->pre_indikatif_e2_model->UpdateOnDb($data);
-			}
+			$result = $this->pre_indikatif_e2_model->UpdateOnDb($data);
 		}
 		
 		if ($result){
-			echo json_encode(array('success'=>true, 'target'=>$data['target']));
+			echo json_encode(array('success'=>true, 'target'=>$data['jumlah']));
 		} else {
 			echo json_encode(array('msg'=>$error));
 		}
@@ -259,7 +251,7 @@ class Pre_indikatif_e2 extends CI_Controller {
 	
 	function getKegiatan_e2($kode, $tahun=""){
 		if($kode != '0' && $tahun != ""){
-			echo $this->pre_indikatif_e2_model->getKegiatan_e2($this->objectId, $kode, $tahun);
+			echo $this->pre_indikatif_e2_model->getKegiatan_e2($this->objectId, $kode, $tahun,true);
 		}
 	}
 	

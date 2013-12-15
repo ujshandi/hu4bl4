@@ -7,7 +7,7 @@
 		 	saveData<?=$objectId;?>=function(){
 			
 				$('#fm<?=$objectId;?>').form('submit',{
-					url: base_url + 'kka/ongoing_e2/save',
+					url: base_url + 'kka/post_e2/save',
 					onSubmit: function(){
 						return $(this).form('validate');
 					},
@@ -21,7 +21,7 @@
 							});
 							// reload and close tab
 							$('#dg<?=$objectId;?>').datagrid('reload');
-							$('#tt').tabs('close', 'Add Ongoing Eselon II');
+							$('#tt').tabs('close', 'Add Data Post Monev Eselon II');
 						} else {
 							$.messager.show({
 								title: 'Error',
@@ -67,7 +67,7 @@
 				
 				tahun =  $('#tahun<?=$objectId;?>').val();
 				$("#tbodykegiatan<?=$objectId;?>").load(
-					base_url+"kka/ongoing_e2/getKegiatan_e2/"+e2+"/"+tahun,
+					base_url+"kka/post_e2/getKegiatan_e2/"+e2+"/"+tahun,
 					function(){
 						$('.money').autoNumeric('init',{aSep: '.', aDec: ',',vMin:'0',aPad:"false",vMax:"999999999999999"});
 
@@ -83,7 +83,7 @@
 			
 				tahun =  $('#tahun<?=$objectId;?>').val();
 				$("#divSasaranE2<?=$objectId?>").load(
-					base_url+"kka/ongoing_e2/getListSasaranE2/"+"<?=$objectId;?>"+"/"+e2+"/"+tahun,
+					base_url+"kka/post_e2/getListSasaranE2/"+"<?=$objectId;?>"+"/"+e2+"/"+tahun,
 					function(){
 						$("textarea").autogrow();
 						if($("#drop<?=$objectId;?>").is(":visible")){
@@ -120,7 +120,7 @@
 				
 				tahun =  $('#tahun<?=$objectId;?>').val();
 				$("#divIkk<?=$objectId?>").load(
-					base_url+"kka/ongoing_e2/getListIkuE2/"+"<?=$objectId;?>"+"/"+e2+"/"+tahun,
+					base_url+"kka/post_e2/getListIkuE2/"+"<?=$objectId;?>"+"/"+e2+"/"+tahun,
 					function(){
 						$("textarea").autogrow();
 						if($("#dropIku<?=$objectId;?>").is(":visible")){
@@ -188,7 +188,7 @@
 				if (kode_ikk == null) kode_ikk = "-1";
 			
 				$('#dgPendukung<?=$objectId;?>').datagrid({
-					url:base_url+"kka/ongoing_e2/getpendukung/"+tahun+"/"+kode_e2+"/"+kode_sasaran+"/"+kode_ikk,
+					url:base_url+"kka/post_e2/getpendukung/"+tahun+"/"+kode_e2+"/"+kode_sasaran+"/"+kode_ikk,
 					
 					pageNumber : 1,
 					onLoadSuccess:function(data){	
@@ -228,7 +228,7 @@
 			}else{
 			//	setSasaranE2<?=$objectId;?>(kode_e1, tahun);
 				$("#tbodykegiatan<?=$objectId;?>").load(
-					base_url+"kka/ongoing_e2/getIKU_e1/"+kode_e1+"/"+tahun
+					base_url+"kka/post_e2/getIKU_e1/"+kode_e1+"/"+tahun
 				);
 			} */
 			
@@ -320,7 +320,7 @@
 			
 			<div class="easyui-layout" fit="true">  
 								
-				<div region="center" border="true" title="Tambah Data Ongoing Monev Eselon II">
+				<div region="center" border="true" title="Tambah Data Post Monev Eselon II">
 				<form id="fm<?=$objectId;?>" method="post" style="margin:10px 5px 5px 10px;" onsubmit="return false">
 					<div class="fitem">
 						<label style="width:120px;vertical-align:top">Tahun :</label>

@@ -23,7 +23,7 @@ class Home extends CI_Controller {
 					'title_page'=>'Sistem Aplikasi Pengukuran Kinerja Direktorat Jenderal Perhubungan Laut',
 					'sess_fullname'=>$this->session->userdata('full_name'),
 					'sess_apptype'=>$this->session->userdata('app_type'),
-					'js'=>array('js/jquery-easyui-1.3.3/jquery.min.js','js/jquery-easyui-1.3.3/jquery.easyui.min.js','js/jquery-easyui-1.3.3/plugins/jquery-easyui-datagridview/datagrid-detailview.js','js/uri_encode_decode.js','js/json2.js','js/jquery.autogrow.js','js/jquery.formatCurrency-1.4.0.min.js','js/formwizard.js','js/jquery.jqURL.js','js/ckeditor/ckeditor.js','js/purl.js',
+					'js'=>array('js/jquery-easyui-1.3.3/jquery.min.js','js/jquery-easyui-1.3.3/jquery.easyui.min.js','js/jquery-easyui-1.3.3/plugins/jquery-easyui-datagridview/datagrid-detailview.js','js/jquery-easyui-1.3.3/plugins/jquery-easyui-datagridview/datagrid-groupview.js','js/uri_encode_decode.js','js/json2.js','js/jquery.autogrow.js','js/jquery.formatCurrency-1.4.0.min.js','js/formwizard.js','js/jquery.jqURL.js','js/ckeditor/ckeditor.js','js/purl.js',
 					'apycom.com-5-steel-blue/menu.js'
 					//'jquery-mega-drop-down-menu/js/jquery.hoverIntent.minified.js','jquery-mega-drop-down-menu/js/jquery.dcmegamenu.1.3.3.min.js'
 					
