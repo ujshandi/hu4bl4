@@ -14,12 +14,12 @@ class rseselon1_model extends CI_Model
 		//$this->CI =& get_instance();
     }
 	
-	public function easyGrid($filtahun=null,$file1=null){
+	public function easyGrid($filtahun=null,$file1=null,$filbulan=null){
 		
 		$page = isset($_POST['page']) ? intval($_POST['page']) : 1;  
 		$limit = isset($_POST['rows']) ? intval($_POST['rows']) : 10;  
 		
-		$count = $this->GetRecordCount($file1);
+		$count = $this->GetRecordCount($filtahun,$file1,$filbulan);
 		$response = new stdClass();
 		$response->total = $count;
 		$sort = isset($_POST['sort']) ? strval($_POST['sort']) : 'tahun';  
@@ -30,6 +30,9 @@ class rseselon1_model extends CI_Model
 			if($filtahun != '' && $filtahun != '-1' && $filtahun != null) {
 				$this->db->where("tbl_pk_eselon1.tahun",$filtahun);
 			}
+			if($filbulan != '' && $filbulan != '-1' && $filbulan != null) {
+				$this->db->where("tbl_kinerja_eselon1.triwulan",$filbulan);
+			}	
 			if($file1 != '' && $file1 != '-1' && $file1 != null) {
 				$this->db->where("tbl_pk_eselon1.kode_e1",$file1);
 			}
@@ -59,9 +62,22 @@ class rseselon1_model extends CI_Model
 
 				$response->rows[$i]['target']=$this->utility->cekNumericFmt($row->penetapan);
 				$response->rows[$i]['satuan']=$row->satuan;
-
+				$realisasi_persen = 0;
+				if(is_numeric($row->realisasi)){
+					if (is_numeric($row->penetapan)){
+						if ($row->penetapan>0){
+							$exc = $this->isException($row->tahun, $row->kode_iku_e1);
+							if($exc){								
+								$realisasi_persen = round((2 * $row->penetapan - $row->realisasi) / $row->penetapan * 100, 2);
+							}else{
+								$realisasi_persen = round(($row->realisasi/$row->penetapan)*100, 2);
+							}	
+							//$realisasi_persen = ($row->realisasi/$row->penetapan)*100;
+						}
+					}	
+				}
 				$response->rows[$i]['realisasi']=$this->utility->cekNumericFmt($row->realisasi);
-				$response->rows[$i]['realisasi_persen']=$this->utility->cekNumericFmt($row->realisasi_persen);
+				$response->rows[$i]['realisasi_persen']=$this->utility->cekNumericFmt($realisasi_persen);//$row->realisasi_persen);
 				//$response->rows[$i]['realisasi_persen']=$this->utility->cekNumericFmt($row->realisasi_persen);
 				$response->rows[$i]['keterangan']=$row->keterangan;
 				$response->rows[$i]['action_plan']=$row->action_plan;
@@ -92,11 +108,29 @@ class rseselon1_model extends CI_Model
 		
 	}
 	
+	public function isException($tahun, $kode_iku_e1){
+		$this->db->flush_cache();
+		$this->db->select('*');
+		$this->db->from('tbl_exception_iku_eselon1');
+		$this->db->where('tahun', $tahun);
+		$this->db->where('kode_iku_e1', $kode_iku_e1);
+		
+		$q = $this->db->get();
+		
+		return ($q->num_rows() > 0?TRUE:FALSE);
+	}
 	
-	public function GetRecordCount($file1){
-		if($file1 != '' && $file1 != '-1' && $file1 != null) {
-			$this->db->where("tbl_pk_eselon1.kode_e1",$file1);
-		}
+	public function GetRecordCount($filtahun,$file1,$filbulan){
+		if($filtahun != '' && $filtahun != '-1' && $filtahun != null) {
+				$this->db->where("tbl_pk_eselon1.tahun",$filtahun);
+			}
+			if($filbulan != '' && $filbulan != '-1' && $filbulan != null) {
+				$this->db->where("tbl_kinerja_eselon1.triwulan",$filbulan);
+			}	
+			if($file1 != '' && $file1 != '-1' && $file1 != null) {
+				$this->db->where("tbl_pk_eselon1.kode_e1",$file1);
+			}
+			
 		$this->db->select("tbl_kinerja_eselon1.id_kinerja_e1, tbl_kinerja_eselon1.tahun, tbl_kinerja_eselon1.triwulan, tbl_kinerja_eselon1.kode_e1,tbl_kinerja_eselon1.kode_sasaran_e1,tbl_kinerja_eselon1.kode_iku_e1,tbl_iku_eselon1.satuan,tbl_pk_eselon1.penetapan,tbl_kinerja_eselon1.realisasi, tbl_eselon1.nama_e1, tbl_sasaran_eselon1.deskripsi AS deskripsi_sasaran_e1, tbl_iku_eselon1.deskripsi AS deskripsi_iku_e1");
 		$this->db->from('tbl_pk_eselon1');
 		$this->db->join('tbl_kinerja_eselon1', 'tbl_kinerja_eselon1.kode_iku_e1 = tbl_pk_eselon1.kode_iku_e1');

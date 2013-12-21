@@ -55,10 +55,10 @@
 
 			
 			$("#filter_e1<?=$objectId;?>").change(function(){
-				var unit = $("#unit<?=$objectId;?>").val();
-				if(unit=="E2"){
+				//var unit = $("#unit<?=$objectId;?>").val();
+			//	if(unit=="E2"){
 					$("#divUnitKerja<?=$objectId;?>").load(base_url+"rujukan/eselon2/loadFilterE2/"+$(this).val()+"/<?=$objectId;?>");
-				}
+				//}
 			});
 			
 			setTimeout(function(){
