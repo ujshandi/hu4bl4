@@ -2,7 +2,7 @@
 	<script  type="text/javascript" >
 		
 		$(function(){
-		
+			
 			saveDataEdit<?=$objectId;?>=function(){
 				$('#fmedit<?=$objectId;?>').form('submit',{
 					url: base_url+'pengukuran/pengukurankl/save_edit',
@@ -20,7 +20,7 @@
 							 
 							// reload and close tab
 							$('#dg<?=$objectId;?>').datagrid('reload');
-							$('#tt').tabs('close', 'Edit Kinerja Kementerian');
+							$('#tt').tabs('close', 'Edit Pengukuran Kinerja Kementerian');
 						} else {
 							$.messager.show({
 								title: 'Error',
@@ -35,7 +35,11 @@
 			closeView<?=$objectId;?>=function(){
 				// reload and close tab
 				$('#dg<?=$objectId;?>').datagrid('reload');
-				$('#tt').tabs('close', 'View Kinerja Kementerian');
+					<?if($editMode=="true"){?>
+					$('#tt').tabs('close', 'Edit Pengukuran Kinerja Kementerian');
+					<?}{?>
+						$('#tt').tabs('close', 'View Pengukuran Kinerja Kementerian');
+					<?}?>
 			}
 		});
 			//end saveData
@@ -92,6 +96,10 @@
 						  <label style="width:150px" >Tahun :</label>
 						  <?=$result->tahun?>
 						</div>
+						<div class="fitem">
+						  <label style="width:150px" >Bulan :</label>
+						  <?=$this->utility->getBulanValue($result->triwulan-1)?>
+						</div>
 						<div class="fitem">							
 						    <label style="width:150px">Kementerian:</label>
 							<?=$result->nama_kl;//'Kementerian Perhubungan';?>
@@ -130,7 +138,8 @@
 						<br>
 						<!------------Edit View-->
 						<?if($editMode=="true"){?>
-							<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveDataEdit<?=$objectId;?>()">Simpan</a>
+							<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveDataEdit<?=$objectId;?>()">Save</a>
+							<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="closeView<?=$objectId;?>()">Cancel</a>
 						<?}else{?>
 							<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="closeView<?=$objectId;?>()">Close</a>
 						<?}?>

@@ -6,7 +6,7 @@
 				//$('#fm<?=$objectId;?>').form('clear');  
 				//url = base_url+'penetapan/kegiatankl/save';  
 				
-				addTab("Tambah Sub Kegiatan Kementerian", "rujukan/subkegiatankl/add");
+				addTab("Add Sub Kegiatan", "rujukan/subkegiatankl/add");
 			}
 			//end newData 
 			
@@ -66,7 +66,7 @@
 			editData<?=$objectId;?> = function (){
 			var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
 			if (row){
-				addTab("Edit Data Sub Kegiatan", "rujukan/subkegiatankl/edit/"+row.id_subkegiatan_kl);
+				addTab("Edit Sub Kegiatan", "rujukan/subkegiatankl/edit/"+row.id_subkegiatan_kl);
 			}
 		}
 		//end editData

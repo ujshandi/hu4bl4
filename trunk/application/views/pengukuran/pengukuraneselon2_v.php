@@ -1,7 +1,7 @@
 	<script  type="text/javascript" >
 				
 		$(function(){
-			
+			$('textarea').autosize();   	
 			//chan=============================================
 			 function setListE2<?=$objectId?>(){
 				$("#divEselon2<?=$objectId?>").load(
@@ -11,6 +11,7 @@
 						//setSasaranE2<?=$objectId?>($("#kode_e2<?=$objectId?>").val());
 						$("#kode_e2<?=$objectId?>").change(function(){
 							setSasaranE2<?=$objectId?>($(this).val(), $('#tahun<?=$objectId;?>').val());
+							document.getElementById('detail<?=$objectId;?>').innerHTML = '';
 						});	
 						setSasaranE2<?=$objectId?>($("#kode_e2<?=$objectId?>").val(), $('#tahun<?=$objectId;?>').val());
 					}
@@ -19,6 +20,7 @@
 			 
 			 $("#kode_e1<?=$objectId?>").change(function(){
 				setListE2<?=$objectId?>();
+				document.getElementById('detail<?=$objectId;?>').innerHTML = '';
 			  });
 			  
 			function setSasaranE2<?=$objectId;?>(e2, tahun){
@@ -26,7 +28,7 @@
 					base_url+"rencana/rkteselon2/getListSasaranE2/"+"<?=$objectId;?>"+"/"+e2+"/"+tahun,
 					//on complete
 					function(){
-						$("textarea").autogrow();
+						$('textarea').autosize();   
 								
 						
 						if($("#drop<?=$objectId;?>").is(":visible")){
@@ -77,7 +79,7 @@
 							
 							// reload and close tab
 							$('#dg<?=$objectId;?>').datagrid('reload');
-							$('#tt').tabs('close', 'Add Kinerja Eselon II');
+							$('#tt').tabs('close', 'Add Pengukuran Kinerja Eselon II');
 							
 						} else {
 							$.messager.show({
@@ -269,7 +271,7 @@
 			
 			<div class="easyui-layout" fit="true">  
 								
-				<div region="center" border="true" title="Tambah Data Pengukuran Kinerja Eselon II">	
+				<div region="center" border="true" title="Add Data Pengukuran Kinerja Eselon II">	
 					<form id="fm<?=$objectId;?>" method="post" style="margin:10px 5px 5px 10px;">		
 						<div class="fitem">
 						  <label style="width:120px" >Tahun :</label>
@@ -278,7 +280,7 @@
 						<div class="fitem">
 						  <label style="width:120px">Bulan :</label>
 						  <?= $this->utility->getBulan("","triwulan",false,$objectId)?>
-						</div>  
+						</div>	
 						<!-- chan : Jika login superadmin maka tampilkan combo E1 utk nge filter list E2 -->
 						<? //if ($this->session->userdata('unit_kerja_e1')=='-1'){?>
 						<div class="fitem">							

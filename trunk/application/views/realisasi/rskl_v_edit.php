@@ -20,7 +20,7 @@
 							
 							// reload and close tab
 							$('#dg<?=$objectId;?>').datagrid('reload');
-							$('#tt').tabs('close', 'Edit Realisasi Kinerja Kementerian');
+							$('#tt').tabs('close', 'Edit Capaian Kinerja Kementerian');
 						} else {
 							$.messager.show({
 								title: 'Error',
@@ -36,7 +36,12 @@
 			closeView<?=$objectId;?>=function(){
 				// reload and close tab
 				$('#dg<?=$objectId;?>').datagrid('reload');
-				$('#tt').tabs('close', 'View Realisasi Kinerja Kementerian');
+				
+				<?if($editMode=="true"){?>
+					$('#tt').tabs('close', 'Edit Capaian Kinerja Kementerian');
+					<?}{?>
+						$('#tt').tabs('close', 'View Capaian Kinerja Kementerian');
+					<?}?>
 			}
 		});
 
@@ -83,7 +88,7 @@
 			
 	<div id="cc<?=$objectId;?>" class="easyui-layout" fit="true">  
 			<!------------Edit View-->
-				<div region="center" border="true" title="<?=($editMode=="true")?"Edit":"View"?>  Data Realisasi Kinerja Kementerian">	
+				<div region="center" border="true" title="<?=($editMode=="true")?"Edit":"View"?>  Data Capaian Kinerja Kementerian">	
 					<form id="fmedit<?=$objectId;?>" method="post" style="margin:10px 5px 5px 10px;">
 						<input type="hidden" name="id_kinerja_kl" value="<?=$result->id_kinerja_kl?>">
 						<div class="fitem">
@@ -92,7 +97,7 @@
 						</div>
 						<div class="fitem">
 						  <label style="width:140px">Bulan :</label>
-						  <?=$result->triwulan?>
+						  <?=$this->utility->getBulanValue($result->triwulan-1)?>
 						</div>
 						<div class="fitem">
 						    <label style="width:140px">Kementerian :</label>
@@ -129,7 +134,8 @@
 						<br>
 						<!------------Edit View-->
 						<?if($editMode=="true"){?>
-							<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveDataEdit<?=$objectId;?>()">Simpan</a>
+							<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveDataEdit<?=$objectId;?>()">Save</a>
+							<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="closeView<?=$objectId;?>()">Cancel</a>
 						<?}else{?>
 							<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="closeView<?=$objectId;?>()">Close</a>
 						<?}?>

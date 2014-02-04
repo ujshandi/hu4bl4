@@ -72,6 +72,9 @@ class Kl_model extends CI_Model
 			//var_dump($query->result());die;
 			to_excel($query,"Kementerian",$colHeaders);
 		}
+		else if ($purpose==4) { //WEB SERVICE
+			return $response;
+		}
 	
 	}
 	
@@ -94,6 +97,30 @@ class Kl_model extends CI_Model
 		$rs = $query->num_rows() ;		
 		$query->free_result();
 		return ($rs>0);
+	}
+	
+	public function isSaveDelete($kode){	
+		
+		$this->db->where('kode_kl',$kode); //buat validasi		
+		$this->db->select('*');
+		$this->db->from('tbl_sasaran_kl');
+						
+		$query = $this->db->get();
+		$rs = $query->num_rows() ;		
+		$query->free_result();
+		$isSave = ($rs==0);
+		if ($isSave){
+			$this->db->flush_cache();
+			$this->db->where('kode_kl',$kode); //buat validasi		
+			$this->db->select('*');
+			$this->db->from('tbl_iku_kl');
+							
+			$query = $this->db->get();
+			$rs = $query->num_rows() ;		
+			$query->free_result();
+			$isSave = ($rs==0);
+		}
+		return $isSave;
 	}
 	
 	//insert data

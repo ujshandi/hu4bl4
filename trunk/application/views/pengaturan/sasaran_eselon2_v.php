@@ -1,6 +1,7 @@
 	<script  type="text/javascript" >
+		var _changekode = false;
 		$(function(){
-		
+			$('textarea').autosize();   
 			var url;
 			//chan=============================================
 			function setListE2<?=$objectId?>(e2){
@@ -33,6 +34,7 @@
 			}
 			
 			setKodeOtomatis<?=$objectId?> = function(){
+				if (!_changekode) return;
 				<? if ($this->session->userdata('unit_kerja_e2')==-1){?>
 					var file2 = $("#kode_e2<?=$objectId;?>").val();
 				<?} else {?>
@@ -52,7 +54,7 @@
 			 
 			$("#kode_e1<?=$objectId?>").change(function(){
 				setListE2<?=$objectId?>();
-				setSasaranE1<?=$objectId?>($("#tahun").val(),$(this).val(),"","");
+				setSasaranE1<?=$objectId?>($("#tahun<?=$objectId?>").val(),$(this).val(),"","");
 			});
 			
 			 $("#tahun<?=$objectId;?>").change(function(){
@@ -71,7 +73,7 @@
 				 $("#divSasaranE1<?=$objectId?>").load(
 					base_url+"pengaturan/sasaran_eselon2/getListSasaranE1/"+"<?=$objectId;?>"+"/"+e1+"/"+tahun,
 					function(){
-						$("textarea").autogrow();
+						$('textarea').autosize();   
 						
 						$("#txtkode_sasaran_e1<?=$objectId;?>").click(function(){
 							$("#drop<?=$objectId;?>").slideDown("slow");
@@ -102,6 +104,7 @@
 			
 			//--------------------
 			newData<?=$objectId;?> = function (){  
+				_changekode = true;
 				//----------------Edit title
 				$('#ftitle<?=$objectId;?>').html("Add Data "+"<?=$title?>");
 				$('#saveBtn<?=$objectId;?>').css("display","");
@@ -120,9 +123,13 @@
 			}
 			
 			import<?=$objectId;?> = function (){  
-				$('#dlgimport<?=$objectId;?>').dialog('open').dialog('setTitle','Import Sasaran Eselon 2');
+				$('#dlgimport<?=$objectId;?>').dialog('open').dialog('setTitle','Import Sasaran Eselon II');
 				$('#fmimport<?=$objectId;?>').form('clear');  
 				url = base_url+'pengaturan/sasaran_eselon2/import'; 
+			}
+			
+			copyData<?=$objectId;?> = function (){
+				addTab("Copy Sasaran Eselon II", "pengaturan/sasaran_eselon2/copy");
 			}
 			
 			importData<?=$objectId;?>=function(){
@@ -171,7 +178,7 @@
 					var file2 = "<?=$this->session->userdata('unit_kerja_e2');?>";
 				<?}?>
 				var filtahun = $("#filter_tahun<?=$objectId;?>").val();
-				var filkey = $("#key<?=$objectId;?>").val();
+				var filkey = '-1';//$("#key<?=$objectId;?>").val();
 				if (filtahun == null) filtahun = "-1";
 				if (filkey == null) filkey = "-1";
 				if (file1 == null) file1 = "-1";
@@ -187,18 +194,28 @@
 				}
 			}
 			
-			submitEnter<?=$objectId;?> = function (e) {
-				if (e.keyCode == 13) {
-					searchData<?=$objectId;?>();
-				}
-			}
-		
 			searchData<?=$objectId;?> = function (){
 				//ambil nilai-nilai filter
 				$('#dg<?=$objectId;?>').datagrid({
 					url:getUrl<?=$objectId;?>(1),
 					queryParams:{lastNo:'0'},	
 					pageNumber : 1,
+					onClickCell: function(rowIndex, field, value){
+						$('#dg<?=$objectId;?>').datagrid('selectRow', rowIndex);
+						var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
+						if (row==null) return;
+						switch(field){
+							case "kode_e2":
+								showPopup('#popdesc<?=$objectId?>', row.nama_e2);
+								break;
+							case "kode_sasaran_e1":
+								showPopup('#popdesc<?=$objectId?>', row.e1_deskripsi);
+								break;
+							default:
+								closePopup('#popdesc<?=$objectId?>');
+								break;
+						}
+					},
 					onLoadSuccess:function(data){	
 						$('#dg<?=$objectId;?>').datagrid('options').queryParams.lastNo = data.lastNo;
 						//prepareMerge<?=$objectId;?>(data);
@@ -215,10 +232,12 @@
 			}
 			
 			editData<?=$objectId;?> = function (editmode){
+				_changekode = false;
 				//----------------Edit title
 				$('#ftitle<?=$objectId;?>').html((editmode?"Edit Data ":"View Data ")+"<?=$title?>");
 				$('#saveBtn<?=$objectId;?>').css("display",(editmode)?"":"none");
 				var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
+				if (row==null) return;
 				$('#fm<?=$objectId;?>').form('clear');  
 				//alert(row.dokter_kode);
 				if (row){
@@ -247,7 +266,7 @@
 						$('#txtkode_sasaran_e1<?=$objectId;?>').val(row.deskripsi_e1);
 					},150); */
 			
-					url = base_url+'pengaturan/sasaran_eselon2/save/edit/'+row.kode_sasaran_e2;//+row.id;//'update_user.php?id='+row.id;
+					url = base_url+'pengaturan/sasaran_eselon2/save/edit/'+row.kode_sasaran_e2+'/'+row.tahun;//+row.id;//'update_user.php?id='+row.id;
 					
 					//$("#kode_sasaran_e2<?=$objectId?>").attr("readonly","readonly");
 					
@@ -323,25 +342,11 @@
 				searchData<?=$objectId;?> ();
 			},50);
 			
-			// yanto
-			$('#dg<?=$objectId;?>').datagrid({
-				onClickCell: function(rowIndex, field, value){
-					$('#dg<?=$objectId;?>').datagrid('selectRow', rowIndex);
-					var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
-					
-					switch(field){
-						case "kode_e2":
-							showPopup('#popdesc<?=$objectId?>', row.nama_e2);
-							break;
-						case "kode_sasaran_e1":
-							showPopup('#popdesc<?=$objectId?>', row.e1_deskripsi);
-							break;
-						default:
-							closePopup('#popdesc<?=$objectId?>');
-							break;
-					}
-				}
-			});
+			submitEnter<?=$objectId;?> = function(e) {
+			if (e.keyCode == 13) {
+				searchData<?=$objectId;?>();
+			}
+		}
 			
 			$("#popdesc<?=$objectId?>").click(function(){
 				closePopup('#popdesc<?=$objectId?>');
@@ -349,8 +354,6 @@
 			
 		 });
 	</script>
-	
-
 	
 	<!-- Dari Stef -->
 	<script type="text/javascript">
@@ -373,7 +376,7 @@
 		
 		function setSasaran<?=$objectId;?>(valu){
 			document.getElementById('kode_sasaran_e1<?=$objectId;?>').value = valu;
-			getDetail();
+			//getDetail();
 		}
 	</script>
 	
@@ -472,10 +475,10 @@
 					</span>
 				</td>
 			</tr>
-			<tr>
+			<!--<tr>
 				<td>Kata Kunci :</td>
 				<td><input id="key<?=$objectId;?>" name="key<?=$objectId;?>" type="text" onkeypress="submitEnter<?=$objectId;?>(event)"/></td>
-			</tr>
+			</tr>-->
 			<tr>
 				<td>&nbsp;</td>
 			</tr>
@@ -516,11 +519,14 @@
 		<? if($this->sys_menu_model->cekAkses('IMPORT;',12,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="import<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-import" plain="true">Import</a>
 		<?}?>
-		<a href="#" onclick="download<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-download" plain="true">Download Format Excel</a>
+		<? if($this->sys_menu_model->cekAkses('COPY;',33,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+				<a href="#" onclick="copyData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-copy" plain="true">Copy</a>
+			<?}?>
+		<!--<a href="#" onclick="download<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-download" plain="true">Download Format Excel</a>-->
 	  </div>
 	</div>
 	
-	<table id="dg<?=$objectId;?>" class="easyui-datagrid" style="height:auto;width:auto" title="Data Sasaran Unit Kerja Eselon II" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true" nowrap="false">
+	<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Data Sasaran Unit Kerja Eselon II" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true" nowrap="false">
 	  <thead>
 	  <tr>
 		<th field="kode_e1" sortable="true" hidden="true" width="30" <?=($this->session->userdata('unit_kerja_e2')=='-1'?'':'hidden="true"')?>>Kode Eselon II </th>
@@ -547,7 +553,7 @@
 			<?// if ($this->session->userdata('unit_kerja_e1')=='-1'){?>
 			<div class="fitem">
 				<label style="width:150px;vertical-align:top">Tahun :</label>
-				<input name="tahun" id="tahun<?=$objectId?>" class="easyui-validatebox" size="4" required="true">
+				<input name="tahun" id="tahun<?=$objectId?>" class="easyui-validatebox year" size="4" required="true">
 			</div>		
 			<div class="fitem">							
 				<label style="width:150px">Unit Kerja Eselon I :</label>
@@ -613,4 +619,4 @@
     	</div>
 	</div>
 	
-	<div class="popdesc" id="popdesc<?=$objectId?>">indriyanto</div>
+	<div class="popdesc" id="popdesc<?=$objectId?>">&nbsp;</div>

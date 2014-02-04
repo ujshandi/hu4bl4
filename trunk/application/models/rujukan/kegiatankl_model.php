@@ -43,7 +43,7 @@ class Kegiatankl_model extends CI_Model
 			else
 				$this->db->order_by($sort." ".$order );
 			if($purpose==1){$this->db->limit($limit,$offset);}
-			$this->db->select("kl.*, e2.nama_e2, pr.nama_program",false);
+			$this->db->select("distinct kl.*, e2.nama_e2, pr.nama_program",false);
 			$this->db->from('tbl_kegiatan_kl kl left join tbl_eselon2 e2 on kl.kode_e2 = e2.kode_e2',false);
 			$this->db->join('tbl_program_kl pr','pr.kode_program = kl.kode_program and pr.tahun=kl.tahun');
 			//$this->db->join('tbl_kegiatan','tbl_kegiatan.kode_kegiatan = tbl_kegiatan_kl.kode_kegiatan');
@@ -56,7 +56,7 @@ class Kegiatankl_model extends CI_Model
 				$no++;
 				$response->rows[$i]['no']= $no;
 				//$response->rows[$i]['id_rkt_kl']=$row->id_rkt_kl;
-				$response->rows[$i]['id_kegiatan_kl']	=$row->id_kegiatan_kl;
+				//$response->rows[$i]['id_kegiatan_kl']	=$row->id_kegiatan_kl;
 				$response->rows[$i]['kode_e2']			=$row->kode_e2;
 				$response->rows[$i]['nama_e2']			=$row->nama_e2;
 				$response->rows[$i]['tahun']			=$row->tahun;
@@ -72,7 +72,7 @@ class Kegiatankl_model extends CI_Model
 				//utk kepentingan export excel ============================
 				unset($row->nama_e2);
 				unset($row->nama_program);
-				unset($row->id_kegiatan_kl);
+				//unset($row->id_kegiatan_kl);
 				if($file2 != '' && $file2 != '-1' && $file2 != null){
 					unset($row->kode_e2);
 					//tambahkan header kolom
@@ -109,7 +109,7 @@ class Kegiatankl_model extends CI_Model
 			// $query->free_result();
 		}else {
 				$response->rows[$count]['no']= "";
-				$response->rows[$count]['id_kegiatan_kl']	="";
+				//$response->rows[$count]['id_kegiatan_kl']	="";
 				$response->rows[$count]['kode_e2']			="";
 				$response->rows[$count]['nama_e2']			="";
 				$response->rows[$count]['tahun']			="";
@@ -131,6 +131,9 @@ class Kegiatankl_model extends CI_Model
 		//	var_dump($query->result());die;
 			to_excel($query,"Kegiatan",$colHeaders);
 		}
+		else if ($purpose==4) { //WEB SERVICE
+			return $response;
+		}
 	}
 	
 	public function GetRecordCount($file1=null,$file2=null,$filtahun=null){
@@ -145,7 +148,7 @@ class Kegiatankl_model extends CI_Model
 			$this->db->where("e2.kode_e1",$file1);
 		}
 		$this->db->flush_cache();
-		$this->db->select("*",false);
+		$this->db->select("distinct *",false);
 		$this->db->from('tbl_kegiatan_kl kl left join tbl_eselon2 e2 on kl.kode_e2 = e2.kode_e2',false);
 		//$this->db->join('tbl_kegiatan','tbl_kegiatan.kode_kegiatan = tbl_kegiatan_kl.kode_kegiatan');
 		
@@ -164,14 +167,49 @@ class Kegiatankl_model extends CI_Model
 		return $this->db->get();
 	}
 	
-	public function getDataEdit($id){
+	public function getDataEdit($tahun,$kode_kegiatan){
 		$this->db->flush_cache();
 		$this->db->select('*');
 		$this->db->from('tbl_kegiatan_kl a');
 		$this->db->join('tbl_eselon2 b', 'b.kode_e2 = a.kode_e2');
-		$this->db->where('a.id_kegiatan_kl', $id);
+		//$this->db->where('a.id_kegiatan_kl', $id);
+		$this->db->where('a.tahun', $tahun);
+		$this->db->where('a.kode_kegiatan', $kode_kegiatan);
 		
 		return $this->db->get()->row();
+	}
+	
+	public function isExist($tahun,$kode,$oldtahun=null,$oldkode=null){	
+		if ($kode!=null)//utk update
+			$this->db->where('kode_kegiatan',$kode); //buat validasi
+		if ($tahun!=null)//utk update
+			$this->db->where('tahun',$tahun); //buat validasi
+		if ($oldtahun!=null)
+			$this->db->where('tahun !=',$oldtahun); //buat validasi
+		if ($oldkode!=null)//utk update
+			$this->db->where('kode_kegiatan !=',$oldkode); //buat validasi	
+		$this->db->select('*');
+		$this->db->from('tbl_kegiatan_kl');
+						
+		$query = $this->db->get();
+		$rs = $query->num_rows() ;		
+		$query->free_result();
+		return ($rs>0);
+	}
+	
+	public function isSaveDelete($kode,$tahun){	
+		
+		$this->db->where('kode_kegiatan',$kode); //buat validasi		
+		$this->db->where('tahun',$tahun); //buat validasi		
+		$this->db->select('*');
+		$this->db->from('tbl_masterpk_eselon2');
+						
+		$query = $this->db->get();
+		$rs = $query->num_rows() ;		
+		$query->free_result();
+		$isSave = ($rs==0);
+		
+		return $isSave;
 	}
 	
 	public function InsertOnDB_kegiatanKL($data){
@@ -212,7 +250,9 @@ class Kegiatankl_model extends CI_Model
 		$this->db->set('kode_e2',$data['kode_e2']);
 		$this->db->set('log_update', 		$this->session->userdata('user_id').';'.date('Y-m-d H:i:s'));
 		
-		$this->db->where('id_kegiatan_kl', $data['id_kegiatan_kl']);
+		//$this->db->where('id_kegiatan_kl', $data['id_kegiatan_kl']);
+		$this->db->where('tahun', $data['tahun']);
+		$this->db->where('kode_kegiatan', $data['kode_kegiatan']);
 		
 		$result = $this->db->update('tbl_kegiatan_kl');
 		
@@ -230,9 +270,11 @@ class Kegiatankl_model extends CI_Model
 	}
 	
 	//hapus data
-	public function DeleteOnDb($id){
+	public function DeleteOnDb($tahun,$kode_kegiatan){
 		$this->db->flush_cache();
-		$this->db->where('id_kegiatan_kl', $id);
+		//$this->db->where('id_kegiatan_kl', $id);
+		$this->db->where('tahun', $tahun);
+		$this->db->where('kode_kegiatan', $kode_kegiatan);
 		$result = $this->db->delete('tbl_kegiatan_kl'); 
 		
 		$errNo   = $this->db->_error_number();
@@ -249,31 +291,15 @@ class Kegiatankl_model extends CI_Model
 		}
 	}
 	
-	public function getNamaKegiatan($id_kegiatan_kl){
+	public function getNamaKegiatan($tahun,$kode_kegiatan){
 		$this->db->flush_cache();
 		$this->db->select('nama_kegiatan');
 		$this->db->from('tbl_kegiatan_kl');
-		$this->db->where('id_kegiatan_kl', $id_kegiatan_kl);
+		//$this->db->where('id_kegiatan_kl', $id_kegiatan_kl);
+		$this->db->where('tahun', $tahun);
+		$this->db->where('kode_kegiatan', $kode_kegiatan);
 		
 		return $this->db->get()->row()->nama_kegiatan;
-	}
-	
-	public function getAnggaranSubkegiatan($kodekegiatan,$tahun,$modelMonev){
-		$this->db->flush_cache();
-		$this->db->select('sum(jumlah) as  jumlah',false);
-		switch ($modelMonev) {
-			case "indikatif" : $this->db->from('tbl_pre_indikatif_e2');break;
-			case "definitif" : $this->db->from('tbl_pre_definitif_e2');break;
-			case "ongoing" : $this->db->from('tbl_ongoing_e2');break;
-			case "post" : $this->db->from('tbl_post_e2');break;
-			default : $this->db->from('tbl_pre_usulan1_e2');
-		}
-		//model monev belum terpakai
-		
-		$this->db->where('tahun', $tahun);
-		$this->db->where('kode_kegiatan', $kodekegiatan);
-		
-		return $this->db->get()->row()->jumlah;
 	}
 	
 	public function getListKegiatan($objectId="",$e2="",$data=""){
@@ -281,10 +307,9 @@ class Kegiatankl_model extends CI_Model
 		$this->db->flush_cache();
 		$this->db->select('kode_kegiatan, nama_kegiatan');
 		$this->db->from('tbl_kegiatan_kl');
-		$this->db->order_by('id_kegiatan_kl');
+		//$this->db->order_by('id_kegiatan_kl');
+		$this->db->order_by('tahun,kode_kegiatan');
 		if($e2!=''){$this->db->where('kode_e2',$e2);}
-		$tahun= (isset($data['tahun']))||($data['tahun']=='')?$data['tahun']:'0';
-		if($tahun!=''){$this->db->where('tahun',$tahun);}
 		$que = $this->db->get();
 		
 		$e2 = ($e2=='')?'-1':$e2;

@@ -146,7 +146,6 @@ class Sasaran_eselon2_model extends CI_Model
 			$this->db->where('kode_sasaran_e2',$kode); //buat validasi
 		if ($tahun!=null)//utk update
 			$this->db->where('tahun',$tahun); //buat validasi
-		
 		$this->db->select('*');
 		$this->db->from('tbl_sasaran_eselon2');
 						
@@ -213,9 +212,10 @@ class Sasaran_eselon2_model extends CI_Model
 	}
 
 	//update data
-	public function UpdateOnDb($data, $kode) {
+	public function UpdateOnDb($data, $kode,$tahun) {
 		
 		$this->db->where('kode_sasaran_e2',$kode);
+		$this->db->where('tahun',$tahun);
 		$this->db->set('tahun',$data['tahun']);
 		$this->db->set('kode_sasaran_e2',$data['kode_sasaran_e2']);
 		$this->db->set('kode_e2',$data['kode_e2']);
@@ -261,6 +261,39 @@ class Sasaran_eselon2_model extends CI_Model
 	    log_message("error", "Problem Update to : ".$errMess." (".$errNo.")"); 
 		//return
 		
+		if($result) {
+			return TRUE;
+		}else {
+			return FALSE;
+		}
+	}
+	
+	public function copy($data,& $error) {
+		//query insert data	
+		$result = false;		
+		
+		try {
+			$sql = "insert into tbl_sasaran_eselon2(tahun, kode_e2, kode_sasaran_e2, deskripsi, kode_sasaran_e1, 
+	log_insert) select ".$data['tahun_tujuan'].", kode_e2, kode_sasaran_e2, deskripsi, kode_sasaran_e1, '".$this->session->userdata('user_id').';'.date('Y-m-d H:i:s')."'"
+			." from tbl_sasaran_eselon2 "
+			." where tahun = ".$data['tahun']
+			." and kode_e2 = '".$data['kode_e2']."'";
+		//
+			//var_dump($sql);
+			$result = $this->db->query($sql);
+			
+		}
+		catch(Exception $e){
+			$errNo   = $this->db->_error_number();
+			$errMess = $e->getMessage();//$this->db->_error_message();
+			$error = $errMess;
+			log_message("error", "Problem Inserting to : ".$errMess." (".$errNo.")"); 
+		}
+		
+		//var_dump();die;
+		//$result = $this->db->insert('tbl_sasaran_eselon1');
+		
+		//return
 		if($result) {
 			return TRUE;
 		}else {

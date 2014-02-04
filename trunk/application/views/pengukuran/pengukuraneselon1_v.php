@@ -1,5 +1,5 @@
 	<script  type="text/javascript" >
-				
+		$('textarea').autosize();   			
 		$(function(){
 			//chan---------------------------------------		
 			function setSasaran<?=$objectId;?>(e1, tahun){
@@ -9,7 +9,7 @@
 				$("#divSasaranE1<?=$objectId?>").load(
 					base_url+"rencana/rkteselon1/getListSasaranE1/"+"<?=$objectId;?>"+"/"+e1+"/"+tahun,
 					function(){
-						$("textarea").autogrow();
+						$('textarea').autosize();   
 						if($("#drop<?=$objectId;?>").is(":visible")){
 							$("#drop<?=$objectId;?>").slideUp("slow");
 						}
@@ -30,10 +30,16 @@
 			}
 			$("#kode_e1<?=$objectId?>").change(function(){
 				setSasaran<?=$objectId;?>($(this).val(), $('#tahun<?=$objectId;?>').val());
+				document.getElementById('detail<?=$objectId;?>').innerHTML = '';
 			});
 			
 			//inisilaisasi;
 			setSasaran<?=$objectId;?>($("#kode_e1<?=$objectId?>").val(), $('#tahun<?=$objectId;?>').val());
+			
+			cancel<?=$objectId;?>=function(){
+				
+				$('#tt').tabs('close', 'Add Pengukuran Kinerja Eselon I');
+			}
 			
 			//end---------------------------------------		
 		 	saveData<?=$objectId;?>=function(){
@@ -61,7 +67,7 @@
 							
 							// reload and close tab
 							$('#dg<?=$objectId;?>').datagrid('reload');
-							$('#tt').tabs('close', 'Add Kinerja Eselon I');
+							$('#tt').tabs('close', 'Add Pengukuran Kinerja Eselon I');
 							
 						} else {
 							$.messager.show({
@@ -255,7 +261,7 @@
 	<!--	<div region="north" split="true" title="" style="height:450px;">
 			<div class="easyui-layout" fit="true">  
 		-->						
-				<div region="center" border="true" title="Tambah Data Pengukuran Kinerja Eselon I" fit="true">	
+				<div region="center" border="true" title="Add Data Pengukuran Kinerja Eselon I" fit="true">	
 					<form id="fm<?=$objectId;?>" method="post" style="margin:10px 5px 5px 10px;">		
 						<div class="fitem">
 						  <label style="width:120px" >Tahun :</label>

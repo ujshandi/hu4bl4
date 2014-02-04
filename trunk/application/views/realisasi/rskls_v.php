@@ -13,6 +13,7 @@
 			editData<?=$objectId;?> = function (editmode){
 				<? //chan if ($this->session->userdata('unit_kerja_e1')=='-1'){?>				
 					var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
+					if (row==null) return;
 					addTab((editmode?"Edit":"View")+" Capaian Kinerja Kementerian", "realisasi/rskl/edit/"+ row.id_kinerja_kl + "/" + editmode);
 				<?//} else { ?>	
 					//alert("Silahkan Login sebagai Superadmin");
@@ -84,6 +85,7 @@
 			searchData<?=$objectId;?> = function (){
 				//ambil nilai-nilai filter
 				var filtahun = $("#filter_tahun<?=$objectId;?>").val();
+				var filbulan = $("#filbulan<?=$objectId;?>").val();
 				
 				/*var filnip = $("#filter_nip").val();
 				var filnama = $("#filter_nama").val();
@@ -99,7 +101,32 @@
 				else filalamat = DoAsciiHex(filalamat,"A2H");
 				*/
 				
-				$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>realisasi/rskl/grid/"+filtahun});
+				$('#dg<?=$objectId;?>').datagrid({
+					url:"<?=base_url()?>realisasi/rskl/grid/"+filtahun+"/"+filbulan,
+					onClickCell: function(rowIndex, field, value){
+						$('#dg<?=$objectId;?>').datagrid('selectRow', rowIndex);
+						var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
+						if (row==null) return;
+						//alert(row.deskripsi_iku_kl);
+						switch(field){
+							case "kode_kl":
+								showPopup('#popdesc<?=$objectId?>', row.nama_kl);
+								break;
+							case "kode_sasaran_kl":
+								showPopup('#popdesc<?=$objectId?>', row.deskripsi_sasaran_kl);
+								break;
+							case "kode_iku_kl":
+								showPopup('#popdesc<?=$objectId?>', row.deskripsi_iku_kl);
+								break;
+							/* case "kode_kl":
+								showPopup('#popdesc<?=$objectId?>', row.nama_kl);
+								break; */
+							default:
+								closePopup('#popdesc<?=$objectId?>');
+								break;
+						}
+					}
+				});
 			}
 			//end searhData 
 			
@@ -157,28 +184,7 @@
 			
 			// chan
 			$('#dg<?=$objectId;?>').datagrid({
-				onClickCell: function(rowIndex, field, value){
-					$('#dg<?=$objectId;?>').datagrid('selectRow', rowIndex);
-					var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
-					//alert(row.deskripsi_iku_kl);
-					switch(field){
-						case "kode_kl":
-							showPopup('#popdesc<?=$objectId?>', row.nama_kl);
-							break;
-						case "kode_sasaran_kl":
-							showPopup('#popdesc<?=$objectId?>', row.deskripsi_sasaran_kl);
-							break;
-						case "kode_iku_kl":
-							showPopup('#popdesc<?=$objectId?>', row.deskripsi_iku_kl);
-							break;
-						/* case "kode_kl":
-							showPopup('#popdesc<?=$objectId?>', row.nama_kl);
-							break; */
-						default:
-							closePopup('#popdesc<?=$objectId?>');
-							break;
-					}
-				}
+				
 			});
 			
 			$("#popdesc<?=$objectId?>").click(function(){
@@ -266,6 +272,12 @@
 					<?=$this->rskl_model->getListFilterTahun($objectId)?>
 				</td>
 			</tr>
+			<tr style="margin-bottom: 10px;">
+				<td width="70px">Bulan :</td>
+				<td align="left">
+			  <?= $this->utility->getBulan("","filbulan",true,$objectId)?>
+				</td>
+			</tr>
 			<tr style="height:10px">
 				  <td style="">
 				  </td>
@@ -324,7 +336,7 @@
 	  </div>
 	</div>
 	
-	<table id="dg<?=$objectId;?>" class="easyui-datagrid" style="height:auto;width:auto" title="Data Capaian Kinerja Kementerian" toolbar="#tb<?=$objectId;?>" fitColumns="true"  nowrap="false" singleSelect="true" rownumbers="true" pagination="true">
+	<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Data Capaian Kinerja Kementerian" toolbar="#tb<?=$objectId;?>" fitColumns="true"  nowrap="false" singleSelect="true" rownumbers="true" pagination="true">
 	  <thead>
 	  <tr>
 		<th field="id_kinerja_kl" sortable="true" hidden="true" width="30px">id_kinerja_kl</th>
@@ -346,5 +358,5 @@
 	  </thead>
 	</table>
 	
-	<div class="popdesc" id="popdesc<?=$objectId?>">pops</div>
+	<div class="popdesc" id="popdesc<?=$objectId?>">&nbsp;</div>
 	

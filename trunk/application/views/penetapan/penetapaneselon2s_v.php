@@ -18,9 +18,8 @@
 				searchData<?=$objectId;?>();
 			}
 			
-			searchData<?=$objectId;?> = function (){
-				//ambil nilai-nilai filter
-				
+			//tipe 1=grid, 2=pdf, 3=excel
+			getUrl<?=$objectId;?> = function (tipe){
 				var filtahun = $("#filter_tahun<?=$objectId;?>").val();
 					<? if ($this->session->userdata('unit_kerja_e1')==-1){?>
 					var file1 = $("#filter_e1<?=$objectId;?>").val();
@@ -35,7 +34,47 @@
 				if (filtahun == null) filtahun = "-1";
 				if (file1 == null) file1 = "-1";
 				if (file2 == null) file2 = "-1";
-				$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>penetapan/penetapaneselon2/grid/"+filtahun+"/"+file1+"/"+file2});
+			
+				if (tipe==1){
+					return "<?=base_url()?>penetapan/penetapaneselon2/grid/"+filtahun+"/"+file1+"/"+file2;
+				}
+				else if (tipe==2){
+					return "<?=base_url()?>penetapan/penetapaneselon2/pdf/"+filtahun+"/"+file1+"/"+file2;
+				}else if (tipe==3){
+					return "<?=base_url()?>penetapan/penetapaneselon2/excel/"+filtahun+"/"+file1+"/"+file2;
+				}
+			}
+			
+			searchData<?=$objectId;?> = function (){
+				//ambil nilai-nilai filter
+				
+				
+				$('#dg<?=$objectId;?>').datagrid({
+					url:getUrl<?=$objectId;?>(1),
+					onClickCell: function(rowIndex, field, value){
+							$('#dg<?=$objectId;?>').datagrid('selectRow', rowIndex);
+							var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
+							if (row==null) return;
+							//alert(row.deskripsi_iku_kl);
+							switch(field){
+								case "kode_e2":
+									showPopup('#popdesc<?=$objectId?>', row.nama_e2);
+									break;
+								case "kode_sasaran_e2":
+									showPopup('#popdesc<?=$objectId?>', row.deskripsi_sasaran_e2);
+									break;
+								case "kode_ikk":
+									showPopup('#popdesc<?=$objectId?>', row.deskripsi_iku_e2);
+									break;
+								 case "kode_e2":
+									showPopup('#popdesc<?=$objectId?>', row.nama_e2);
+									break; 
+								default:
+									closePopup('#popdesc<?=$objectId?>');
+									break;
+							}
+						}
+					});
 			}
 			//end searhData 
 			
@@ -138,32 +177,6 @@
 				//$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>penetapan/penetapaneselon2/grid"});
 			},50);
 			
-			// chan
-			$('#dg<?=$objectId;?>').datagrid({
-				onClickCell: function(rowIndex, field, value){
-					$('#dg<?=$objectId;?>').datagrid('selectRow', rowIndex);
-					var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
-					//alert(row.deskripsi_iku_kl);
-					switch(field){
-						case "kode_e2":
-							showPopup('#popdesc<?=$objectId?>', row.nama_e2);
-							break;
-						case "kode_sasaran_e2":
-							showPopup('#popdesc<?=$objectId?>', row.deskripsi_sasaran_e2);
-							break;
-						case "kode_ikk":
-							showPopup('#popdesc<?=$objectId?>', row.deskripsi_iku_e2);
-							break;
-						 case "kode_e2":
-							showPopup('#popdesc<?=$objectId?>', row.nama_e2);
-							break; 
-						default:
-							closePopup('#popdesc<?=$objectId?>');
-							break;
-					}
-				}
-			});
-			
 			$("#popdesc<?=$objectId?>").click(function(){
 				closePopup('#popdesc<?=$objectId?>');
 			});
@@ -248,14 +261,14 @@
 					</tr>
 					<? //if ($this->session->userdata('unit_kerja_e1')==-1){?>
 					<tr>
-						<td>Unit Kerja Eselon I&nbsp;</td>
+						<td>Unit Kerja Eselon I :&nbsp;</td>
 						<td>
 							<?=$this->eselon1_model->getListFilterEselon1($objectId,$this->session->userdata('unit_kerja_e1'))?>
 						</td>
 					</tr>
 					<?//}?>
 					<tr>
-						<td>Unit Kerja Eselon II&nbsp;</td>
+						<td>Unit Kerja Eselon II :&nbsp;</td>
 						<td><span class="fitem" id="divUnitKerja<?=$objectId;?>">
 							<?=$this->eselon2_model->getListFilterEselon2($objectId,$this->session->userdata('unit_kerja_e1'),$this->session->userdata('unit_kerja_e2'))?>
 						</span></td>

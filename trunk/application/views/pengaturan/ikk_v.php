@@ -1,6 +1,8 @@
 	<script  type="text/javascript" >
 		$(function(){
 			var url;
+			var _changekode=false;
+			$('textarea').autosize();   
 			loadTahun<?=$objectId;?> = function (){
 				$('#divTahun<?=$objectId;?>').load(
 					base_url+"pengaturan/ikk/getListTahun/"+"<?=$objectId;?>"
@@ -10,6 +12,7 @@
 			loadTahun<?=$objectId;?>();
 			
 			setKodeOtomatis<?=$objectId?> = function(){
+				if (!_changekode) return;
 				<? if ($this->session->userdata('unit_kerja_e2')==-1){?>
 					var file2 = $("#kode_e2<?=$objectId;?>").val();
 				<?} else {?>
@@ -29,7 +32,7 @@
 			}
 			
 			//chan=============================================
-			 function setListE2<?=$objectId?>(){
+			 function setListE2<?=$objectId?>(e2,keysasaran,valuesasaran){
 				$("#divEselon2<?=$objectId?>").load(
 					base_url+"rujukan/eselon2/loadE2/"+$("#kode_e1<?=$objectId?>").val()+"/<?=$objectId;?>",
 					//on complete
@@ -46,8 +49,8 @@
 							
 						 });
 						 
-						$('#kode_e2<?=$objectId;?>').val('<?=$this->session->userdata('unit_kerja_e2');?>');
-						setSasaranE2<?=$objectId;?>($("#tahun<?=$objectId?>").val(),$("#kode_e2<?=$objectId?>").val(),"");
+						$('#kode_e2<?=$objectId;?>').val(e2);
+						setSasaranE2<?=$objectId;?>($("#tahun<?=$objectId?>").val(),$("#kode_e2<?=$objectId?>").val(),keysasaran,valuesasaran);
 						 setKodeOtomatis<?=$objectId?>();
 					}
 				);
@@ -77,7 +80,7 @@
 					base_url+"pengaturan/ikk/getListIKU_E1/"+"<?=$objectId;?>"+"/"+e1+"/"+tahun,
 					//on complete
 					function(){
-						$("textarea").autogrow();
+						$('textarea').autosize();   
 						
 						$("#txtkode_iku_e1<?=$objectId;?>").click(function(){
 							$("#drop<?=$objectId;?>").slideDown("slow");
@@ -107,6 +110,7 @@
 			 
 			//end-------------------------------------
 			newData<?=$objectId;?> = function (){  
+				_changekode = true;
 				//----------------Edit title
 				$('#ftitle<?=$objectId;?>').html("Add Data "+"<?=$title?>");
 				$('#saveBtn<?=$objectId;?>').css("display","");
@@ -128,6 +132,10 @@
 				$('#dlgimport<?=$objectId;?>').dialog('open').dialog('setTitle','Import Indikator Kinerja Kegiatan');
 				$('#fmimport<?=$objectId;?>').form('clear');  
 				url = base_url+'pengaturan/ikk/import'; 
+			}
+			
+			copyData<?=$objectId;?> = function (){
+				addTab("Copy Data IKK", "pengaturan/ikk/copy");
 			}
 			
 			importData<?=$objectId;?>=function(){
@@ -180,7 +188,7 @@
 					var file2 = "<?=$this->session->userdata('unit_kerja_e2');?>";
 				<?}?>
 				var filtahun = $("#filter_tahun<?=$objectId;?>").val();
-				var filkey = $("#key<?=$objectId;?>").val();
+				var filkey = '-1';//$("#key<?=$objectId;?>").val();
 				
 				if (file1 == null) file1 = "-1";
 				if (file2 == null) file2 = "-1";
@@ -197,18 +205,31 @@
 				}
 			}
 			
-			submitEnter<?=$objectId;?> = function (e) {
-				if (e.keyCode == 13) {
-					searchData<?=$objectId;?>();
-				}
-			}
-			
 			searchData<?=$objectId;?> = function (){
 				//ambil nilai-nilai filter
 				$('#dg<?=$objectId;?>').datagrid({
 					url:getUrl<?=$objectId;?>(1),
 					queryParams:{lastNo:'0'},	
 					pageNumber : 1,
+					onClickCell: function(rowIndex, field, value){
+						$('#dg<?=$objectId;?>').datagrid('selectRow', rowIndex);
+						var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
+						if (row==null) return;
+						switch(field){
+							case "kode_e2":
+								showPopup('#popdesc<?=$objectId?>', row.nama_e2);
+								break;
+							case "kode_iku_e1":
+								showPopup('#popdesc<?=$objectId?>', row.e1_deskripsi);
+								break;
+							case "kode_sasaran_e2":
+								showPopup('#popdesc<?=$objectId?>', row.deskripsi_sasaran_e2);
+								break;
+							default:
+								closePopup('#popdesc<?=$objectId?>');
+								break;
+						}
+					},
 					onLoadSuccess:function(data){	
 						$('#dg<?=$objectId;?>').datagrid('options').queryParams.lastNo = data.lastNo;
 						//prepareMerge<?=$objectId;?>(data);
@@ -226,6 +247,7 @@
 			
 			editData<?=$objectId;?> = function (editmode){
 				//----------------Edit title
+				_changekode = false;
 				$('#ftitle<?=$objectId;?>').html((editmode?"Edit Data ":"View Data ")+"<?=$title?>");
 				$('#saveBtn<?=$objectId;?>').css("display",(editmode)?"":"none");
 				var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
@@ -237,11 +259,15 @@
 					$('#fm<?=$objectId;?>').form('load',row);
 					//	initCombo();
 					setTimeout(function(){
-							setListE2<?=$objectId?>();
+							setListE2<?=$objectId?>(row.kode_e2,row.kode_sasaran_e2,row.deskripsi_sasaran_e2);
 							setIKUE1<?=$objectId;?>($("#tahun<?=$objectId?>").val(),$("#kode_e1<?=$objectId?>").val(),row.kode_iku_e1,row.deskripsi_e1);
+							
 						},1000);
+						
+				
+				//	setSasaranE2<?=$objectId?>($("#tahun<?=$objectId?>").val(),$("#kode_e2<?=$objectId?>").val(),row.kode_sasaran_e2,row.deskripsi_sasaran_e2);
+				
 					
-					setSasaranE2<?=$objectId?>($("#tahun<?=$objectId?>").val(),$("#kode_e2<?=$objectId?>").val(),row.kode_sasaran_e2,row.deskripsi_sasaran_e2);
 					url = base_url+'pengaturan/ikk/save/edit/'+row.kode_ikk+"/"+row.tahun;//+row.id;//'update_user.php?id='+row.id;
 					
 					//$("#kode_ikk<?=$objectId?>").attr("readonly","readonly");
@@ -317,28 +343,12 @@
 				//$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>pengaturan/ikk/grid"});
 			},50);
 			
-			// yanto
-			$('#dg<?=$objectId;?>').datagrid({
-				onClickCell: function(rowIndex, field, value){
-					$('#dg<?=$objectId;?>').datagrid('selectRow', rowIndex);
-					var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
-					
-					switch(field){
-						case "kode_e2":
-							showPopup('#popdesc<?=$objectId?>', row.nama_e2);
-							break;
-						case "kode_iku_e1":
-							showPopup('#popdesc<?=$objectId?>', row.e1_deskripsi);
-							break;
-						case "kode_sasaran_e2":
-							showPopup('#popdesc<?=$objectId?>', row.deskripsi_sasaran_e2);
-							break;
-						default:
-							closePopup('#popdesc<?=$objectId?>');
-							break;
+			
+			 submitEnter<?=$objectId;?> = function(e) {
+					if (e.keyCode == 13) {
+						searchData<?=$objectId;?>();
 					}
 				}
-			});
 			
 			$("#popdesc<?=$objectId?>").click(function(){
 				closePopup('#popdesc<?=$objectId?>');
@@ -354,7 +364,7 @@
 				 $("#divSasaranE2<?=$objectId?>").load(
 					base_url+"pengaturan/sasaran_eselon2/getListSasaranE2/ListSasaran"+"<?=$objectId;?>"+"/"+e2+"/"+tahun,
 					function(){
-						$("textarea").autogrow();
+						$('textarea').autosize();   
 						
 						$("#txtkode_sasaran_e2ListSasaran<?=$objectId;?>").click(function(){
 							$("#dropListSasaran<?=$objectId;?>").slideDown("slow");
@@ -377,7 +387,7 @@
 			}
 		 });
 	</script>
-
+	
 	
 	<!-- Dari Stef -->
 	<script type="text/javascript">
@@ -489,23 +499,23 @@
 					</tr>
 					<? //if ($this->session->userdata('unit_kerja_e1')==-1){?>
 					<tr>
-						<td>Unit Kerja Eselon I &nbsp</td>
+						<td>Unit Kerja Eselon I :</td>
 						<td>
 							<?=$this->eselon1_model->getListFilterEselon1($objectId,$this->session->userdata('unit_kerja_e1'))?>				
 						</td>
 					</tr>
 					<?//}?>
 					<tr>
-						<td>Unit Kerja Eselon II &nbsp</td>
+						<td>Unit Kerja Eselon II :</td>
 						<td><span class="fitem" id="divUnitKerja<?=$objectId;?>">
 							<?=$this->eselon2_model->getListFilterEselon2($objectId,$this->session->userdata('unit_kerja_e1'),$this->session->userdata('unit_kerja_e2'))?>
 						</span>
 						</td>
 					</tr>
-					<tr>
+					<!--<tr>
 						<td>Kata Kunci :</td>
 						<td><input id="key<?=$objectId;?>" name="key<?=$objectId;?>" type="text" onkeypress="submitEnter<?=$objectId;?>(event)"/></td>
-					</tr>
+					</tr>-->
 					<tr>
 						<td align="right" colspan="2" valign="top">
 							<a href="#" class="easyui-linkbutton" onclick="clearFilter<?=$objectId;?>();" iconCls="icon-reset">Reset</a>
@@ -541,11 +551,14 @@
 			<? if($this->sys_menu_model->cekAkses('IMPORT;',15,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 				<a href="#" onclick="import<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-import" plain="true">Import</a>
 			<?}?>
-			<a href="#" onclick="download<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-download" plain="true">Download Format Excel</a>
+				<? if($this->sys_menu_model->cekAkses('COPY;',36,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+				<a href="#" onclick="copyData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-copy" plain="true">Copy</a>
+			<?}?>
+			<!--<a href="#" onclick="download<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-download" plain="true">Download Format Excel</a>-->
 		</div>
 	</div>
 	
-	<table id="dg<?=$objectId;?>" class="easyui-datagrid" style="height:auto;width:auto" title="Data Indikator Kinerja Kegiatan (IKK) Eselon II" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true"  nowrap="false">
+	<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Data Indikator Kinerja Kegiatan (IKK) Eselon II" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true"  nowrap="false">
 	<thead>
 		<tr>
 			<th field="tahun" sortable="true" width="15px">Tahun</th>
@@ -573,7 +586,7 @@
 		<form id="fm<?=$objectId;?>" method="post">
 			<div class="fitem">
 				<label style="width:120px">Tahun :</label>
-				<input name="tahun" id="tahun<?=$objectId;?>" class="easyui-validatebox" required="true" size="5" >
+				<input name="tahun" id="tahun<?=$objectId;?>" class="easyui-validatebox year" required="true" size="5" >
 			</div>	
 			<!-- chan : Jika login superadmin maka tampilkan combo E1 utk nge filter list E2 -->
 			<? //if ($this->session->userdata('unit_kerja_e1')=='-1'){?>
@@ -599,7 +612,7 @@
 				</span>
 			</div>
 			<div class="fitem">
-				<label style="width:120px">Sasaran Eselon 2:</label>					
+				<label style="width:120px">Sasaran Eselon II :</label>					
 					<span id="divSasaranE2<?=$objectId?>">
 				</span>
 			</div>

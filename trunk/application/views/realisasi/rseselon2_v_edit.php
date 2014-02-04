@@ -20,7 +20,7 @@
 							
 							// reload and close tab
 							$('#dg<?=$objectId;?>').datagrid('reload');
-							$('#tt').tabs('close', 'Edit Realisasi Kinerja Eselon II');
+							$('#tt').tabs('close', 'Edit Capaian Kinerja Eselon II');
 						} else {
 							$.messager.show({
 								title: 'Error',
@@ -35,7 +35,12 @@
 			closeView<?=$objectId;?>=function(){
 				// reload and close tab
 				$('#dg<?=$objectId;?>').datagrid('reload');
-				$('#tt').tabs('close', 'View Realisasi Kinerja Eselon II');
+				<?if($editMode=="true"){?>
+					$('#tt').tabs('close', 'Edit Capaian Kinerja Eselon II');
+					<?}{?>
+						$('#tt').tabs('close', 'View Capaian Kinerja Eselon II');
+					<?}?>
+				
 			}
 		});
 			//end saveData
@@ -82,7 +87,7 @@
 			
 	<div id="cc<?=$objectId;?>" class="easyui-layout" fit="true">  
 				<!------------Edit View-->
-				<div region="center" border="true" title="<?=($editMode=="true")?"Edit":"View"?>  Data Realisasi Kinerja Eselon II">
+				<div region="center" border="true" title="<?=($editMode=="true")?"Edit":"View"?>  Data Capaian Kinerja Eselon II">
 					<form id="fmedit<?=$objectId;?>" method="post" style="margin:10px 5px 5px 10px;">
 						<input type="hidden" name="id_kinerja_e2" value="<?=$result->id_kinerja_e2?>">
 						<div class="fitem">
@@ -91,7 +96,7 @@
 						</div>
 						<div class="fitem">
 						  <label style="width:150px">Bulan :</label>
-						  <?=$result->triwulan?>
+						  <?=$this->utility->getBulanValue($result->triwulan-1)?>
 						</div>
 						<div class="fitem">							
 						    <label style="width:150px">Unit Kerja Eselon I :</label>
@@ -121,10 +126,19 @@
 							&nbsp;&nbsp;
 							<?=$result->satuan?>
 						</div>
+						<div class="fitem">
+						  <label style="width:150px">Keterangan :</label>
+						  <textarea name="keterangan" cols="60"><?=$result->keterangan?></textarea>
+						</div>
+						<div class="fitem">
+						  <label style="width:150px">Rencana Aksi :</label>
+						  <textarea name="action_plan" cols="60"><?=$result->action_plan?></textarea>
+						</div>
 						<br>
 						<!------------Edit View-->
 						<?if($editMode=="true"){?>
-							<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveDataEdit<?=$objectId;?>()">Simpan</a>
+							<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveDataEdit<?=$objectId;?>()">Save</a>
+							<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="closeView<?=$objectId;?>()">Cancel</a>
 						<?}else{?>
 							<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="closeView<?=$objectId;?>()">Close</a>
 						<?}?>

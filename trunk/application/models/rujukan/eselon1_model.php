@@ -15,7 +15,7 @@ class Eselon1_model extends CI_Model
     }
 
 	// purpose : 1=buat grid, 2=buat pdf, 3=buat excel
-	public function easyGrid($purpose=1){
+	public function easyGrid($purpose=1,$file1=null){
 		
 		$page = isset($_POST['page']) ? intval($_POST['page']) : 1;  
 		$limit = isset($_POST['rows']) ? intval($_POST['rows']) : 10;  
@@ -35,6 +35,10 @@ class Eselon1_model extends CI_Model
 				$this->db->where('kode_e1',$e1);
 				//$value = $e1;
 			}
+			if ($purpose==4){
+				$this->db->where('kode_e1',$file1);
+			}
+			
 			$this->db->select("kode_e1 as \"kode_e1\", tbl_eselon1.kode_kl as \"kode_kl\", nama_e1 as \"nama_e1\", tbl_eselon1.singkatan as \"singkatan\", nama_dirjen as \"nama_dirjen\", nip as \"nip\", pangkat as \"pangkat\", gol as \"gol\", tbl_kl.nama_kl",false);
 			$this->db->from('tbl_eselon1');
 			$this->db->join('tbl_kl', 'tbl_kl.kode_kl = tbl_eselon1.kode_kl');
@@ -56,7 +60,7 @@ class Eselon1_model extends CI_Model
 				
 
 				//$pdfdata[] = array($i+1,$response->rows[$i]['kode_e1'],$response->rows[$i]['kode_kl'],$response->rows[$i]['nama_e1'],$response->rows[$i]['singkatan'],$response->rows[$i]['nama_dirjen'],$response->rows[$i]['nip'],$response->rows[$i]['pangkat'],$response->rows[$i]['gol']);
-				$pdfdata[] = array($i+1,$response->rows[$i]['nama_e1'],$response->rows[$i]['singkatan'],$response->rows[$i]['nama_dirjen'],$response->rows[$i]['nip'],$response->rows[$i]['pangkat'],$response->rows[$i]['gol'],$response->rows[$i]['kode_e1']);
+				$pdfdata[] = array($i+1,$response->rows[$i]['kode_e1'],$response->rows[$i]['nama_e1'],$response->rows[$i]['singkatan'],$response->rows[$i]['nama_dirjen'],$response->rows[$i]['nip'],$response->rows[$i]['pangkat'],$response->rows[$i]['gol']);
 				unset($row->nama_kl);
 				
 				$i++;
@@ -82,11 +86,14 @@ class Eselon1_model extends CI_Model
 		}
 		else if($purpose==3){//to excel
 			//tambahkan header kolom
-			$colHeaders = array("Kode E1","Kode KL","Nama","Singkatan","Nama Dirjen","NIP","Pangkat","Golongan");
+			$colHeaders = array("Kode E1","Kode KL","Nama","Singkatan","Nama Pimpinan","NIP","Pangkat","Golongan");
 		//	$query =$this->db->list_fields('tbl_eselon1');
 			//$query->list_fields();
 		//	var_dump($query);die;
 			to_excel($query,"Eselon1",$colHeaders);
+		}
+		else if ($purpose==4) { //WEB SERVICE
+			return $response;
 		}
 	
 	}
@@ -102,6 +109,41 @@ class Eselon1_model extends CI_Model
 		$rs = $query->num_rows() ;		
 		$query->free_result();
 		return ($rs>0);
+	}
+	
+	public function isSaveDelete($kode){	
+		
+		$this->db->where('kode_e1',$kode); //buat validasi		
+		$this->db->select('*');
+		$this->db->from('tbl_program_kl');
+						
+		$query = $this->db->get();
+		$rs = $query->num_rows() ;		
+		$query->free_result();
+		$isSave = ($rs==0);
+		if ($isSave){
+			$this->db->flush_cache();
+			$this->db->where('kode_e1',$kode); //buat validasi		
+			$this->db->select('*');
+			$this->db->from('tbl_sasaran_eselon1');
+							
+			$query = $this->db->get();
+			$rs = $query->num_rows() ;		
+			$query->free_result();
+			$isSave = ($rs==0);
+			if ($isSave){
+				$this->db->flush_cache();
+				$this->db->where('kode_e1',$kode); //buat validasi		
+				$this->db->select('*');
+				$this->db->from('tbl_iku_eselon1');
+								
+				$query = $this->db->get();
+				$rs = $query->num_rows() ;		
+				$query->free_result();
+				$isSave = ($rs==0);
+			}
+		}
+		return $isSave;
 	}
 	
 	//insert data

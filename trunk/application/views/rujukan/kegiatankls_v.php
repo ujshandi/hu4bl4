@@ -16,9 +16,9 @@
 		
 		editData<?=$objectId;?> = function (){
 			var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
-			
-			if (row&&(row.id_kegiatan_kl!="")){
-				addTab("Edit Kegiatan", "rujukan/kegiatankl/edit/"+row.id_kegiatan_kl);
+			if (row==null) return;
+			if (row&&(row.tahun!="")){
+				addTab("Edit Kegiatan", "rujukan/kegiatankl/edit/"+row.tahun+"/"+row.kode_kegiatan);
 			}
 		}
 		//end editData
@@ -32,12 +32,16 @@
 
 		//tipe 1=grid, 2=pdf, 3=excel
 		getUrl<?=$objectId;?> = function (tipe){
-			<? if (($this->session->userdata('unit_kerja_e1')!=null)&&($this->session->userdata('unit_kerja_e1')!=-1)) {?>	
-				var file1 = '<?=$this->session->userdata('unit_kerja_e1')?>'
-			<?} else {?>	
-				var file1 = $("#filter_e1<?=$objectId;?>").val();
-			<? }?>	
-				var file2 = $("#filter_e2<?=$objectId;?>").val();
+			<? if ($this->session->userdata('unit_kerja_e1')==-1){?>
+					var file1 = $("#filter_e1<?=$objectId;?>").val();
+				<?} else {?>
+					var file1 = "<?=$this->session->userdata('unit_kerja_e1');?>";
+				<?}?>
+				<? if ($this->session->userdata('unit_kerja_e2')==-1){?>
+					var file2 = $("#filter_e2<?=$objectId;?>").val();
+				<?} else {?>
+					var file2 = "<?=$this->session->userdata('unit_kerja_e2');?>";
+				<?}?>
 				var filtahun = $("#filter_tahun<?=$objectId;?>").val();
 				if (filtahun == null) filtahun = "-1";
 			if (file1 == null) file1 = "-1";
@@ -62,7 +66,7 @@
 				onClickCell: function(rowIndex, field, value){
 					$('#dg<?=$objectId;?>').datagrid('selectRow', rowIndex);
 					var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
-					
+					if (row==null) return;
 					switch(field){
 						case "kode_e2":
 							showPopup('#popdesc<?=$objectId?>', row.nama_e2);
@@ -90,6 +94,37 @@
 			window.open(getUrl<?=$objectId;?>(3));;
 		}
 
+		deleteData<?=$objectId;?> = function (){
+				var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
+				if(row){
+					if(confirm("Apakah yakin akan menghapus data '" + row.kode_kegiatan + "'?")){
+						var response = '';
+						$.ajax({ type: "GET",
+								 url: base_url+'rujukan/kegiatankl/delete/' + row.tahun+'/'+row.kode_kegiatan ,
+								 async: false,
+								 success : function(response)
+								 {
+									var response = eval('('+response+')');
+									if (response.success){
+										$.messager.show({
+											title: 'Success',
+											msg: 'Data Berhasil Dihapus'
+										});
+										
+										// reload and close tab
+										$('#dg<?=$objectId;?>').datagrid('reload');
+									} else {
+										$.messager.show({
+											title: 'Error',
+											msg: response.msg
+										});
+									}
+								 }
+						});
+					}
+				}
+			}
+			//end deleteData 
 		
 		/*
 		saveData<?=$objectId;?>=function(){
@@ -134,6 +169,7 @@
 			searchData<?=$objectId;?>();
 		},50);
 		
+			
 		
 		$("#popdesc<?=$objectId?>").click(function(){
 			closePopup('#popdesc<?=$objectId?>');
@@ -218,19 +254,21 @@
 					<td><span id="divTahun<?=$objectId;?>"></span></td>
 				</tr>	
 				<tr>
-				<td>Unit Kerja Eselon I&nbsp;</td>
+				<td>Unit Kerja Eselon I :&nbsp;</td>
 				<td>
 					<?=$this->eselon1_model->getListFilterEselon1($objectId,$this->session->userdata('unit_kerja_e1'))?>				
 				</td>
 			</tr>
-			
+			<?//}
+		//	var_dump($this->session->userdata('unit_kerja_e2'));
+			?>
 			<tr>
-				<td>Unit Kerja Eselon II&nbsp</td>
+				<td>Unit Kerja Eselon II :&nbsp;</td>
 				<td><span class="fitem" id="divUnitKerja<?=$objectId;?>">
 					<?=$this->eselon2_model->getListFilterEselon2($objectId,$this->session->userdata('unit_kerja_e1'),$this->session->userdata('unit_kerja_e2'))?>
 					</span>
 				</td>
-			</tr>	
+			</tr>
 				<tr>
 					<td align="right" colspan="2" valign="top">
 						<a href="#" class="easyui-linkbutton" onclick="clearFilter<?=$objectId;?>();" iconCls="icon-reset">Reset</a>
@@ -249,6 +287,9 @@
 		<? if($this->sys_menu_model->cekAkses('EDIT;',7,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="editData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-edit" plain="true">Edit</a>
 		<?}?>
+		<? if($this->sys_menu_model->cekAkses('DELETE;',7,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+			<a href="#" onclick="deleteData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-remove" plain="true">Delete</a>
+		<?}?>
 		<? if($this->sys_menu_model->cekAkses('PRINT;',7,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="printData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-print" plain="true">Print</a>
 		<?}?>
@@ -261,7 +302,7 @@
 <table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Data Kegiatan" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true" nowrap="false">
 	<thead>
 	<tr>
-		<th field="id_kegiatan_kl" sortable="true" width="5px" hidden="true">No.</th>
+		<!-- <th field="id_kegiatan_kl" sortable="true" width="5px" hidden="true">No.</th>-->
 		<th field="tahun" sortable="true" width="10px">Tahun</th>
 		<th field="kode_program" sortable="true" width="20px">Kode Program</th>
 		<th field="nama_program" hidden="true">Nama Program</th>
@@ -274,4 +315,4 @@
 	</thead>  
 </table>
 
-<div class="popdesc" id="popdesc<?=$objectId?>">indriyanto</div>
+<div class="popdesc" id="popdesc<?=$objectId?>">&nbsp;</div>

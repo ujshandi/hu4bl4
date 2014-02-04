@@ -14,6 +14,7 @@ class Rpt_capaian_kinerjae2_model extends CI_Model
 		//$this->CI =& get_instance();
     }
 	// purpose : 1=buat grid, 2=buat pdf, 3=buat excel
+	//http://192.168.0.100/e-performance/realisasi/rpt_capaian_kinerjae2/grid/2012/-1/-1/022.02/022.02.04/1/12
 	public function easyGrid($filtahun=null,$filsasaran=null,$filiku=null,$file1=null,$file2=null,$filstart=null,$filend=null,$purpose=1,$pageNumber=null,$pageSize=null){
 		$lastNo = isset($_POST['lastNo']) ? intval($_POST['lastNo']) : 0;  
 		$page = isset($_POST['page']) ? intval($_POST['page']) : 1;  
@@ -98,7 +99,7 @@ class Rpt_capaian_kinerjae2_model extends CI_Model
 				$response->rows[$i]['bulan10'] = "";
 				$response->rows[$i]['bulan11'] = "";
 				$response->rows[$i]['bulan12'] = "";
-				
+				//var_dump($filstart);
 				if ((1>=intval($filstart))&&(1<=intval($filend))){
 					$row->bulan1 = $this->getRealisasi($filtahun,$row->kode_ikk,"1");
 					$response->rows[$i]['bulan1']= $this->utility->cekNumericFmt($row->bulan1); 

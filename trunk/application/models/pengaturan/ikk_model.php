@@ -311,46 +311,42 @@ $this->db->set('kode_ikk',$data['kode_ikk']);
 			return FALSE;
 		}
 	}
-
-	public function getListIKK_E2($objectId="", $e1="",$tahun = "-1",$ul_id='drop'){
+	
+	
+	function copy($data,& $error) {
+		//query insert data	
+		$result = false;		
 		
-		$this->db->flush_cache();
-		$this->db->select('kode_ikk,deskripsi');
-		$this->db->from('tbl_ikk');
-		$this->db->where('kode_e2', $e1);
-		$this->db->order_by('kode_ikk');
-		
-		$this->db->where('tahun',$tahun);
-		$que = $this->db->get();
-		/*
-		$out = '<select name="kode_iku_e1'.$objectId.'" class="easyui-validatebox" required="true">';
-		
-		foreach($que->result() as $r){
-			$out .= '<option value="'.$r->kode_iku_e1.'">'.$r->deskripsi.'</option>';
+		try {
+			$sql = "insert into tbl_ikk(tahun, kode_ikk, deskripsi, satuan, kode_iku_e1, kode_e2, kode_sasaran_e2, 
+	log_insert) select ".$data['tahun_tujuan'].", kode_ikk, deskripsi, satuan, kode_iku_e1,kode_e2, kode_sasaran_e2,  '".$this->session->userdata('user_id').';'.date('Y-m-d H:i:s')."'"
+			." from tbl_ikk"
+			." where tahun = ".$data['tahun']
+			." and kode_e2 = '".$data['kode_e2']."'";
+		//
+			//var_dump($sql);
+			$result = $this->db->query($sql);
+			
+		}
+		catch(Exception $e){
+			$errNo   = $this->db->_error_number();
+			$errMess = $e->getMessage();//$this->db->_error_message();
+			$error = $errMess;
+			log_message("error", "Problem Inserting to : ".$errMess." (".$errNo.")"); 
 		}
 		
-		$out .= '</select>';
-		*/
+		//var_dump();die;
+		//$result = $this->db->insert('tbl_sasaran_eselon1');
 		
-		$out = '<div id="tcContainer"><input id="kode_ikk'.$objectId.'" name="kode_ikk" type="hidden" class="h_code" value="0">';
-		$out .= '<textarea name="txtkode_ikk'.$objectId.'" id="txtkode_ikk'.$objectId.'" class="textdown" required="true" readonly>-- Pilih --</textarea>';
-		$out .= '<ul id="'.$ul_id.$objectId.'" class="dropdown">';
-		$out .= '<li value="0"  onclick="setIkk'.$objectId.'(\'\')">-- Pilih --</li>';
-		
-		foreach($que->result() as $r){
-			$out .= '<li onclick="setIkk'.$objectId.'(\''.$r->kode_ikk.'\')">'.$r->deskripsi.'</li>';
+		//return
+		if($result) {
+			return TRUE;
+		}else {
+			return FALSE;
 		}
-		$out .= '</ul></div>';
-		
-		//chan
-		if ($que->num_rows()==0){
-			$out = "Data IKK untuk tingkat Eselon II ini belum tersedia.";
-		}
-		
-		echo $out;
 	}
 	
-	
+
 	public function getListIKK($objectId=""){
 		
 		$this->db->flush_cache();
@@ -378,12 +374,11 @@ $this->db->set('kode_ikk',$data['kode_ikk']);
 	}
 	
 	
-	public function getListTahun($objectId,$name="filter_tahun",$required="false",$withAll=true){
+	public function getListTahun($objectId,$withAll=true){
 		
 		$this->db->flush_cache();
 		$this->db->select('distinct tahun',false);
-		$this->db->from('tbl_ikk');	
-	
+		$this->db->from('tbl_ikk');
 		$e2 = $this->session->userdata('unit_kerja_e2');
 		if (($e2!=-1)&&($e2!=null)){
 			$this->db->where('kode_e2',$e2);
@@ -393,7 +388,7 @@ $this->db->set('kode_ikk',$data['kode_ikk']);
 		
 		$que = $this->db->get();
 		
-		$out = '<select name="'.$name.$objectId.'" id="'.$name.$objectId.'"  class="easyui-validatebox" required="'.$required.'">';
+		$out = '<select name="filter_tahun'.$objectId.'" id="filter_tahun'.$objectId.'">';
 		if ($withAll)
 			$out .= '<option value="-1">Semua</option>';
 		foreach($que->result() as $r){
@@ -401,6 +396,10 @@ $this->db->set('kode_ikk',$data['kode_ikk']);
 		}
 		
 		$out .= '</select>';
+		
+		if ($que->num_rows()==0){
+			$out = 'Data IKK belum ada.';
+		}
 		
 		echo $out;
 	}

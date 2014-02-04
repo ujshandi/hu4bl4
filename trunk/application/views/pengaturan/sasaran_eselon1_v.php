@@ -1,7 +1,8 @@
 	<script  type="text/javascript" >
 		$(function(){
 			var url;
-
+			var _changekode = false;
+			$('textarea').autosize();   
 			saveData<?=$objectId;?>=function(){
 				$('#fm<?=$objectId;?>').form('submit',{
 					url: url,
@@ -9,7 +10,7 @@
 						return $(this).form('validate');
 					},
 					success: function(result){
-						//alert(result);
+					//	alert(result);
 						var result = eval('('+result+')');
 						if (result.success){
 							$.messager.show({
@@ -30,6 +31,7 @@
 			//end saveData
 			
 			newData<?=$objectId;?> = function (){  
+				_changekode = true;
 				//----------------Edit title
 				$('#ftitle<?=$objectId;?>').html("Add Data "+"<?=$title?>");
 				$('#saveBtn<?=$objectId;?>').css("display","");
@@ -43,6 +45,7 @@
 			//end newData 
 			
 			editData<?=$objectId;?> = function (editmode){
+				_changekode = false;
 				//----------------Edit title
 				$('#ftitle<?=$objectId;?>').html((editmode?"Edit Data ":"View Data ")+"<?=$title?>");
 				$('#saveBtn<?=$objectId;?>').css("display",(editmode)?"":"none");
@@ -126,6 +129,10 @@
 				window.location=base_url+"download/format_excel_import/sasaran_e1.xls"
 			}
 			
+			copyData<?=$objectId;?> = function (){
+				addTab("Copy Sasaran Eselon I", "pengaturan/sasaran_eselon1/copy");
+			}
+			
 			importData<?=$objectId;?>=function(){
 			
 				$('#fmimport<?=$objectId;?>').form('submit',{
@@ -167,7 +174,7 @@
 					var file1 = "<?=$this->session->userdata('unit_kerja_e1');?>";
 				<?}?>
 				var filtahun = $("#filter_tahun<?=$objectId;?>").val();
-				var filkey = $("#key<?=$objectId;?>").val();
+				var filkey = '-1';//$("#key<?=$objectId;?>").val();
 				if (filtahun == null) filtahun = "-1";
 				if (filkey == null) filkey = "-1";
 				if (file1 == null) file1 = "-1";
@@ -183,6 +190,7 @@
 			}
 			
 			setKodeOtomatis<?=$objectId?> = function(){
+				if (!_changekode) return;
 				<? if ($this->session->userdata('unit_kerja_e1')==-1){?>
 					var file1 = $("#kode_e1<?=$objectId;?>").val();
 				<?} else {?>
@@ -207,18 +215,28 @@
 				searchData<?=$objectId;?>();
 			}
 
-			submitEnter<?=$objectId;?> =function (e){
-				if (e.keyCode == 13) {
-					searchData<?=$objectId;?>();
-				}
-			}
-			
 			searchData<?=$objectId;?> = function (){
 				//ambil nilai-nilai filter
 				$('#dg<?=$objectId;?>').datagrid({
 					url:getUrl<?=$objectId;?>(1),
 					queryParams:{lastNo:'0'},	
 					pageNumber : 1,
+					onClickCell: function(rowIndex, field, value){
+						$('#dg<?=$objectId;?>').datagrid('selectRow', rowIndex);
+						var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
+						
+						switch(field){
+							case "kode_e1":
+								showPopup('#popdesc<?=$objectId?>', row.nama_e1);
+								break;
+							case "kode_sasaran_kl":
+								showPopup('#popdesc<?=$objectId?>', row.deskripsi_sasaran_kl);
+								break;
+							default:
+								closePopup('#popdesc<?=$objectId?>');
+								break;
+						}
+					},
 					onLoadSuccess:function(data){	
 						$('#dg<?=$objectId;?>').datagrid('options').queryParams.lastNo = data.lastNo;
 						//prepareMerge<?=$objectId;?>(data);
@@ -231,7 +249,7 @@
 				$("#divSasaranKL<?=$objectId?>").load(
 					base_url+"pengaturan/sasaran_eselon1/getListSasaranKL/"+"<?=$objectId;?>"+"/"+tahun,
 					function(){
-						$("textarea").autogrow();
+						$('textarea').autosize();   
 						if($("#drop<?=$objectId;?>").is(":visible")){
 							$("#drop<?=$objectId;?>").slideUp("slow");
 						}
@@ -282,26 +300,11 @@
 				//$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>pengaturan/sasaran_eselon1/grid"});
 			},50);
 			
-			// yanto
-			$('#dg<?=$objectId;?>').datagrid({
-				onClickCell: function(rowIndex, field, value){
-					$('#dg<?=$objectId;?>').datagrid('selectRow', rowIndex);
-					var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
-					
-					switch(field){
-						case "kode_e1":
-							showPopup('#popdesc<?=$objectId?>', row.nama_e1);
-							break;
-						case "kode_sasaran_kl":
-							showPopup('#popdesc<?=$objectId?>', row.deskripsi_sasaran_kl);
-							break;
-						default:
-							closePopup('#popdesc<?=$objectId?>');
-							break;
-					}
+			submitEnter<?=$objectId;?> = function(e) {
+				if (e.keyCode == 13) {
+					searchData<?=$objectId;?>();
 				}
-			});
-			
+			}
 			$("#popdesc<?=$objectId?>").click(function(){
 				closePopup('#popdesc<?=$objectId?>');
 			});
@@ -309,29 +312,9 @@
 		 });
 	</script>
 	
-
 	<!-- Dari Stef -->
 	<script type="text/javascript">
 		$(document).ready(function() {
-		/* 	chan
-		
-		initCombo<?=$objectId?> = function(){
-				if($("#drop<?=$objectId;?>").is(":visible")){
-					$("#drop<?=$objectId;?>").slideUp("slow");
-				}
-			} 
-			
-			$("#txtkode_sasaran_kl<?=$objectId;?>").click(function(){
-					$("#drop<?=$objectId;?>").slideDown("slow");
-				});
-				
-				$("#drop<?=$objectId;?> li").click(function(e){
-					var chose = $(this).text();
-					$("#txtkode_sasaran_kl<?=$objectId;?>").val(chose);
-				//	$("#drop<?=$objectId;?>").slideToggle("slow");
-					$("#drop<?=$objectId;?>").slideUp("slow");
-				});
-			*/
 		});
 		
 		function setSasaran<?=$objectId;?>(valu){
@@ -421,10 +404,10 @@
 						<?=$this->eselon1_model->getListFilterEselon1($objectId,$this->session->userdata('unit_kerja_e1'))?>
 					</td>
 				</tr>
-				<tr>
+				<!--<tr>
 					<td>Kata Kunci</td>
 					<td><input id="key<?=$objectId;?>" name="key<?=$objectId;?>" type="text" onkeypress="submitEnter<?=$objectId;?>(event)"/></td>
-				</tr>
+				</tr>-->
 				<tr>
 					<td>&nbsp;</td>
 				</tr>
@@ -464,11 +447,14 @@
 			<? if($this->sys_menu_model->cekAkses('IMPORT;',11,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 				<a href="#" onclick="import<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-import" plain="true">Import</a>
 			<?}?>
-			<a href="#" onclick="download<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-download" plain="true">Download Format Excel</a>
+			<? if($this->sys_menu_model->cekAkses('COPY;',32,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+				<a href="#" onclick="copyData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-copy" plain="true">Copy</a>
+			<?}?>
+			<!--<a href="#" onclick="download<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-download" plain="true">Download Format Excel</a>-->
 		</div>
 	</div>
 	
-	<table id="dg<?=$objectId;?>" class="easyui-datagrid" style="height:auto;width:auto" title="Data Sasaran Unit Kerja Eselon I" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true"  nowrap="false">
+	<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Data Sasaran Unit Kerja Eselon I" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true"  nowrap="false">
 		<thead>
 		<tr>
 			<th field="kode_e1" sortable="true" width="20" <?=($this->session->userdata('unit_kerja_e1')=='-1'?'':'hidden="true"')?>>Kode Eselon I </th>
@@ -490,7 +476,7 @@
 		<form id="fm<?=$objectId;?>" method="post">
 			<div class="fitem">
 				<label style="width:150px;vertical-align:top">Tahun</label>
-				<input name="tahun" id="tahun<?=$objectId?>" class="easyui-validatebox" size="4" required="true">
+				<input name="tahun" id="tahun<?=$objectId?>" class="easyui-validatebox year" size="4" required="true">
 			</div>		
 			<div class="fitem" >
 				<label style="width:150px">Unit Kerja Eselon I</label>

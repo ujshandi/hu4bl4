@@ -387,6 +387,8 @@
 					href :base_url+aHref,
 						onLoad : function(){
 						//	alert('on Load');
+								$('.year').autoNumeric('init',{aSep: '', aDec: ',',vMin:'0',aPad:"false",vMax:"9999"});
+								$('.money').autoNumeric('init',{aSep: '.', aDec: ',',vMin:'0',aPad:"false",vMax:"999999999999999"});
 						},
 						onBeforeClose : function(){
 							//alert('ga bisa ditutup');

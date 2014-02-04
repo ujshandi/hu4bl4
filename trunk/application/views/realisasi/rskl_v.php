@@ -2,7 +2,11 @@
 	<script  type="text/javascript" >
 				
 		$(function(){
-		
+			$('textarea').autosize();   
+			cancel<?=$objectId;?>=function(){
+				
+				$('#tt').tabs('close', 'Add Capaian Kinerja Kementerian');
+			}	
 		 	saveData<?=$objectId;?>=function(){
 				$('#fm<?=$objectId;?>').form('submit',{
 					url: base_url+'realisasi/rskl/save',
@@ -28,7 +32,7 @@
 							
 							// reload and close tab
 							$('#dg<?=$objectId;?>').datagrid('reload');
-							$('#tt').tabs('close', 'Add Realisasi Kinerja Kementerian');
+							$('#tt').tabs('close', 'Add Capaian Kinerja Kementerian');
 						} else {
 							$.messager.show({
 								title: 'Error',
@@ -41,6 +45,10 @@
 			//end saveData
 			
 			$("#tahun<?=$objectId?>").change(function(){
+				getDetail<?=$objectId;?>();
+			});
+			
+			$("#triwulan<?=$objectId?>").change(function(){
 				getDetail<?=$objectId;?>();
 			});
 			
@@ -117,7 +125,7 @@
 				$("#divSasaranKL<?=$objectId?>").load(
 					base_url+"pengaturan/sasaran_eselon1/getListSasaranKL/"+"<?=$objectId;?>"+"/"+tahun,
 					function(){
-						$("textarea").autogrow();
+						$('textarea').autosize();   
 						if($("#drop<?=$objectId;?>").is(":visible")){
 							$("#drop<?=$objectId;?>").slideUp("slow");
 						}
@@ -198,7 +206,7 @@
 	<div id="cc<?=$objectId;?>" class="easyui-layout" fit="true">  
 
 								
-				<div region="center" border="true" title="Tambah Data Realisasi Kinerja Kementerian">
+				<div region="center" border="true" title="Add Data Capaian Kinerja Kementerian">
 					<form id="fm<?=$objectId;?>" method="post" style="margin:10px 5px 5px 10px;">		
 						<div class="fitem">
 						  <label style="width:120px" >Tahun :</label>
@@ -206,20 +214,8 @@
 						</div>
 						<div class="fitem">
 						  <label style="width:120px">Bulan :</label>
-						  <select name="triwulan" id="triwulan<?=$objectId;?>">
-								<option value="1">Januari</option>
-								<option value="2">Februari</option>
-								<option value="3">Maret</option>
-								<option value="4">April</option>
-								<option value="5">Mei</option>
-								<option value="6">Juni</option>
-								<option value="7">Juli</option>
-								<option value="8">Agustus</option>
-								<option value="9">September</option>
-								<option value="10">Oktober</option>
-								<option value="11">November</option>
-								<option value="12">Desember</option>
-							</select>
+						  <?= $this->utility->getBulan("","triwulan",false,$objectId)?>
+						  
 						</div>					
 						<div class="fitem">
 						    <label style="width:120px">Kementerian :</label>

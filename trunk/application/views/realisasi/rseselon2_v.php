@@ -1,7 +1,12 @@
 	<script  type="text/javascript" >
 				
 		$(function(){
-			
+				$('textarea').autosize();   
+				
+				cancel<?=$objectId;?>=function(){
+				
+				$('#tt').tabs('close', 'Add Capaian Kinerja Eselon II');
+			}
 			//chan---------------------------------------		
 			function setListE2<?=$objectId?>(){
 				$("#divEselon2<?=$objectId?>").load(
@@ -19,6 +24,7 @@
 			 
 			 $("#kode_e1<?=$objectId?>").change(function(){
 				setListE2<?=$objectId?>();
+				document.getElementById('detail<?=$objectId;?>').innerHTML = '';
 			  });
 			  
 			function setSasaranE2<?=$objectId;?>(e2, tahun){
@@ -26,7 +32,7 @@
 					base_url+"rencana/rkteselon2/getListSasaranE2/"+"<?=$objectId;?>"+"/"+e2+"/"+tahun,
 					//on complete
 					function(){
-						$("textarea").autogrow();
+						$('textarea').autosize();   
 								
 						
 						if($("#drop<?=$objectId;?>").is(":visible")){
@@ -48,6 +54,7 @@
 			
 			$("#kode_e2<?=$objectId;?>").change( function(){
 				filterSasaranE2<?=$objectId;?>($(this).val());
+				document.getElementById('detail<?=$objectId;?>').innerHTML = '';
 			});
 			
 			//inisialisasi
@@ -83,7 +90,7 @@
 							
 							// reload and close tab
 							$('#dg<?=$objectId;?>').datagrid('reload');
-							$('#tt').tabs('close', 'Add Realisasi Kinerja Eselon II');
+							$('#tt').tabs('close', 'Add Capaian Kinerja Eselon II');
 							
 						} else {
 							$.messager.show({
@@ -97,6 +104,10 @@
 			//end saveData
 			
 			$("#tahun<?=$objectId?>").change(function(){
+				getDetail<?=$objectId;?>();
+			});
+			
+			$("#triwulan<?=$objectId?>").change(function(){
 				getDetail<?=$objectId;?>();
 			});
 			
@@ -281,7 +292,7 @@
 	<div id="cc<?=$objectId;?>" class="easyui-layout" fit="true">  
 
 	
-				<div region="center" border="true" title="Tambah Data Realisasi Kinerja Eselon II">	
+				<div region="center" border="true" title="Add Data Capaian Kinerja Eselon II">	
 					<form id="fm<?=$objectId;?>" method="post" style="margin:10px 5px 5px 10px;">		
 						<div class="fitem">
 						  <label style="width:120px" >Tahun :</label>
@@ -289,20 +300,7 @@
 						</div>
 						<div class="fitem">
 						  <label style="width:120px">Bulan :</label>
-						  <select name="triwulan" id="triwulan<?=$objectId;?>">
-								<option value="1">Januari</option>
-								<option value="2">Februari</option>
-								<option value="3">Maret</option>
-								<option value="4">April</option>
-								<option value="5">Mei</option>
-								<option value="6">Juni</option>
-								<option value="7">Juli</option>
-								<option value="8">Agustus</option>
-								<option value="9">September</option>
-								<option value="10">Oktober</option>
-								<option value="11">November</option>
-								<option value="12">Desember</option>
-							</select>
+						  <?= $this->utility->getBulan("","triwulan",false,$objectId)?>
 						</div>
 						<!-- chan : Jika login superadmin maka tampilkan combo E1 utk nge filter list E2 -->
 						<?// if ($this->session->userdata('unit_kerja_e1')=='-1'){?>

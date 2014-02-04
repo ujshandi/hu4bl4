@@ -1,7 +1,7 @@
 	<script  type="text/javascript" >
 		$(function(){
 			var url;
-			
+			$('textarea').autosize();   
 			saveData<?=$objectId;?>=function(){
 				$('#fm<?=$objectId;?>').form('submit',{
 					url: url,
@@ -28,7 +28,7 @@
 			newData<?=$objectId;?> = function (){  
 				$('#ftitle<?=$objectId;?>').html("Add Data "+"<?=$title?>");
 				$('#saveBtn<?=$objectId;?>').css("display","");
-				$('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Add Sasaran Strategis');
+				$('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Add Sasaran Kementerian');
 				$('#fm<?=$objectId;?>').form('clear');  
 
 				url = base_url+'pengaturan/sasaran_strategis/save/add'; 
@@ -42,10 +42,11 @@
 				$('#ftitle<?=$objectId;?>').html((editmode?"Edit Data ":"View Data ")+"<?=$title?>");
 				$('#saveBtn<?=$objectId;?>').css("display",(editmode)?"":"none");
 				var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
+				if (row==null) return;
 				$('#fm<?=$objectId;?>').form('clear');  
 				//alert(row.dokter_kode);
 				if (row){
-					$('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Edit Sasaran Strategis');
+					$('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Edit Sasaran Kementerian');
 					$('#fm<?=$objectId;?>').form('load',row);
 					$("#kode_strategis<?=$objectId?>").val(row.kode_kl);
 					url = base_url+'pengaturan/sasaran_strategis/save/edit/'+row.kode_sasaran_kl+"/"+row.tahun;//+row.id;//'update_user.php?id='+row.id;
@@ -101,6 +102,11 @@
 			download<?=$objectId;?>=function(){
 				window.location=base_url+"download/format_excel_import/sasaran_kl.xls"
 			}
+			
+			copyData<?=$objectId;?> = function (){
+				addTab("Copy Sasaran Kementerian", "pengaturan/sasaran_strategis/copy");
+			}
+			
 			importData<?=$objectId;?>=function(){
 				$('#fmimport<?=$objectId;?>').form('submit',{
 					url: url,
@@ -108,7 +114,7 @@
 						//return $(this).form('validate');
 					},
 					success: function(result){
-						//alert(result);
+						alert(result);
 						var result = eval('('+result+')');
 						if (result.success){
 							 $.messager.show({
@@ -129,7 +135,7 @@
 			//end importData
 
 			import<?=$objectId;?> = function (){  
-				$('#dlgimport<?=$objectId;?>').dialog('open').dialog('setTitle','Import Data Sasaran Strategis');
+				$('#dlgimport<?=$objectId;?>').dialog('open').dialog('setTitle','Import Data Sasaran Kementerian');
 				$('#fmimport<?=$objectId;?>').form('clear');  
 				url = base_url+'pengaturan/sasaran_strategis/import'; 
 			}
@@ -138,7 +144,8 @@
 			//tipe 1=grid, 2=pdf, 3=excel
 			getUrl<?=$objectId;?> = function (tipe){
 				var filtahun = $("#filter_tahun<?=$objectId;?>").val();
-				var filkey = $("#key<?=$objectId;?>").val();
+				var filkey = '-1';//$("#key<?=$objectId;?>").val();
+				
 				if (tipe==1){
 					return "<?=base_url()?>pengaturan/sasaran_strategis/grid/"+filtahun+"/"+filkey;
 				}
@@ -158,7 +165,7 @@
 				if ((filtahun == null)||(filtahun == '')) filtahun = "-1";
 				$.ajax({url:base_url+"pengaturan/sasaran_strategis/getNewCode/"+filkl+"/"+filtahun,
 					success : function(data){
-					$("#kode_sasaran_strategis<?=$objectId?>").val(data);
+					$("#kode_sasaran_kl<?=$objectId?>").val(data);
 					}					
 					})
 				
@@ -181,6 +188,12 @@
 				$("#filter_tahun<?=$objectId;?>").val('');
 				
 				//$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>pengaturan/kl/grid/"+filnip+"/"+filnama+"/"+filalamat});
+			}
+			
+			submitEnter<?=$objectId;?> =function (e){
+				if (e.keyCode == 13) {
+					searchData<?=$objectId;?>();
+				}
 			}
 			
 			searchData<?=$objectId;?> = function (){
@@ -209,14 +222,7 @@
 		 });
 	</script>
 
-	<script>
-		<!--Enter-->
-		function submitEnter<?=$objectId;?>(e) {
-			if (e.keyCode == 13) {
-				searchData<?=$objectId;?>();
-			}
-		}
-	</script>
+	
 	<style type="text/css">
 		
 		#fm<?=$objectId;?>{
@@ -293,10 +299,10 @@
 						<td width="90px">Tahun :</td>
 						<td><?=$this->sasaran_kl_model->getListFilterTahun($objectId);?></span></td>
 					</tr>
-					<tr>
+					<!--<tr>
 						<td>Kata Kunci :</td>
 						<td><input id="key<?=$objectId;?>" name="key<?=$objectId;?>" type="text" onkeypress="submitEnter<?=$objectId;?>(event)"/></td>
-					</tr>
+					</tr> -->
 					<tr>
 						<td>&nbsp;</td>
 					</tr>
@@ -319,9 +325,9 @@
 			<? if($this->sys_menu_model->cekAkses('EDIT;',31,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 				<a href="#" onclick="editData<?=$objectId;?>(true);" class="easyui-linkbutton" iconCls="icon-edit" plain="true">Edit</a>
 			<?}?>
-			<? if($this->sys_menu_model->cekAkses('VIEW;',31,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+			<!--<? if($this->sys_menu_model->cekAkses('VIEW;',31,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 				<a href="#" onclick="editData<?=$objectId;?>(false);" class="easyui-linkbutton" iconCls="icon-view" plain="true">View</a>
-			<?}?>
+			<?}?>-->
 			<? if($this->sys_menu_model->cekAkses('DELETE;',31,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 				<a href="#" onclick="deleteData<?=$objectId;?>(false);" class="easyui-linkbutton" iconCls="icon-remove" plain="true">Delete</a>
 			<?}?>
@@ -334,11 +340,14 @@
 			<? if($this->sys_menu_model->cekAkses('IMPORT;',31,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 				<a href="#" onclick="import<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-import" plain="true">Import</a>
 			<?}?>
-			<a href="#" onclick="download<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-download" plain="true">Download Format Excel</a>
+			<? if($this->sys_menu_model->cekAkses('COPY;',31,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+				<a href="#" onclick="copyData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-copy" plain="true">Copy</a>
+			<?}?>
+		<!--	<a href="#" onclick="download<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-download" plain="true">Download Format Excel</a>-->
 		</div>
 	</div>
 	
-	<table id="dg<?=$objectId;?>" class="easyui-datagrid" style="height:auto;width:auto" title="Data Sasaran Strategis" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true">
+	<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Data Sasaran Kementerian" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true">
 		<thead>
 			<tr>
 				<th field="kode_kl" sortable="true" width="15" hidden="true">Kode KL</th>
@@ -352,11 +361,11 @@
 	 <!-- AREA untuk Form Add/Edit >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  -->
 	<div id="dlg<?=$objectId;?>" class="easyui-dialog" style="width:800px;height:350px;padding:10px 20px" closed="true" buttons="#dlg-buttons">
 		<!----------------Edit title-->
-		<div id="ftitle<?=$objectId?>" class="ftitle">Add/Edit/View Data Sasaran Strategis</div>
+		<div id="ftitle<?=$objectId?>" class="ftitle">Add/Edit/View Data Sasaran Kementerian</div>
 		<form id="fm<?=$objectId;?>" method="post">		
 			<div class="fitem">
 				<label style="width:150px;vertical-align:top">Tahun :</label>
-				<input name="tahun" id="tahun<?=$objectId?>" class="easyui-validatebox" size="4" required="true">
+				<input name="tahun" id="tahun<?=$objectId?>" class="easyui-validatebox year" size="4" required="true">
 			</div>		
 			<div class="fitem">
 				<label style="width:150px;vertical-align:top">Nama Kementerian :</label>

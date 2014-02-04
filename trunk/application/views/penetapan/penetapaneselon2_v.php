@@ -1,6 +1,13 @@
 	<script  type="text/javascript" >
 				
 		$(function(){
+			$('textarea').autosize();   
+			
+			
+			cancel<?=$objectId;?>=function(){
+				$('#tt').tabs('close', 'Add PK Eselon II');
+			}
+			
 			//chan=============================================
 			 function setListE2<?=$objectId?>(){
 				$("#divEselon2<?=$objectId?>").load(
@@ -25,7 +32,7 @@
 					base_url+"rencana/rkteselon2/getListSasaranE2/"+"<?=$objectId;?>"+"/"+e2+"/"+tahun,
 					//on complete
 					function(){
-						$("textarea").autogrow();
+						$('textarea').autosize();   
 								
 						
 						if($("#drop<?=$objectId;?>").is(":visible")){
@@ -341,7 +348,7 @@
 							<a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="deleteRow('tbl<?=$objectId;?>')">Hapus IKK</a>
 							&nbsp;&nbsp;&nbsp;&nbsp;
 							-->
-							<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveData<?=$objectId;?>()">Simpan</a>
+							<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveData<?=$objectId;?>()">Save</a>&nbsp;<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="cancel<?=$objectId;?>()">Cancel</a>
 						</div>
 					</form>
 				</div>

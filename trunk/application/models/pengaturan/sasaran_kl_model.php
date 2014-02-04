@@ -221,6 +221,39 @@ class Sasaran_kl_model extends CI_Model
 		}
 	}
 	
+	public function copy($data,& $error) {
+		//query insert data	
+		$result = false;		
+		
+		try {
+			$sql = "insert into tbl_sasaran_kl(tahun, kode_kl, kode_sasaran_kl,deskripsi,  
+	log_insert) select ".$data['tahun_tujuan'].", kode_kl, kode_sasaran_kl, deskripsi, '".$this->session->userdata('user_id').';'.date('Y-m-d H:i:s')."'"
+			." from tbl_sasaran_kl "
+			." where tahun = ".$data['tahun']
+			." and kode_kl = '".$data['kode_kl']."'";
+		//
+			//var_dump($sql);
+			$result = $this->db->query($sql);
+			
+		}
+		catch(Exception $e){
+			$errNo   = $this->db->_error_number();
+			$errMess = $e->getMessage();//$this->db->_error_message();
+			$error = $errMess;
+			log_message("error", "Problem Inserting to : ".$errMess." (".$errNo.")"); 
+		}
+		
+		//var_dump();die;
+		//$result = $this->db->insert('tbl_sasaran_eselon1');
+		
+		//return
+		if($result) {
+			return TRUE;
+		}else {
+			return FALSE;
+		}
+	}
+	
 	public function getListSasaranKL($objectId="", $data="",$required=true){
 		//chan 12.08.12 tambah parameter $required coz ada inputan yg boleh tanpa field ini
 		$this->db->flush_cache();
@@ -289,18 +322,27 @@ class Sasaran_kl_model extends CI_Model
 		//query insert data
 		$this->db->flush_cache();
 		
-		$this->db->set('tahun',				$data['tahun']);
-		$this->db->set('kode_kl',			$data['kode_kl']);
-		$this->db->set('kode_sasaran_kl',	$data['kode_sasaran_kl']);
-		$this->db->set('deskripsi',			$data['deskripsi']);		
 		
-		$result = $this->db->insert('tbl_sasaran_kl');
+		try {
+			$this->db->set('tahun',				$data['tahun']);
+			$this->db->set('kode_kl',			$data['kode_kl']);
+			$this->db->set('kode_sasaran_kl',	$data['kode_sasaran_kl']);
+			$this->db->set('deskripsi',			$data['deskripsi']);		
+			
+			$result = $this->db->insert('tbl_sasaran_kl');
+			//var_dump($result);die;
+			if (!$result){
+				throw new Exception("Import Data Gagal");
+			}
+		}
+		catch(Exception $e){
+			$errNo   = $this->db->_error_number();
+			$errMess = $this->db->_error_message();
+			$error = $errMess;
+			//var_dump($errMess);die;
+			log_message("error", "Problem import Inserting to : ".$errMess." (".$errNo.")"); 
+		}
 		
-		$errNo   = $this->db->_error_number();
-	    $errMess = $this->db->_error_message();
-		$error = $errMess;
-		//var_dump($errMess);die;
-	    log_message("error", "Problem import Inserting to : ".$errMess." (".$errNo.")"); 
 		//return
 		if($result) {
 			return TRUE;
