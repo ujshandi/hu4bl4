@@ -49,7 +49,7 @@ class Programkl_model extends CI_Model
 				$no++;
 				$response->rows[$i]['no']= $no;
 				//$response->rows[$i]['id_rkt_kl']=$row->id_rkt_kl;
-				$response->rows[$i]['id_program_kl']	=$row->id_program_kl;
+				//$response->rows[$i]['id_program_kl']	=$row->id_program_kl;
 				$response->rows[$i]['kode_e1']			=$row->kode_e1;
 				$response->rows[$i]['nama_e1']			=$row->nama_e1;
 				$response->rows[$i]['tahun']			=$row->tahun;
@@ -59,7 +59,7 @@ class Programkl_model extends CI_Model
 
 				//utk kepentingan export excel =============================
 				unset($row->nama_e1);
-				unset($row->id_program_kl);
+				//unset($row->id_program_kl);
 				if($file1 != '' && $file1 != '-1' && $file1 != null){
 					unset($row->kode_e1);
 					//tambahkan header kolom
@@ -93,7 +93,7 @@ class Programkl_model extends CI_Model
 			$response->lastNo = $no;
 			// $query->free_result();
 		}else {
-				$response->rows[$count]['id_program_kl']	="";
+				//$response->rows[$count]['id_program_kl']	="";
 				$response->rows[$count]['kode_e1']			="";
 				$response->rows[$count]['nama_e1']			="";
 				$response->rows[$count]['tahun']			="";
@@ -111,6 +111,9 @@ class Programkl_model extends CI_Model
 		else if($purpose==3){//to excel		
 		//	var_dump($query->result());die;
 			to_excel($query,"Program",$colHeaders);
+		}
+		else if ($purpose==4) { //WEB SERVICE
+			return $response;
 		}
 	}
 	
@@ -132,14 +135,72 @@ class Programkl_model extends CI_Model
 		$this->db->free_result();
 	}
 	
-	public function getDataEdit($id){
+	public function getDataEdit($tahun,$kode_program){
 		$this->db->flush_cache();
 		$this->db->select('*');
 		$this->db->from('tbl_program_kl a');
 		$this->db->join('tbl_eselon1 b', 'b.kode_e1 = a.kode_e1');
-		$this->db->where('a.id_program_kl', $id);
+		//$this->db->where('a.id_program_kl', $id);
+		$this->db->where('a.tahun', $tahun);
+		$this->db->where('a.kode_program', $kode_program);
 		
 		return $this->db->get()->row();
+	}
+	
+	public function isExist($tahun,$kode,$oldtahun=null,$oldkode=null){	
+		if ($kode!=null)//utk update
+			$this->db->where('kode_program',$kode); //buat validasi
+		if ($tahun!=null)//utk update
+			$this->db->where('tahun',$tahun); //buat validasi
+		if ($oldtahun!=null)
+			$this->db->where('tahun !=',$oldtahun); //buat validasi
+		if ($oldkode!=null)//utk update
+			$this->db->where('kode_program !=',$oldkode); //buat validasi	
+		$this->db->select('*');
+		$this->db->from('tbl_program_kl');
+						
+		$query = $this->db->get();
+		$rs = $query->num_rows() ;		
+		$query->free_result();
+		return ($rs>0);
+	}
+	
+	public function isSaveDelete($kode,$tahun){	
+		
+		$this->db->where('kode_program',$kode); //buat validasi		
+		$this->db->where('tahun',$tahun); //buat validasi		
+		$this->db->select('*');
+		$this->db->from('tbl_kegiatan_kl');
+						
+		$query = $this->db->get();
+		$rs = $query->num_rows() ;		
+		$query->free_result();
+		$isSave = ($rs==0);
+		if ($isSave){
+			$this->db->flush_cache();
+			$this->db->where('kode_program',$kode); //buat validasi		
+			$this->db->where('tahun',$tahun); //buat validasi		
+			$this->db->select('*');
+			$this->db->from('tbl_masterpk_kl');
+							
+			$query = $this->db->get();
+			$rs = $query->num_rows() ;		
+			$query->free_result();
+			$isSave = ($rs==0);
+			if ($isSave){
+				$this->db->flush_cache();
+				$this->db->where('kode_program',$kode); //buat validasi		
+				$this->db->where('tahun',$tahun); //buat validasi		
+				$this->db->select('*');
+				$this->db->from('tbl_masterpk_eselon1');
+								
+				$query = $this->db->get();
+				$rs = $query->num_rows() ;		
+				$query->free_result();
+				$isSave = ($rs==0);
+			}
+		}
+		return $isSave;
 	}
 	
 	public function InsertOnDB_programKL($data){
@@ -174,7 +235,9 @@ class Programkl_model extends CI_Model
 		$this->db->set('kode_e1',$data['kode_e1']);
 		$this->db->set('log_update', 		$this->session->userdata('user_id').';'.date('Y-m-d H:i:s'));
 		
-		$this->db->where('id_program_kl', $data['id_program_kl']);
+		//$this->db->where('id_program_kl', $data['id_program_kl']);
+		$this->db->where('tahun', $data['tahun_old']);
+		$this->db->where('kode_program', $data['kode_program_old']);
 		
 		$result = $this->db->update('tbl_program_kl');
 		
@@ -193,9 +256,11 @@ class Programkl_model extends CI_Model
 	
 	
 	//hapus data
-	public function DeleteOnDb($id){
+	public function DeleteOnDb($tahun,$kode_program){
 		$this->db->flush_cache();
-		$this->db->where('id_program_kl', $id);
+		//$this->db->where('id_program_kl', $id);
+		$this->db->where('tahun', $tahun);
+		$this->db->where('kode_program', $kode_program);
 		$result = $this->db->delete('tbl_program_kl'); 
 		
 		$errNo   = $this->db->_error_number();

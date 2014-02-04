@@ -1,8 +1,7 @@
-<script  type="text/javascript" src="<?=base_url()?>public/js/autoNumeric.js"></script>
+	<script  type="text/javascript" src="<?=base_url()?>public/js/autoNumeric.js"></script>
 	<script  type="text/javascript" >
 			$('.year').autoNumeric('init',{aSep: '', aDec: ',',vMin:'0',aPad:"false",vMax:"9999"});
 			$('.money').autoNumeric('init',{aSep: '.', aDec: ',',vMin:'0',aPad:"false",vMax:"999999999999999"});
-			
 			onchangeKodeE1<?=$objectId;?> = function(){
 					$("#divUnitKerjaAdd<?=$objectId;?>").load(base_url+"rujukan/eselon2/loadE2/"+$("#kode_e1<?=$objectId;?>").val()+"/<?=$objectId;?>");
 					$("#divProgram<?=$objectId;?>").load(base_url+"rujukan/programkl/loadProgram/"+$("#kode_e1<?=$objectId;?>").val()+"/"+$("#tahun<?=$objectId;?>").val()+"/<?=$objectId;?>");
@@ -87,8 +86,8 @@
 			//newcell_3.childNodes[1].id = "satuan" + rowCount;
 			newcell_3.childNodes[1].value = "";
 			newcell_3.childNodes[1].name = "detail[" + rowCount + "][total]";
-			$('.money').autoNumeric('init',{aSep: '.', aDec: ',',vMin:'0',aPad:"false",vMax:"999999999999999"});
 			//newcell_3.childNodes[1].readOnly = "true";
+			$('.money').autoNumeric('init',{aSep: '.', aDec: ',',vMin:'0',aPad:"false",vMax:"999999999999999"});
         }
  
         function deleteRow(tableID) {
@@ -189,10 +188,10 @@
 									</td>
 									<td>
 										
-										<textarea name="detail[1][nama_kegiatan]" cols="100" rows="0"></textarea>
+										<textarea name="detail[1][nama_kegiatan]" cols="80" rows="0"></textarea>
 									</td>
 									<td>
-										<input name="detail[1][total]" size="25" class="money" style="text-align:right">
+										<input name="detail[1][total]" class="money" size="20">
 									</td>
 								</tr>
 							</table>

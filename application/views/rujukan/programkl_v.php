@@ -1,4 +1,4 @@
-<script  type="text/javascript" src="<?=base_url()?>public/js/autoNumeric.js"></script>
+
 	<script  type="text/javascript" >
 				
 		$(function(){

@@ -43,7 +43,6 @@ class Sys_login_model extends CI_Model{
 			$data['unit_kerja_e1']=$row['unit_kerja_e1'];
 			$data['unit_kerja_e2']=$row['unit_kerja_e2'];
 			return $this->insertLoginLog($data);
-			return TRUE;
 			}else {
 				$query->free_result();
 			return FALSE;

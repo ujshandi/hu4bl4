@@ -14,12 +14,12 @@ class Penetapankl_model extends CI_Model
 		//$this->CI =& get_instance();
     }
 	
-	public function easyGrid($filtahun=null){
+	public function easyGrid($filtahun=null,$filstatus=null){
 		
 		$page = isset($_POST['page']) ? intval($_POST['page']) : 1;  
 		$limit = isset($_POST['rows']) ? intval($_POST['rows']) : 10;  
 		
-		$count = $this->GetRecordCount($filtahun);
+		$count = $this->GetRecordCount($filtahun,$filstatus);
 		$response = new stdClass();
 		$response->total = $count;
 		$sort = isset($_POST['sort']) ? strval($_POST['sort']) : 'tahun';  
@@ -32,13 +32,16 @@ class Penetapankl_model extends CI_Model
 			if($filtahun != '' && $filtahun != '-1' && $filtahun != null) {
 				$this->db->where("tbl_pk_kl.tahun",$filtahun);
 			}	
+			if ($filstatus!=null){
+				$this->db->where("tbl_pk_kl.status",$filstatus);
+			}
 			
 			$this->db->order_by($sort." ".$order );
 			$this->db->limit($limit,$offset);
 			$this->db->select("distinct tbl_pk_kl.*,tbl_iku_kl.deskripsi as deskripsi_iku_kl,tbl_iku_kl.satuan,tbl_sasaran_kl.deskripsi as deskripsi_sasaran_kl, tbl_kl.nama_kl",false);
 			$this->db->from('tbl_pk_kl ');
 			$this->db->join('tbl_iku_kl','tbl_iku_kl.kode_iku_kl = tbl_pk_kl.kode_iku_kl and tbl_iku_kl.tahun = tbl_pk_kl.tahun');
-			$this->db->join('tbl_sasaran_kl','tbl_sasaran_kl.kode_sasaran_kl = tbl_pk_kl.kode_sasaran_kl');
+			$this->db->join('tbl_sasaran_kl','tbl_sasaran_kl.kode_sasaran_kl = tbl_pk_kl.kode_sasaran_kl and tbl_sasaran_kl.tahun = tbl_pk_kl.tahun');
 			$this->db->join('tbl_kl', 'tbl_kl.kode_kl = tbl_pk_kl.kode_kl');
 			$this->db->order_by("tbl_pk_kl.tahun DESC, kode_sasaran_kl ASC, tbl_pk_kl.kode_iku_kl ASC");
 			$query = $this->db->get();
@@ -100,16 +103,20 @@ class Penetapankl_model extends CI_Model
 	}
 	
 	
-	public function GetRecordCount($filtahun=null){
+	public function GetRecordCount($filtahun=null,$filstatus=null){
 		if($filtahun != '' && $filtahun != '-1' && $filtahun != null) {
 			$this->db->where("tbl_pk_kl.tahun",$filtahun);
 		}
 		
+		if ($filstatus!=null){
+			$this->db->where("tbl_pk_kl.status",$filstatus);
+		}
+		
 		$this->db->select("distinct tbl_pk_kl.*,tbl_iku_kl.deskripsi as deskripsi_iku_kl,tbl_iku_kl.satuan,tbl_sasaran_kl.deskripsi as deskripsi_sasaran_kl, tbl_kl.nama_kl",false);
 		$this->db->from('tbl_pk_kl ');
-		$this->db->join('tbl_iku_kl','tbl_iku_kl.kode_iku_kl = tbl_pk_kl.kode_iku_kl and tbl_iku_kl.tahun = tbl_pk_kl.tahun');
-		$this->db->join('tbl_sasaran_kl','tbl_sasaran_kl.kode_sasaran_kl = tbl_pk_kl.kode_sasaran_kl');
-		$this->db->join('tbl_kl', 'tbl_kl.kode_kl = tbl_pk_kl.kode_kl');
+			$this->db->join('tbl_iku_kl','tbl_iku_kl.kode_iku_kl = tbl_pk_kl.kode_iku_kl and tbl_iku_kl.tahun = tbl_pk_kl.tahun');
+			$this->db->join('tbl_sasaran_kl','tbl_sasaran_kl.kode_sasaran_kl = tbl_pk_kl.kode_sasaran_kl and tbl_sasaran_kl.tahun = tbl_pk_kl.tahun');
+			$this->db->join('tbl_kl', 'tbl_kl.kode_kl = tbl_pk_kl.kode_kl');
 		
 		return $this->db->count_all_results();
 		$this->db->free_result();
@@ -151,11 +158,11 @@ class Penetapankl_model extends CI_Model
 					$out .= '</td>';
 				
 					$out .= '<td>';
-						$out .= '<input name="detail['.$i.'][target]" value="'.$row->target.'" readonly="readonly" size="15">';
+						$out .= '<input name="detail['.$i.'][target]" value="'.$this->utility->cekNumericFmt($row->target).'" readonly="readonly" size="15">';
 					$out .= '</td>';
 				
 					$out .= '<td>';
-						$out .= '<input name="detail['.$i.'][penetapan]" value="'.$row->penetapan.'" size="15" '.($row->status=='1'?'readonly="readonly"':'').'>';
+						$out .= '<input name="detail['.$i.'][penetapan]" value="'.$this->utility->cekNumericFmt($row->penetapan).'" size="15" '.($row->status=='1'?'readonly="readonly"':'').'>';
 					$out .= '</td>';
 				
 					$out .= '<td>';
@@ -194,7 +201,7 @@ class Penetapankl_model extends CI_Model
 				$out .= '</td>';
 			
 				$out .= '<td>';
-					$out .= '<input name=detail['.$i.'][target] value="'.$row->target.'" readonly="readonly" size="15">';
+					$out .= '<input name=detail['.$i.'][target] value="'.$this->utility->cekNumericFmt($row->target).'" readonly="readonly" size="15">';
 				$out .= '</td>';
 			
 				$out .= '<td>';

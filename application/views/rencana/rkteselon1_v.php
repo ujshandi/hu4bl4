@@ -1,7 +1,12 @@
 	<script  type="text/javascript" >
 				
 		$(function(){
-		
+			$('textarea').autosize();   
+			
+		 	cancel<?=$objectId;?>=function(){
+				$('#tt').tabs('close', 'Add RKT Eselon I');
+			}
+			
 		 	saveData<?=$objectId;?>=function(){
 			
 				$('#fm<?=$objectId;?>').form('submit',{
@@ -51,6 +56,7 @@
 			$("#tahun<?=$objectId;?>").change(function(){
 				var e1 = $("#kode_e1<?=$objectId;?>").val();
 				 setSasaranE1<?=$objectId;?>(e1,$(this).val());
+				 getListIkuE1<?=$objectId;?>();
 			
 			});
 			
@@ -64,7 +70,7 @@
 				$("#divSasaranE1<?=$objectId?>").load(
 					base_url+"rencana/rkteselon1/getListSasaranE1/"+"<?=$objectId;?>"+"/"+e1+"/"+tahun,
 					function(){
-						$("textarea").autogrow();
+						$('textarea').autosize();   
 						if($("#drop<?=$objectId;?>").is(":visible")){
 							$("#drop<?=$objectId;?>").slideUp("slow");
 						}
@@ -93,6 +99,7 @@
 			}
 			$("#kode_e1<?=$objectId?>").change(function(){
 				setSasaranE1<?=$objectId;?>($(this).val(), $('#tahun<?=$objectId;?>').val());
+				getListIkuE1<?=$objectId;?>();
 			});
 			
 			//inisilaisasi;
@@ -210,20 +217,6 @@
 	<!-- Dari Stef -->
 	<script type="text/javascript">
 		$(document).ready(function() {
-			/*chan-----------
-			if($("#drop<?=$objectId;?>").is(":visible")){
-				$("#drop<?=$objectId;?>").slideToggle("slow");
-			}
-			
-			$("#txtkode_sasaran_e1<?=$objectId;?>").click(function(){
-				$("#drop<?=$objectId;?>").slideToggle("slow");
-			});
-			
-			$("#drop<?=$objectId;?> li").click(function(e){
-				var chose = $(this).text();
-				$("#txtkode_sasaran_e1<?=$objectId;?>").text(chose);
-				$("#drop<?=$objectId;?>").slideToggle("slow");
-			});*/
 		});
 		
 		//chan-----------
@@ -234,19 +227,30 @@
 			}
 			
 			// set IKU E1 berdasarkan unit kerja eselon 1
+			
+			getListIkuE1<?=$objectId;?>();
+		}
+		
+		
+		getListIkuE1<?=$objectId;?> = function(){
+			
+			var kode_sasaran_e1 = $("#kode_sasaran_e1<?=$objectId;?>").val();			
 			var kode_e1 = $('#kode_e1<?=$objectId;?>').val();
 			var tahun = $('#tahun<?=$objectId;?>').val();
+			if (kode_sasaran_e1==null) kode_sasaran_e1 = "-1";
+			if (kode_e1==null) kode_e1 = "-1";
 			
 			if(tahun.length < 4){
 				$("#tbodyiku<?=$objectId;?>").html('<tr><td colspan="5">Isi Tahun dengan benar</td></tr>');
 			}else{
 			//	setSasaranE1<?=$objectId;?>(kode_e1, tahun);
 				$("#tbodyiku<?=$objectId;?>").load(
-					base_url+"rencana/rkteselon1/getIKU_e1/"+kode_e1+"/"+tahun
+					base_url+"rencana/rkteselon1/getIKU_e1/"+kode_e1+"/"+tahun+"/"+kode_sasaran_e1,function(){
+					
+					}
 				);
 			}
-			
-		}
+		}	
 			
 	</script>
 	
@@ -329,7 +333,7 @@
 				<form id="fm<?=$objectId;?>" method="post" style="margin:10px 5px 5px 10px;">
 					<div class="fitem">
 						<label style="width:120px;vertical-align:top">Tahun :</label>
-						<input id="tahun<?=$objectId?>" name="tahun" class="easyui-validatebox" required="true" size="5" maxlength="4">
+						<input id="tahun<?=$objectId?>" name="tahun" class="easyui-validatebox year" required="true" size="5" maxlength="4">
 					</div>
 					<div class="fitem" >
 						<label style="width:120px">Unit Kerja Eselon I :</label>
@@ -354,7 +358,7 @@
 						<table id="tbl<?=$objectId;?>" >
 							<thead>
 								<tr>
-									<th></th>
+									<!--<th></th> -->
 									<th width="20px" bgcolor="#F4F4F4">No.</th>
 									<th width="100%" bgcolor="#F4F4F4">Indikator Kerja Utama</th>
 									<th bgcolor="#F4F4F4">Target</th>
@@ -366,9 +370,9 @@
 							</tbody>
 						</table>
 						<br>
-						<a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="addRow<?=$objectId;?>('tbl<?=$objectId;?>')">Tambah IKU</a>
-						<a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="deleteRow<?=$objectId;?>('tbl<?=$objectId;?>')">Hapus IKU</a>
-						<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveData<?=$objectId;?>()">Simpan</a>
+					<!--	<a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="addRow<?=$objectId;?>('tbl<?=$objectId;?>')">Tambah IKU</a>
+						<a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="deleteRow<?=$objectId;?>('tbl<?=$objectId;?>')">Hapus IKU</a> -->
+						<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveData<?=$objectId;?>()">Save</a>&nbsp;<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="cancel<?=$objectId;?>()">Cancel</a>
 					</div>
 				</form>
 				</div>

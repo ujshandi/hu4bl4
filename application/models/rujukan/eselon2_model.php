@@ -60,9 +60,9 @@ class Eselon2_model extends CI_Model
 				unset($row->nama_e1);
 				if($file1 != '' && $file1 != '-1' && $file1 != null){
 					unset($row->kode_e1);
-					$colHeaders = array("Kode E2","Nama","Singkatan","Nama Direktur","NIP","Pangkat","Golongan");
+					$colHeaders = array("Kode E2","Nama","Singkatan","Nama Pimpinan","NIP","Pangkat","Golongan");
 				}
-				else {$colHeaders = array("Kode E2","Kode E1","Nama","Singkatan","Nama Direktur","NIP","Pangkat","Golongan");}
+				else {$colHeaders = array("Kode E2","Kode E1","Nama","Singkatan","Nama Pimpinan","NIP","Pangkat","Golongan");}
 					
 				//===========================================================
 					
@@ -121,6 +121,9 @@ class Eselon2_model extends CI_Model
 		//	var_dump($query);die;
 			to_excel($query,"Eselon2",$colHeaders);
 		}
+		else if ($purpose==4) { //WEB SERVICE
+			return $response;
+		}
 	
 	}
 	
@@ -147,6 +150,41 @@ class Eselon2_model extends CI_Model
 		$rs = $query->num_rows() ;		
 		$query->free_result();
 		return ($rs>0);
+	}
+	
+	public function isSaveDelete($kode){	
+		
+		$this->db->where('kode_e2',$kode); //buat validasi		
+		$this->db->select('*');
+		$this->db->from('tbl_kegiatan_kl');
+						
+		$query = $this->db->get();
+		$rs = $query->num_rows() ;		
+		$query->free_result();
+		$isSave = ($rs==0);
+		if ($isSave){
+			$this->db->flush_cache();
+			$this->db->where('kode_e2',$kode); //buat validasi		
+			$this->db->select('*');
+			$this->db->from('tbl_sasaran_eselon2');
+							
+			$query = $this->db->get();
+			$rs = $query->num_rows() ;		
+			$query->free_result();
+			$isSave = ($rs==0);
+			if ($isSave){
+				$this->db->flush_cache();
+				$this->db->where('kode_e2',$kode); //buat validasi		
+				$this->db->select('*');
+				$this->db->from('tbl_ikk');
+								
+				$query = $this->db->get();
+				$rs = $query->num_rows() ;		
+				$query->free_result();
+				$isSave = ($rs==0);
+			}
+		}
+		return $isSave;
 	}
 	
 	//insert data
@@ -306,6 +344,7 @@ class Eselon2_model extends CI_Model
 		$this->db->select('nama_e2');
 		$this->db->from('tbl_eselon2');
 		$this->db->where('kode_e2', $id);
+		//var_dump($id);die;
 		$query = $this->db->get();
 		
 		return $query->row()->nama_e2;

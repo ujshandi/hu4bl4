@@ -5,12 +5,7 @@ class Subkegiatankl extends CI_Controller {
 	function __construct()
 	{
 		parent::__construct();			
-		$userdata = array ('logged_in' => TRUE);
-		$this->session->set_userdata($userdata);
-		
-		//$this->output->enable_profiler(true);
-				
-		if ($this->session->userdata('logged_in') != TRUE) redirect('security/login');					
+						
 		$this->load->model('/security/sys_menu_model');
 		$this->load->model('/rujukan/subkegiatankl_model');
 		$this->load->model('/rencana/rpt_rkteselon1_model');
@@ -37,7 +32,6 @@ class Subkegiatankl extends CI_Controller {
 		$data['title'] = 'Edit Data Sub Kegiatan';	
 		$data['objectId'] = 'subkegiatankl';
 		$data['result'] = $this->subkegiatankl_model->getDataEdit($id);
-		//var_dump($data['result']);
 	  	$this->load->view('rujukan/subkegiatankl_v_edit',$data);
 	}
 	
@@ -54,7 +48,7 @@ class Subkegiatankl extends CI_Controller {
 		//echo $this->sasaran_eselon2_model->getListSasaranE2($objectId,$e2);
 		$data['kode_kegiatan'] = $kode;
 		$data['tahun'] = $tahun;
-		$data['nama_kegiatan'] = (($kode=='')||($kode=="-1"))?'':$this->kegiatankl_model->getNamaKegiatan($kode);
+		$data['nama_kegiatan'] = (($kode=='')||($kode=="-1"))?'':$this->kegiatankl_model->getNamaKegiatan($tahun,$kode);
 		echo $this->kegiatankl_model->getListKegiatan($objectId,$e2,$data);
 	}
 	

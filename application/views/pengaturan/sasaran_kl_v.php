@@ -1,6 +1,7 @@
 	<script  type="text/javascript" >
 		$(function(){
 			var url;
+			var _changekode = false;
 			
 			saveData<?=$objectId;?>=function(){
 				$('#fm<?=$objectId;?>').form('submit',{
@@ -26,6 +27,7 @@
 			//end saveData
 
 			newData<?=$objectId;?> = function (){  
+				_changekode = true;
 				$('#ftitle<?=$objectId;?>').html("Add Data "+"<?=$title?>");
 				$('#saveBtn<?=$objectId;?>').css("display","");
 				$('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Add Sasaran Kementerian');
@@ -38,6 +40,7 @@
 			//end newData 
 			
 			editData<?=$objectId;?> = function (editmode){
+				_changekode = false;
 				//----------------Edit title
 				$('#ftitle<?=$objectId;?>').html((editmode?"Edit Data ":"View Data ")+"<?=$title?>");
 				$('#saveBtn<?=$objectId;?>').css("display",(editmode)?"":"none");
@@ -135,7 +138,7 @@
 			//tipe 1=grid, 2=pdf, 3=excel
 			getUrl<?=$objectId;?> = function (tipe){
 				var filtahun = $("#filter_tahun<?=$objectId;?>").val();
-				var filkey = $("#key<?=$objectId;?>").val();
+				var filkey = '-1';//$("#key<?=$objectId;?>").val();
 				if (tipe==1){
 					return "<?=base_url()?>pengaturan/sasaran_kl/grid/"+filtahun+"/"+filkey;
 				}
@@ -147,7 +150,9 @@
 			}
 			//end getUrl
 			
+			
 			setKodeOtomatis<?=$objectId?> = function(){
+				if (!_changekode) return;
 				var filkl ="-1";
 				var filtahun = $("#tahun<?=$objectId;?>").val();
 				
@@ -155,7 +160,8 @@
 				if ((filtahun == null)||(filtahun == '')) filtahun = "-1";
 				$.ajax({url:base_url+"pengaturan/sasaran_kl/getNewCode/"+filkl+"/"+filtahun,
 					success : function(data){
-					$("#kode_sasaran_kl<?=$objectId?>").val(data);
+						$("#kode_sasaran_kl<?=$objectId?>").val(data);
+						alert(data);
 					}					
 					})
 				
@@ -178,6 +184,12 @@
 				$("#filter_tahun<?=$objectId;?>").val('');
 				
 				//$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>pengaturan/kl/grid/"+filnip+"/"+filnama+"/"+filalamat});
+			}
+			
+			submitEnter<?=$objectId;?> =function (e){
+				if (e.keyCode == 13) {
+					searchData<?=$objectId;?>();
+				}
 			}
 			
 			searchData<?=$objectId;?> = function (){
@@ -203,17 +215,12 @@
 			setTimeout(function(){
 				searchData<?=$objectId;?> ();//$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>pengaturan/sasaran_kl/grid"});
 			},0);
+			
+			
+			
 		 });
 	</script>
 
-	<script>
-		<!--Enter-->
-		function submitEnter<?=$objectId;?>(e) {
-			if (e.keyCode == 13) {
-				searchData<?=$objectId;?>();
-			}
-		}
-	</script>
 	<style type="text/css">
 		
 		#fm<?=$objectId;?>{
@@ -290,10 +297,10 @@
 						<td width="90px">Tahun :</td>
 						<td><?=$this->sasaran_kl_model->getListFilterTahun($objectId);?></span></td>
 					</tr>
-					<tr>
+		<!--			<tr>
 						<td>Kata Kunci :</td>
 						<td><input id="key<?=$objectId;?>" name="key<?=$objectId;?>" type="text" onkeypress="submitEnter<?=$objectId;?>(event)"/></td>
-					</tr>
+					</tr> -->
 					<tr>
 						<td>&nbsp;</td>
 					</tr>
@@ -335,7 +342,7 @@
 		</div>
 	</div>
 	
-	<table id="dg<?=$objectId;?>" class="easyui-datagrid" style="height:auto;width:auto" title="Data Sasaran Kementerian" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true" nowrap="false">
+	<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Data Sasaran Kementerian" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true" nowrap="false">
 		<thead>
 			<tr>
 				<th field="kode_kl" sortable="true" width="15" hidden="true">Kode KL</th>

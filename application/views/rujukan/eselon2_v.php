@@ -94,6 +94,38 @@
 				});
 			}
 			//end saveData
+			
+			deleteData<?=$objectId;?> = function (){
+				var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
+				if(row){
+					if(confirm("Apakah yakin akan menghapus data '" + row.kode_e2 + "'?")){
+						var response = '';
+						$.ajax({ type: "GET",
+								 url: base_url+'rujukan/eselon2/delete/' + row.kode_e2 ,
+								 async: false,
+								 success : function(response)
+								 {
+									var response = eval('('+response+')');
+									if (response.success){
+										$.messager.show({
+											title: 'Success',
+											msg: 'Data Berhasil Dihapus'
+										});
+										
+										// reload and close tab
+										$('#dg<?=$objectId;?>').datagrid('reload');
+									} else {
+										$.messager.show({
+											title: 'Error',
+											msg: response.msg
+										});
+									}
+								 }
+						});
+					}
+				}
+			}
+			//end deleteData 
 
 			$("#filter_e1<?=$objectId;?>").change(function(){
 				$("#divUnitKerja<?=$objectId;?>").load(base_url+"rujukan/eselon2/loadFilterE2/"+$(this).val()+"/<?=$objectId;?>");
@@ -201,14 +233,14 @@
 			<table border="0" cellpadding="1" cellspacing="1">
 			<?// if ($this->session->userdata('unit_kerja_e1')==-1){?>
 			<tr>
-				<td>Unit Kerja Eselon I&nbsp;</td>
+				<td>Unit Kerja Eselon I :&nbsp;</td>
 				<td>
 					<?=$this->eselon1_model->getListFilterEselon1($objectId,$this->session->userdata('unit_kerja_e1'))?>				
 				</td>
 			</tr>
 			<?//}?>
 			<tr>
-				<td>Unit Kerja Eselon II&nbsp</td>
+				<td>Unit Kerja Eselon II :&nbsp</td>
 				<td><span class="fitem" id="divUnitKerja<?=$objectId;?>">
 					<?=$this->eselon2_model->getListFilterEselon2($objectId,$this->session->userdata('unit_kerja_e1'),$this->session->userdata('unit_kerja_e2'))?>
 					</span>
@@ -236,6 +268,9 @@
 			<? if($this->sys_menu_model->cekAkses('EDIT;',4,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 				<a href="#" onclick="editData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-edit" plain="true">Edit</a>
 			<?}?>
+			<? if($this->sys_menu_model->cekAkses('DELETE;',4,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+			<a href="#" onclick="deleteData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-remove" plain="true">Delete</a>
+		<?}?>
 			<? if($this->sys_menu_model->cekAkses('PRINT;',4,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 				<a href="#" onclick="printData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-print" plain="true">Print</a>
 			<?}?>
@@ -291,7 +326,7 @@
 			</div>
 			<div class="fitem">
 				<label style="width:120px;vertical-align:top">N I P :</label>
-				<input name="nip" class="easyui-validatebox" size="20" required="false">
+				<input name="nip" class="easyui-validatebox" size="20" maxlength="25" required="false">
 			</div>
 			<div class="fitem">
 				<label style="width:120px;vertical-align:top">Pangkat :</label>

@@ -2,6 +2,12 @@
 				
 		$(function(){
 			//chan=============================================
+			$('textarea').autosize();   
+			
+			cancel<?=$objectId;?>=function(){
+				$('#tt').tabs('close', 'Add RKT Eselon II');
+			}
+			
 			 function setListE2<?=$objectId?>(){
 				$("#divEselon2<?=$objectId?>").load(
 					base_url+"rujukan/eselon2/loadE2/"+$("#kode_e1<?=$objectId?>").val()+"/<?=$objectId;?>",
@@ -23,6 +29,7 @@
 			 $("#tahun<?=$objectId;?>").change(function(){
 				var e2 = $("#kode_e2<?=$objectId;?>").val();
 				 setSasaranE2<?=$objectId;?>(e2,$(this).val());
+				 getListIkk<?=$objectId;?>();
 			
 			});
 			setSasaranE2<?=$objectId;?> = function (e2, tahun){
@@ -30,7 +37,7 @@
 					base_url+"rencana/rkteselon2/getListSasaranE2/"+"<?=$objectId;?>"+"/"+e2+"/"+tahun,
 					//on complete
 					function(){
-						$("textarea").autogrow();
+						$('textarea').autosize();   
 								
 						
 						if($("#drop<?=$objectId;?>").is(":visible")){
@@ -46,6 +53,7 @@
 							$("#txtkode_sasaran_e2<?=$objectId;?>").text(chose);
 							$("#drop<?=$objectId;?>").slideUp("slow");
 						});
+						getListIkk<?=$objectId;?>();
 					}
 				);
 			}  
@@ -129,16 +137,25 @@
 				document.getElementById('kode_sasaran_e2<?=$objectId;?>').value = valu;
 			}
 			
+			getListIkk<?=$objectId;?>();
+		}
+		
+		
+		getListIkk<?=$objectId;?> = function(){
 			// set IKK berdasarkan unit kerja eselon 2
 			var kode_e2 = $('#kode_e2<?=$objectId;?>').val();
 			var tahun = $('#tahun<?=$objectId;?>').val();
+			var kode_sasaran_e2 = $("#kode_sasaran_e2<?=$objectId;?>").val();		
+			
+			if (kode_sasaran_e2==null) kode_sasaran_e2 = "-1";
+			if (kode_e2==null) kode_e2 = "-1";
 			
 			if(tahun.length < 4){
 				$("#tbodyikk<?=$objectId;?>").html('<tr><td colspan="5">Isi Tahun dengan benar</td></tr>');
 			}else{
 				//setSasaranE2<?=$objectId;?>(kode_e2, tahun);
 				$("#tbodyikk<?=$objectId;?>").load(
-					base_url+"rencana/rkteselon2/getIKK/"+kode_e2+"/"+tahun
+					base_url+"rencana/rkteselon2/getIKK/"+kode_e2+"/"+tahun+'/'+kode_sasaran_e2
 				);
 			}
 			
@@ -327,7 +344,7 @@
 				<!-- chan : Jika login superadmin maka tampilkan combo E1 utk nge filter list E2 -->
 					<div class="fitem">
 						<label style="width:120px;vertical-align:top">Tahun :</label>
-						<input id="tahun<?=$objectId?>" name="tahun"  class="easyui-validatebox" required="true" size="5" maxlength="4">
+						<input id="tahun<?=$objectId?>" name="tahun"  class="easyui-validatebox year" required="true" size="5" maxlength="4">
 					</div>					
 					<?// if ($this->session->userdata('unit_kerja_e1')=='-1'){?>
 					<div class="fitem">							
@@ -363,7 +380,7 @@
 						<table id="tbl<?=$objectId;?>">
 							<thead>
 							<tr>
-								<th></th>
+								<!--<th></th> -->
 								<th width="20px" bgcolor="#F4F4F4">No.</th>
 								<tH width="100%" bgcolor="#F4F4F4">IKK</th>
 								<th bgcolor="#F4F4F4">Target</th>
@@ -374,9 +391,9 @@
 							</tbody>
 						</table>
 						<br>
-						<a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="addRow<?=$objectId;?>('tbl<?=$objectId;?>')">Tambah IKU</a>
-						<a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="deleteRow<?=$objectId;?>('tbl<?=$objectId;?>')">Hapus IKU</a>
-						<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveData<?=$objectId;?>()">Simpan</a>
+						<!--<a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="addRow<?=$objectId;?>('tbl<?=$objectId;?>')">Tambah IKU</a>
+						<a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="deleteRow<?=$objectId;?>('tbl<?=$objectId;?>')">Hapus IKU</a> -->
+						<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveData<?=$objectId;?>()">Save</a>&nbsp;<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="cancel<?=$objectId;?>()">Cancel</a>
 					</div>
 				</form>
 				</div>

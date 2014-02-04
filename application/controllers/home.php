@@ -7,11 +7,11 @@ class Home extends CI_Controller {
 		parent::__construct();			
 		
 	//	$userdata = array ('userLogin' => $userLogin,'logged_in' => TRUE,'groupId'=>$this->sys_login_model->groupId,'fullName'=>$this->sys_login_model->fullName,'userId'=>$this->sys_login_model->userId,'groupLevel'=>$this->sys_login_model->level);
-	//	$userdata = array ('logged_in' => TRUE);
+		//$userdata = array ('logged_in' => TRUE);
 				//
 		//$this->session->set_userdata($userdata);
-			
-		if ($this->session->userdata('logged_in') != TRUE) redirect('security/login');					
+			//var_dump($this->session->userdata('user_id'));	
+		if ($this->session->userdata('user_id') != TRUE) redirect(base_url());					
 		$this->load->model('/security/sys_menu_model');
 		//$this->load->library("utility");
 	}
@@ -23,7 +23,7 @@ class Home extends CI_Controller {
 					'title_page'=>'Sistem Aplikasi Pengukuran Kinerja Direktorat Jenderal Perhubungan Laut',
 					'sess_fullname'=>$this->session->userdata('full_name'),
 					'sess_apptype'=>$this->session->userdata('app_type'),
-					'js'=>array('js/jquery-easyui-1.3.3/jquery.min.js','js/jquery-easyui-1.3.3/jquery.easyui.min.js','js/jquery-easyui-1.3.3/plugins/jquery-easyui-datagridview/datagrid-detailview.js','js/jquery-easyui-1.3.3/plugins/jquery-easyui-datagridview/datagrid-groupview.js','js/uri_encode_decode.js','js/json2.js','js/jquery.autogrow.js','js/jquery.formatCurrency-1.4.0.min.js','js/formwizard.js','js/jquery.jqURL.js','js/ckeditor/ckeditor.js','js/purl.js',
+					'js'=>array('js/jquery-easyui-1.3.3/jquery.min.js','js/jquery-easyui-1.3.3/jquery.easyui.min.js','js/jquery-easyui-1.3.3/plugins/jquery-easyui-datagridview/datagrid-detailview.js','js/jquery-easyui-1.3.3/plugins/jquery-easyui-datagridview/datagrid-groupview.js','js/uri_encode_decode.js','js/json2.js','js/jquery.autosize.min.js','js/jquery.formatCurrency-1.4.0.min.js','js/formwizard.js','js/jquery.jqURL.js','js/ckeditor/ckeditor.js','js/purl.js','js/autoNumeric.js',
 					'apycom.com-5-steel-blue/menu.js'
 					//'jquery-mega-drop-down-menu/js/jquery.hoverIntent.minified.js','jquery-mega-drop-down-menu/js/jquery.dcmegamenu.1.3.3.min.js'
 					

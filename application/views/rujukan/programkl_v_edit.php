@@ -1,18 +1,16 @@
-	<script  type="text/javascript" src="<?=base_url()?>public/js/autoNumeric.js"></script>
+
 	<script  type="text/javascript" >
 		$(function(){
 			$('.year').autoNumeric('init',{aSep: '', aDec: ',',vMin:'0',aPad:"false",vMax:"9999"});
 			$('.money').autoNumeric('init',{aSep: '.', aDec: ',',vMin:'0',aPad:"false",vMax:"999999999999999"});
 		 	saveDataEdit<?=$objectId;?>=function(){
-				alert('tes');
 				$('#fm<?=$objectId;?>').form('submit',{
 					url: base_url+'rujukan/programkl/save_edit',
 					onSubmit: function(){
-						//alert( $(this).form('validate'));
-						//return $(this).form('validate');
+						return $(this).form('validate');
 					},
 					success: function(result){
-						//alert(result);
+					//	alert(result);
 						var result = eval('('+result+')');
 						if (result.success){
 							$.messager.show({
@@ -22,7 +20,7 @@
 							
 							$('#dg<?=$objectId;?>').datagrid('reload');
 							loadTahun<?=$objectId;?>();
-							$('#tt').tabs('close', 'Edit Program');
+							$('#tt').tabs('close', '<?=($editMode?'Edit':'Add')?> Program');
 							
 						} else {
 							$.messager.show({
@@ -34,6 +32,17 @@
 				});
 			}
 			//end saveData
+			
+			cancel<?=$objectId;?>=function(){
+				// reload and close tab
+				$('#dg<?=$objectId;?>').datagrid('reload');
+				
+				<?if($editMode=="true"){?>
+					$('#tt').tabs('close', 'Edit Program');
+					<?}{?>
+						$('#tt').tabs('close', 'Add Program');
+					<?}?>
+			}
 		});
 	</script>
 	
@@ -77,7 +86,8 @@
 		<div region="north" split="true" title="Edit Data Program" style="height:450px;">
 				<div region="center" border="true" title="">	
 					<form id="fm<?=$objectId;?>" method="post">		
-						<input name="id_program_kl" type="hidden" value="<?=$result->id_program_kl?>" >
+						<input name="tahun_old" type="hidden" value="<?=$result->tahun?>" >
+						<input name="kode_program_old" type="hidden" value="<?=$result->kode_program?>" >
 						<div class="fitem">
 							<label style="width:120px">Tahun :</label>
 							<input name="tahun" class="easyui-validatebox year" size="5" required="true" value="<?=$result->tahun?>" >
@@ -101,7 +111,9 @@
 						<br>
 						<div class="fitem" >
 							<label style="width:120px"></label>
-							<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveDataEdit<?=$objectId;?>()">Simpan</a>
+							<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveDataEdit<?=$objectId;?>()">Save</a>
+							<label style="width:120px"></label>
+							<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="cancel<?=$objectId;?>()">Cancel</a>
 						</div>
 					</form>
 				</div>

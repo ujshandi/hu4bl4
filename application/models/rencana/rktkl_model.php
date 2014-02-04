@@ -131,9 +131,9 @@ class Rktkl_model extends CI_Model
 		}	
 		
 		$this->db->from('tbl_rkt_kl a');
-		$this->db->join('tbl_iku_kl b', 'b.kode_iku_kl = a.kode_iku_kl and b.tahun = a.tahun');
-		$this->db->join('tbl_sasaran_kl c', 'c.kode_sasaran_kl = a.kode_sasaran_kl');
-		$this->db->join('tbl_kl d', 'd.kode_kl = a.kode_kl');
+			$this->db->join('tbl_iku_kl b', 'b.kode_iku_kl = a.kode_iku_kl and b.tahun = a.tahun');
+			$this->db->join('tbl_sasaran_kl c', 'c.kode_sasaran_kl = a.kode_sasaran_kl and c.tahun = a.tahun');
+			$this->db->join('tbl_kl d', 'd.kode_kl = a.kode_kl');
 			
 		return $this->db->count_all_results();
 		$this->db->free_result();
@@ -156,13 +156,14 @@ class Rktkl_model extends CI_Model
 		$this->db->select('kode_iku_kl, deskripsi');
 		$this->db->from('tbl_iku_kl');
 		$this->db->where('tahun', $tahun);
-		//ditutup dulu bahas lebih lanjut $this->db->where('kode_sasaran_klx', $sasaran);
+		//ditutup dulu bahas lebih lanjut 
+		$this->db->where('kode_sasaran_kl', $sasaran);
 		$this->db->order_by('kode_iku_kl');
 		$que = $this->db->get();
 		
 		if($que->num_rows() > 0){
-			//$out = '<select id="1" name="detail[1][kode_iku_kl]" onclick="javascript:getSatuan'.$objectId.'(this.value, this.id)" style=width:750px;>';
-			$out = '<select id="'.$id.'" name="'.$name.'" onclick="'.$onclick.'" style=width:100%;>';
+			
+			/* $out = '<select id="'.$id.'" name="'.$name.'" onclick="'.$onclick.'" style=width:100%;>';
 			$out .= '<option value="0">-- Pilih --</option>';
 			foreach($que->result() as $r){
 				if($r->kode_iku_kl == $kode_iku){
@@ -172,7 +173,23 @@ class Rktkl_model extends CI_Model
 				}
 			}
 			
-			$out .= '</select>';
+			$out .= '</select>'; */
+			$out = '<div id="tcContainer"><input id="'.$id.'" name="'.$name.'" type="hidden" class="h_code" value="0">';
+			$out .= '<textarea name="txtkode_iku_kl'.$objectId.'" id="txtkode_iku_kl'.$objectId.'" class="textdown" required="true" readonly>-- Pilih --</textarea>';
+			$out .= '<ul id="drop'.$objectId.'" class="dropdown">';
+			$out .= '<li value="0" onclick="setIku'.$objectId.'(\'\')">-- Pilih --</li>';
+			
+			foreach($que->result() as $r){
+				$out .= '<li onclick="setIku'.$objectId.'(\''.$r->kode_iku_kl.'\')">'.$r->deskripsi.'</li>';
+			}
+			$out .= '</ul></div>';
+			
+			//chan
+			if ($que->num_rows()==0){
+				$out = "Data IKU untuk tingkat Eselon 1 ini belum tersedia.";
+			}
+			
+			
 		}else{
 			$out = 'Tidak terdapat IKU pada tahun '.$tahun;
 		}
@@ -180,8 +197,45 @@ class Rktkl_model extends CI_Model
 		return $out;
 	}
 	
-	public function getIKU_kl($objectId, $tahun,$sasaran){
-		$out = '<tr>
+	public function getListIKU_KL_new($idx,$name,$objectId, $tahun, $sasaran){
+		
+		
+		
+		$this->db->flush_cache();
+		$this->db->select('kode_iku_kl, deskripsi');
+		$this->db->from('tbl_iku_kl');
+		$this->db->where('tahun', $tahun);
+		//ditutup dulu bahas lebih lanjut 
+		$this->db->where('kode_sasaran_kl', $sasaran);
+		$this->db->order_by('kode_iku_kl');
+		$que = $this->db->get();
+		
+		if($que->num_rows() > 0){		
+			$out = '<div id="tcContainer"><input id="kode_iku_kl'.$objectId.$idx.'" name="'.$name.'" type="hidden" class="h_code" value="0">';
+			$out .= '<textarea name="txtkode_iku_kl'.$idx.'" id="txtkode_iku_kl'.$objectId.$idx.'" class="textdown" required="true" readonly>-- Pilih --</textarea>';
+			$out .= '<ul id="drop'.$objectId.$idx.'" class="dropdown">';
+			$out .= '<li value="0" onclick="setIku'.$objectId.'('.$idx.',\'\',\'\')">-- Pilih --</li>';
+			
+			foreach($que->result() as $r){
+				$out .= '<li onclick="setIku'.$objectId.'('.$idx.',\''.$name.'\',\''.$r->kode_iku_kl.'\')">'.$r->deskripsi.'</li>';
+			}
+			$out .= '</ul></div>';
+			
+			//chan
+			if ($que->num_rows()==0){
+				$out = "Data IKU untuk tingkat Eselon 1 ini belum tersedia.";
+			}
+			
+			
+		}else{
+			$out = 'Tidak terdapat IKU pada tahun '.$tahun;
+		}
+		
+		return $out;
+	}
+	
+	public function getIKU_kl($objectId, $kode_kl,$tahun,$sasaran){
+		$outOld = '<tr>
 					<td><input type="checkbox" name="chk'.$objectId.'[]"/></td>
 					<td>1</td>
 					<td>
@@ -194,8 +248,47 @@ class Rktkl_model extends CI_Model
 						<input name="detail[1][satuan]" id="satuan1'.$objectId.'" type="text" value="" readonly="true">
 					</td>
 				</tr>';
-		
+		$data = $this->getDataExist($kode_kl,$tahun,$sasaran);
+		$out ='';
+		$i=1;
+		if ($data->num_rows()>0) {
+			
+			foreach ($data->result() as $r){
+				$out .= '<tr>'
+					//<td><input type="checkbox" checked="checked" name="chk'.$objectId.'[]"/></td>
+					.'<td>'.$i.'<input type="hidden" value="'.$r->id_rkt_kl.'" name="detail['.$i.'][id_rkt_kl]"></td>
+					<td>'.$r->deskripsi.'<input type="hidden" name="detail['.$i.'][kode_iku_kl]" value="'.$r->kode_iku_kl.'">
+					</td>
+					<td>
+						<input name="detail['.$i.'][target]" size="20" value="'.$this->utility->cekNumericFmt($r->target).'">
+					</td>
+					<td width="30px"><input name="detail['.$i.'][satuan]" id="satuan1'.$objectId.'" type="hidden" value="'.$r->satuan.'" readonly="true">
+						'.$r->satuan.'
+					</td>
+				</tr>';		
+				$i++;
+			}
+		}
 		return $out;
+	}
+	
+	private function getDataExist($kode_kl,$tahun,$kode_sasaran_kl){		
+		
+		$this->db->flush_cache();
+		$this->db->select("a.id_rkt_kl, b.tahun, b.kode_kl, b.kode_iku_kl, b.kode_sasaran_kl, b.deskripsi, a.target, b.satuan, a.status",false);
+			$this->db->select("c.deskripsi as deskripsi_sasaran_kl, b.deskripsi AS deskripsi_iku_kl, d.nama_kl",false);
+			$this->db->from('tbl_iku_kl b');
+			$this->db->join('tbl_sasaran_kl c', 'c.kode_sasaran_kl = b.kode_sasaran_kl and c.tahun = b.tahun');
+			$this->db->join('tbl_kl d', 'd.kode_kl = b.kode_kl');
+			$this->db->join('tbl_rkt_kl a', 'b.kode_iku_kl = a.kode_iku_kl and b.tahun = a.tahun','left');
+			$this->db->order_by("b.tahun DESC, b.kode_sasaran_kl ASC, b.kode_iku_kl ASC");
+		$this->db->where('c.kode_sasaran_kl', $kode_sasaran_kl);		
+		$this->db->where('b.tahun', $tahun);		
+		
+		$query = $this->db->get();
+		
+			
+		return $query;
 	}
 	
 	public function getDataEdit($id){
@@ -210,24 +303,45 @@ class Rktkl_model extends CI_Model
 		return $this->db->get()->row();
 	}
 	
-	public function InsertOnDB($data) {
+	
+	public function saveToDb($data){
 		$this->db->trans_start();
-		
 		foreach($data['detail'] as $dt){
+			$dt['tahun'] = $data['tahun'];
+			$dt['kode_kl'] = $data['kode_kl'];
+			$dt['kode_sasaran_kl'] = $data['kode_sasaran_kl'];
+			if (($dt['id_rkt_kl']=="")||($dt['id_rkt_kl']==null)){				
+				$this->InsertOnDB($dt);
+			}
+			else {
+				$this->UpdateOnDb($dt);
+			}
+		}
+		
+		$this->db->trans_complete();
+	    return $this->db->trans_status();
+	}
+	
+	
+	public function InsertOnDB($data) {
+		//$this->db->trans_start();
+		$this->db->flush_cache();
+		
+		//foreach($data['detail'] as $dt){
 			//query insert data		
 			$this->db->set('tahun',				$data['tahun']);
 			$this->db->set('kode_kl',			$data['kode_kl']);
 			$this->db->set('kode_sasaran_kl',	$data['kode_sasaran_kl']);
-			$this->db->set('kode_iku_kl',		$dt['kode_iku_kl']);
-			$this->db->set('target',			$dt['target']);
+			$this->db->set('kode_iku_kl',		$data['kode_iku_kl']);
+			$this->db->set('target',			$data['target']);
 			$this->db->set('status',			'0');
 			$this->db->set('log_insert', 		$this->session->userdata('user_id').';'.date('Y-m-d H:i:s'));
 			//$this->db->set('satuan',$data['satuan']);
 			
-			$this->db->insert('tbl_rkt_kl');
+			$result = $this->db->insert('tbl_rkt_kl');
 			
 			# insert to log
-			$this->db->flush_cache();
+			/* $this->db->flush_cache();
 			$this->db->set('tahun',				$data['tahun']);
 			$this->db->set('kode_kl',			$data['kode_kl']);
 			$this->db->set('kode_sasaran_kl',	$data['kode_sasaran_kl']);
@@ -235,23 +349,28 @@ class Rktkl_model extends CI_Model
 			$this->db->set('target',			$dt['target']);
 			$this->db->set('status',			'0');
 			$this->db->set('log',				'INSERT;'.$this->session->userdata('user_id').';'.date('Y-m-d H:i:s'));
-			$this->db->insert('tbl_rkt_kl_log');
+			$this->db->insert('tbl_rkt_kl_log'); */
 			
+		//}
+		$errNo   = $this->db->_error_number();
+	    $errMess = $this->db->_error_message();
+		$error = $errMess;
+		//var_dump($errMess);die;
+	    log_message("error", "Problem Update to : ".$errMess." (".$errNo.")"); 
+		//return
+		if($result) {
+			return TRUE;
+		}else {
+			return FALSE;
 		}
 		
-		$this->db->trans_complete();
-	    return $this->db->trans_status();
+		//$this->db->trans_complete();
+	    //return $this->db->trans_status();
 	}
 	
 	public function UpdateOnDb($data){
 		$this->db->flush_cache();
-		$this->db->where('id_rkt_kl', $data['id_rkt_kl']);
 		
-		$this->db->set('kode_iku_kl', $data['kode_iku_kl']);
-		$this->db->set('target', $data['target']);
-		$this->db->set('log_update', 		$this->session->userdata('user_id').';'.date('Y-m-d H:i:s'));
-		
-		$result = $this->db->update('tbl_rkt_kl');
 		
 		# insert to log
 		$this->db->flush_cache();
@@ -269,6 +388,14 @@ class Rktkl_model extends CI_Model
 		$this->db->set('log',				'UPDATE;'.$this->session->userdata('user_id').';'.date('Y-m-d H:i:s'));
 		$this->db->insert('tbl_rkt_kl_log');
 		
+		
+		$this->db->flush_cache();
+		$this->db->where('id_rkt_kl', $data['id_rkt_kl']);		
+		$this->db->set('kode_iku_kl', $data['kode_iku_kl']);
+		$this->db->set('target', $data['target']);
+		$this->db->set('log_update', 		$this->session->userdata('user_id').';'.date('Y-m-d H:i:s'));
+		
+		$result = $this->db->update('tbl_rkt_kl');
 		
 		$errNo   = $this->db->_error_number();
 	    $errMess = $this->db->_error_message();

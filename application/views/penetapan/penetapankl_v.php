@@ -1,7 +1,10 @@
 	<script  type="text/javascript" >
 				
 		$(function(){
-		
+			$('textarea').autosize();   
+			cancel<?=$objectId?> = function(){
+				$('#tt').tabs('close', 'Add PK Kementerian');	
+			}
 		 	saveData<?=$objectId;?>=function(){
 				$('#fm<?=$objectId;?>').form('submit',{
 					url: base_url+'penetapan/penetapankl/save',
@@ -47,7 +50,7 @@
 			//end saveData
 			
 			$("#tahun<?=$objectId?>").change(function(){
-				loadSasaran<?=$objectId;?>();
+				loadSasaran<?=$objectId;?>($(this).val(),"","");
 				getDetail<?=$objectId;?>();
 			});
 			
@@ -161,7 +164,7 @@
 			
 			
 			// inisialisasi
-			loadSasaran<?=$objectId;?>()
+			loadSasaran<?=$objectId;?>($("#tahun<?=$objectId?>").val(),"","");
 
 		});
 		
@@ -170,11 +173,14 @@
 			getDetail<?=$objectId;?>();
 		}
 		
-		function loadSasaran<?=$objectId;?>(){
+		
+		
+		function loadSasaran<?=$objectId;?>(tahun,key,val){
+			if ((tahun==null)||(tahun=="")) tahun = "-1";
 			$("#divSasaran<?=$objectId?>").load(
-				base_url+"pengaturan/sasaran_eselon1/getListSasaranKL/"+"<?=$objectId;?>"+"/"+$('#tahun<?=$objectId;?>').val(),
+				base_url+"pengaturan/sasaran_eselon1/getListSasaranKL/"+"<?=$objectId;?>"+"/"+tahun,
 				function(){
-					$("textarea").autogrow();
+					$('textarea').autosize();   
 					if($("#drop<?=$objectId;?>").is(":visible")){
 						$("#drop<?=$objectId;?>").slideUp("slow");
 					}
@@ -295,7 +301,7 @@
 								<a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="deleteRow<?=$objectId;?>('tbl<?=$objectId;?>')">Hapus IKU</a>
 								&nbsp;&nbsp;&nbsp;&nbsp;
 								-->
-								<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveData<?=$objectId;?>()">Simpan</a>
+								<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveData<?=$objectId;?>()">Save</a>&nbsp;<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="cancel<?=$objectId;?>()">Cancel</a>
 						</div>
 					</form>
 				</div>

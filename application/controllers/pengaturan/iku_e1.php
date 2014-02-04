@@ -7,11 +7,7 @@ class Iku_e1 extends CI_Controller {
 		parent::__construct();			
 		
 	//	$userdata = array ('userLogin' => $userLogin,'logged_in' => TRUE,'groupId'=>$this->sys_login_model->groupId,'fullName'=>$this->sys_login_model->fullName,'userId'=>$this->sys_login_model->userId,'groupLevel'=>$this->sys_login_model->level);
-		$userdata = array ('logged_in' => TRUE);
-				//
-		$this->session->set_userdata($userdata);
-				
-		if ($this->session->userdata('logged_in') != TRUE) redirect('security/login');					
+						
 		$this->load->model('/security/sys_menu_model');
 		$this->load->model('/pengaturan/iku_e1_model');
 		$this->load->model('/pengaturan/iku_kl_model');
@@ -30,6 +26,13 @@ class Iku_e1 extends CI_Controller {
 		//$this->load->view('footer_vw',$data);
 	}
 	
+	public function copy(){
+		$data['title'] = 'Copy Data IKU Eselon I';	
+		$data['objectId'] = 'copyiku_e1';
+		//$data['formLookupTarif'] = $this->tarif_model->lookup('#winLookTarif'.$data['objectId'],"#medrek_id".$data['objectId']);
+	  	$this->load->view('pengaturan/iku_e1_copy_v',$data);
+	}
+	
 	function grid($file1=null,$filtahun=null,$filkey=null){
 		if (($file1==null)&&($this->session->userdata('unit_kerja_e1'))!=-1)
 			$file1= $this->session->userdata('unit_kerja_e1');
@@ -42,7 +45,7 @@ class Iku_e1 extends CI_Controller {
 			$data['kode_e1'] = $this->input->post("kode_e1", TRUE); //id
 		else 
 			$data['kode_e1'] = $this->session->userdata('unit_kerja_e1');
-		$data['kode_e2'] = $this->input->post("kode_e2", TRUE);
+		//$data['kode_e2'] = $this->input->post("kode_e2", TRUE);
 		$data['kode_iku_kl'] = $this->input->post("kode_iku_kl", TRUE); //id
 		$data['kode_iku_e1'] = $this->input->post("kode_iku_e1", TRUE); //id
 		$data['deskripsi'] = $this->input->post("deskripsi", TRUE);
@@ -108,6 +111,28 @@ class Iku_e1 extends CI_Controller {
 		
 	}
 	
+	function saveCopy($tahun, $kode_e1,$tahun_tujuan){		
+		$status = "";
+		$result = false;		
+		$data['pesan_error'] = '';
+		
+		# validasi
+		# message rules
+		//if ($result){
+			$data['tahun'] = $tahun;
+			$data['tahun_tujuan'] = $tahun_tujuan;
+			$data['kode_e1'] = $kode_e1;
+			$result = $this->iku_e1_model->copy($data,$status);
+			$data['pesan_error'] = $status;
+	//	}		
+		if ($result){
+			echo json_encode(array('success'=>true, 'msg'=>"Data Berhasil di copy"));
+		} else {
+			echo json_encode(array('msg'=>$data['pesan_error']));
+		}
+		//echo $status;
+	}
+	
 	function delete($tahun, $kode_iku_e1){
 		# cek keberadaan di RKT
 		// jika ada di RKT
@@ -131,7 +156,7 @@ class Iku_e1 extends CI_Controller {
 	
 	function getNewCode($e1,$tahun,$kodesasaran){
 		//fieldName,$tblName,$condition,$prefix,$suffix,$minLength=5
-		$prefix = $this->utility->getValueFromSQL("select prefix_iku as rs from tbl_prefix where kode_e1 = '$e1'","-").$kodesasaran;//UNSET
+		$prefix = $this->utility->getValueFromSQL("select prefix_iku as rs from tbl_prefix where kode_e1 = '$e1'","-").str_replace(".","",$kodesasaran);//UNSET
 		//var_dump($prefix); die;
 		echo $this->utility->ourGetNextIDNum("kode_iku_e1","tbl_iku_eselon1"," and tahun = '$tahun'",$prefix.".","",2);
 	}
@@ -380,7 +405,7 @@ class Iku_e1 extends CI_Controller {
 						$data['kode_iku_kl'] 		= $this->excel->val($i, 4);
 						$data['deskripsi'] 			= $this->excel->val($i, 5);
 						$data['satuan'] 			= $this->excel->val($i, 6);
-						$data['kode_e2'] 			= $this->excel->val($i, 7);
+						//$data['kode_e2'] 			= $this->excel->val($i, 7);
 						
 						# proses
 						$result = $this->iku_e1_model->importData($data);

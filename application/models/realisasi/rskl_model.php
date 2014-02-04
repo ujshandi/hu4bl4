@@ -14,12 +14,12 @@ class rskl_model extends CI_Model
 		//$this->CI =& get_instance();
     }
 	
-	public function easyGrid($filtahun=null){
+	public function easyGrid($filtahun=null,$filbulan=null){
 		
 		$page = isset($_POST['page']) ? intval($_POST['page']) : 1;  
 		$limit = isset($_POST['rows']) ? intval($_POST['rows']) : 10;  
 		
-		$count = $this->GetRecordCount($filtahun);
+		$count = $this->GetRecordCount($filtahun,$filbulan);
 		$response = new stdClass();
 		$response->total = $count;
 		$sort = isset($_POST['sort']) ? strval($_POST['sort']) : 'tahun';  
@@ -29,6 +29,9 @@ class rskl_model extends CI_Model
 		if ($count>0){
 			if($filtahun != '' && $filtahun != '-1' && $filtahun != null) {
 				$this->db->where("tbl_pk_kl.tahun",$filtahun);
+			}
+			if($filbulan != '' && $filbulan != '-1' && $filbulan != null) {
+				$this->db->where("tbl_kinerja_kl.triwulan",$filbulan);
 			}
 			$this->db->order_by($sort." ".$order );
 			$this->db->limit($limit,$offset);
@@ -77,8 +80,37 @@ class rskl_model extends CI_Model
 					$response->rows[$i]['realisasi'] = $row->realisasi;
 				}						
 */
+
+				/*if ($row[$i]->penetapan != 0) {
+					# jika iku/ikk exception
+					$exc = $this->isException($tahun, $row[$i]->kode_iku_kl);
+					if($exc){
+						$_rencana = $row[$i]->penetapan;
+						$_realisasi = $row[$i]->realisasi;
+						$persentase = round((2 * $_rencana - $_realisasi) / $_rencana * 100, 2);
+					}else{
+						$persentase = round(($row[$i]->realisasi/$row[$i]->penetapan)*100, 2);
+					}
+					
+				}*/	
+				$realisasi_persen = 0;
+				if(is_numeric($row->realisasi)){
+					if (is_numeric($row->penetapan)){
+						
+						if ($row->penetapan>0){
+							$exc = $this->isException($row->tahun, $row->kode_iku_kl);
+							if($exc){
+
+								$realisasi_persen = round((2 * $row->penetapan - $row->realisasi) / $row->penetapan * 100, 2);
+							}else{
+								$realisasi_persen = round(($row->realisasi/$row->penetapan)*100, 2);
+							}	
+							//$realisasi_persen = ($row->realisasi/$row->penetapan)*100;
+						}
+					}	
+				}
 				$response->rows[$i]['realisasi']=$this->utility->cekNumericFmt($row->realisasi);
-				$response->rows[$i]['realisasi_persen']=$this->utility->cekNumericFmt($row->realisasi_persen);
+				$response->rows[$i]['realisasi_persen']=$this->utility->cekNumericFmt($realisasi_persen);//$row->realisasi_persen);
 				$response->rows[$i]['keterangan']=$row->keterangan;
 				$response->rows[$i]['action_plan']=$row->action_plan;
 				$i++;
@@ -108,16 +140,31 @@ class rskl_model extends CI_Model
 		
 	}
 	
-	public function GetRecordCount($filtahun=""){
+	public function isException($tahun, $kode_iku_kl){
+		$this->db->flush_cache();
+		$this->db->select('*');
+		$this->db->from('tbl_exception_iku_kl');
+		$this->db->where('tahun', $tahun);
+		$this->db->where('kode_iku_kl', $kode_iku_kl);
+		
+		$q = $this->db->get();
+		
+		return ($q->num_rows() > 0?TRUE:FALSE);
+	}
+	
+	public function GetRecordCount($filtahun="",$filbulan=""){
 		if($filtahun != '' && $filtahun != '-1' && $filtahun != null) {
 			$this->db->where("tbl_pk_kl.tahun",$filtahun);
 		}
+		if($filbulan != '' && $filbulan != '-1' && $filbulan != null) {
+			$this->db->where("tbl_kinerja_kl.triwulan",$filbulan);
+		}
 		$this->db->select("tbl_kinerja_kl.id_kinerja_kl, tbl_kinerja_kl.tahun, tbl_kinerja_kl.triwulan, tbl_kinerja_kl.kode_kl, tbl_kinerja_kl.kode_sasaran_kl, tbl_kinerja_kl.kode_iku_kl, tbl_kinerja_kl.realisasi, tbl_iku_kl.satuan, tbl_pk_kl.penetapan, tbl_kl.nama_kl, tbl_sasaran_kl.deskripsi AS deskripsi_sasaran_kl, tbl_iku_kl.deskripsi AS deskripsi_iku_kl");
 		$this->db->from('tbl_kinerja_kl');
-		$this->db->join('tbl_pk_kl', 'tbl_pk_kl.kode_iku_kl = tbl_kinerja_kl.kode_iku_kl and tbl_pk_kl.tahun = tbl_kinerja_kl.tahun and tbl_pk_kl.kode_kl = tbl_kinerja_kl.kode_kl');
-		$this->db->join('tbl_iku_kl', 'tbl_iku_kl.kode_iku_kl = tbl_kinerja_kl.kode_iku_kl and tbl_iku_kl.tahun = tbl_kinerja_kl.tahun');
-		$this->db->join('tbl_kl', 'tbl_kl.kode_kl = tbl_kinerja_kl.kode_kl');
-		$this->db->join('tbl_sasaran_kl','tbl_sasaran_kl.kode_sasaran_kl = tbl_kinerja_kl.kode_sasaran_kl');
+			$this->db->join('tbl_pk_kl', 'tbl_pk_kl.kode_iku_kl = tbl_kinerja_kl.kode_iku_kl and tbl_pk_kl.tahun = tbl_kinerja_kl.tahun and tbl_pk_kl.kode_kl = tbl_kinerja_kl.kode_kl');
+			$this->db->join('tbl_iku_kl', 'tbl_iku_kl.kode_iku_kl = tbl_kinerja_kl.kode_iku_kl and tbl_iku_kl.tahun = tbl_kinerja_kl.tahun');
+			$this->db->join('tbl_kl', 'tbl_kl.kode_kl = tbl_kinerja_kl.kode_kl');
+			$this->db->join('tbl_sasaran_kl','tbl_sasaran_kl.kode_sasaran_kl = tbl_kinerja_kl.kode_sasaran_kl and tbl_sasaran_kl.tahun = tbl_kinerja_kl.tahun');
 
 		return $this->db->count_all_results();
 		$this->db->free_result();
@@ -270,7 +317,7 @@ class rskl_model extends CI_Model
 								  <label style="text-align:right; width:10px">('.$this->utility->cekNumericFmt($capaian[1]).'%)</label>
 								</div>
 								<div class="fitem">
-								  <label style="width:150px">Capaian Bulan Ini :</label>
+								  <label style="width:150px">Capaian s.d Bulan Ini :</label>
 								  <input name=detail['.$i.'][realisasi] value="" size="15">								  
 								</div>
 								<div class="fitem">
@@ -288,7 +335,11 @@ class rskl_model extends CI_Model
 		// dibuka dl request p.Toto 2013.08.16						
 			if($i == $akhir){
 				$out .='<br><div class="fitem">';
-				$out .= '<label style="width:150px"></label><input type="button" onclick="saveData'.$objectId.'()" value="Simpan" />';
+				$out .= '<label style="width:150px"></label><input type="button" onclick="saveData'.$objectId.'()" value="Save" /><input type="button" onclick="cancel'.$objectId.'()" value="Cancel" />';
+				$out .='</div>';
+			}else{
+				$out .='<br><div class="fitem">';
+				$out .= '<label style="width:170px"></label><input type="button" onclick="cancel'.$objectId.'()" value="Cancel" />';
 				$out .='</div>';
 			}
 			

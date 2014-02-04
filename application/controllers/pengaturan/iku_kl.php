@@ -7,11 +7,7 @@ class Iku_kl extends CI_Controller {
 		parent::__construct();			
 		
 	//	$userdata = array ('userLogin' => $userLogin,'logged_in' => TRUE,'groupId'=>$this->sys_login_model->groupId,'fullName'=>$this->sys_login_model->fullName,'userId'=>$this->sys_login_model->userId,'groupLevel'=>$this->sys_login_model->level);
-		$userdata = array ('logged_in' => TRUE);
-				//
-		$this->session->set_userdata($userdata);
-				
-		if ($this->session->userdata('logged_in') != TRUE) redirect('security/login');					
+						
 		$this->load->model('/security/sys_menu_model');
 		$this->load->model('/rencana/rpt_rkteselon1_model');
 		$this->load->model('/pengaturan/iku_kl_model');
@@ -27,6 +23,13 @@ class Iku_kl extends CI_Controller {
 		$data['objectId'] = 'iku_kl';
 	  	$this->load->view('pengaturan/iku_kl_v',$data);
 		//$this->load->view('footer_vw',$data);
+	}
+	
+	public function copy(){
+		$data['title'] = 'Copy Data IKU Kementerian';	
+		$data['objectId'] = 'copyiku_kl';
+		//$data['formLookupTarif'] = $this->tarif_model->lookup('#winLookTarif'.$data['objectId'],"#medrek_id".$data['objectId']);
+	  	$this->load->view('pengaturan/iku_kl_copy_v',$data);
 	}
 	
 	function grid($file1=null,$filtahun=null,$filkey=null){
@@ -50,7 +53,7 @@ class Iku_kl extends CI_Controller {
 		$data['kode_iku_kl'] = $this->input->post("kode_iku_kl", TRUE); //id
 		$data['deskripsi'] = $this->input->post("deskripsi", TRUE);
 		$data['satuan'] = $this->input->post("satuan", TRUE);
-		$data['kode_e1'] = $this->input->post("kode_e1", TRUE);
+		//$data['kode_e1'] = $this->input->post("kode_e1", TRUE);
 		$data['tahun'] = $this->input->post("tahun", TRUE);
 		$data['kode_sasaran_kl'] = $this->input->post("kode_sasaran_kl", TRUE);
 		
@@ -113,6 +116,28 @@ class Iku_kl extends CI_Controller {
 		
 	}
 	
+	function saveCopy($tahun,$tahun_tujuan, $kode_kl){		
+		$status = "";
+		$result = false;		
+		$data['pesan_error'] = '';
+		
+		# validasi
+		# message rules
+		//if ($result){
+			$data['tahun'] = $tahun;
+			$data['tahun_tujuan'] = $tahun_tujuan;
+			$data['kode_kl'] = $kode_kl;
+			$result = $this->iku_kl_model->copy($data,$status);
+			$data['pesan_error'] = $status;
+	//	}		
+		if ($result){
+			echo json_encode(array('success'=>true, 'msg'=>"Data Berhasil di copy"));
+		} else {
+			echo json_encode(array('msg'=>$data['pesan_error']));
+		}
+		//echo $status;
+	}
+	
 	function delete($tahun, $kode_iku_kl){
 		# cek keberadaan di RKT
 		// jika ada di RKT
@@ -132,13 +157,15 @@ class Iku_kl extends CI_Controller {
 	
 	function getNewCode($kl,$tahun,$kodesasaran){
 		//fieldName,$tblName,$condition,$prefix,$suffix,$minLength=5
-		$prefix = "IKU".$kodesasaran;//$this->utility->getValueFromSQL("select prefix as rs from tbl_prefix where kode_e1 = '$e1'","UNSET");
+		$prefix = "IKU".str_replace(".","",$kodesasaran);//$this->utility->getValueFromSQL("select prefix as rs from tbl_prefix where kode_e1 = '$e1'","UNSET");
 		//var_dump($prefix); die;
 		echo $this->utility->ourGetNextIDNum("kode_iku_kl","tbl_iku_kl"," and tahun = '$tahun'",$prefix.".","",2);
 	}
 	
-	public function getListTahun($objectId=null){
-		echo $this->iku_kl_model->getListTahun($objectId);
+	public function getListTahun($objectId=null,$withAll=true){
+		if ($withAll=="false")
+		   $withAll = false;
+		echo $this->iku_kl_model->getListTahun($objectId,$withAll);
 	}
 		
 	public function excel($file1=null,$filtahun=null,$filkey=null){
@@ -219,7 +246,7 @@ class Iku_kl extends CI_Controller {
 		for ($i=0;$i<count($pdfdata);$i++){
 			$this->our_pdf->setFont('arial','',8);	
 			//tambah group
-			if($file1 != '' && $file1 != '-1' && $file1 != null) {
+			/* if($file1 != '' && $file1 != '-1' && $file1 != null) {
 					$this->our_pdf->Row(array($pdfdata[$i][0],$pdfdata[$i][1],$pdfdata[$i][2],$pdfdata[$i][3],$pdfdata[$i][4])); 
 			}
 			else {
@@ -231,8 +258,8 @@ class Iku_kl extends CI_Controller {
 					$this->our_pdf->setFont('arial','',8);	
 					
 				}
-				$this->our_pdf->Row(array($pdfdata[$i][0],$pdfdata[$i][1],$pdfdata[$i][2],$pdfdata[$i][3],$pdfdata[$i][4])); 
-			}
+ */				$this->our_pdf->Row(array($pdfdata[$i][0],$pdfdata[$i][1],$pdfdata[$i][2],$pdfdata[$i][3],$pdfdata[$i][4])); 
+//			}
 			
 		}
 		$this->our_pdf->AliasNbPages();
@@ -372,7 +399,7 @@ class Iku_kl extends CI_Controller {
 						$data['kode_iku_kl'] 		= $this->excel->val($i, 3);
 						$data['deskripsi'] 			= $this->excel->val($i, 4);
 						$data['satuan'] 			= $this->excel->val($i, 5);
-						$data['kode_e1'] 			= $this->excel->val($i, 6);
+						//$data['kode_e1'] 			= $this->excel->val($i, 6);
 						
 						# proses
 						$result = $this->iku_kl_model->importData($data);

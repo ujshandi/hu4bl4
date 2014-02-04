@@ -49,6 +49,7 @@
 					onClickCell: function(rowIndex, field, value){
 						$('#dg<?=$objectId;?>').datagrid('selectRow', rowIndex);
 						var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
+						if (row==null) return;
 						//alert(row.deskripsi_iku_kl);
 						switch(field){
 							case "kode_e1":
@@ -88,6 +89,7 @@
 			editData<?=$objectId;?> = function (editmode){
 				<? //chan------if ($this->session->userdata('unit_kerja_e1')=='-1'){?>				
 					var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
+					if (row==null) return;
 					addTab((editmode?"Edit":"View")+" Capaian Kinerja Eselon I", "realisasi/rseselon1/edit/"+ row.id_kinerja_e1 +  "/" + editmode);
 				<?//} else { ?>	
 				//	alert("Silahkan Login sebagai Superadmin");
@@ -173,7 +175,7 @@
 				//$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>realisasi/rseselon1/grid"});
 			},50);
 			
-			
+		
 			
 			$("#popdesc<?=$objectId?>").click(function(){
 				closePopup('#popdesc<?=$objectId?>');
@@ -260,13 +262,13 @@
 					</td>
 				</tr>
 				<tr style="margin-bottom: 10px;">
-					<td width="70px">Bulan :</td>
+					<td width="120px">Bulan :</td>
 					<td align="left">
 				  <?= $this->utility->getBulan("","filbulan",true,$objectId)?>
 					</td>
 				</tr>
 				<tr>
-					<td>Unit Kerja Eselon I&nbsp</td>
+					<td>Unit Kerja Eselon I :</td>
 					<td>
 						<?=$this->eselon1_model->getListFilterEselon1($objectId,$this->session->userdata('unit_kerja_e1'))?>
 					</td>
@@ -325,4 +327,4 @@
 	  </thead>
 	</table>
 
-	<div class="popdesc" id="popdesc<?=$objectId?>">pops</div>
+	<div class="popdesc" id="popdesc<?=$objectId?>">&nbsp;</div>

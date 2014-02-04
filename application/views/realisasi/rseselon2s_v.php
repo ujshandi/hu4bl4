@@ -6,7 +6,7 @@
 				//$('#fm<?=$objectId;?>').form('clear');  
 				//url = base_url+'realisasi/rseselon2/save';  
 				
-				addTab("Add Realisasi Kinerja Eselon II", "realisasi/rseselon2/add");
+				addTab("Add Capaian Kinerja Eselon II", "realisasi/rseselon2/add");
 			}
 			//end newData 
 			
@@ -22,6 +22,7 @@
 			searchData<?=$objectId;?> = function (){
 				//ambil nilai-nilai filter
 				var filtahun = $("#filter_tahun<?=$objectId;?>").val();
+				var filbulan = $("#filbulan<?=$objectId;?>").val();
 					<? if ($this->session->userdata('unit_kerja_e1')==-1){?>
 					var file1 = $("#filter_e1<?=$objectId;?>").val();
 				<?} else {?>
@@ -35,14 +36,40 @@
 				if (filtahun == null) filtahun = "-1";
 				if (file1 == null) file1 = "-1";
 				if (file2 == null) file2 = "-1";
-				$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>realisasi/rseselon2/grid/"+filtahun+"/"+file1+"/"+file2});
+				$('#dg<?=$objectId;?>').datagrid({
+					url:"<?=base_url()?>realisasi/rseselon2/grid/"+filtahun+"/"+file1+"/"+file2+"/"+filbulan,
+					onClickCell: function(rowIndex, field, value){
+						$('#dg<?=$objectId;?>').datagrid('selectRow', rowIndex);
+						var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
+						if (row==null) return;
+						//alert(row.deskripsi_iku_kl);
+						switch(field){
+							case "kode_e2":
+								showPopup('#popdesc<?=$objectId?>', row.nama_e2);
+								break;
+							case "kode_sasaran_e2":
+								showPopup('#popdesc<?=$objectId?>', row.deskripsi_sasaran_e2);
+								break;
+							case "kode_ikk":
+								showPopup('#popdesc<?=$objectId?>', row.deskripsi_ikk);
+								break;
+							/* case "kode_kl":
+								showPopup('#popdesc<?=$objectId?>', row.nama_kl);
+								break; */
+							default:
+								closePopup('#popdesc<?=$objectId?>');
+								break;
+						}
+					}
+				});
 			}
 			//end searhData 
 			
 			editData<?=$objectId;?> = function (editmode){
 				<? //chan------if ($this->session->userdata('unit_kerja_e1')=='-1'){?>				
 					var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
-					addTab((editmode?"Edit":"View")+" Realisasi Kinerja Eselon II", "realisasi/rseselon2/edit/"+ row.id_kinerja_e2 + "/" + editmode);
+					if (row==null) return;
+					addTab((editmode?"Edit":"View")+" Capaian Kinerja Eselon II", "realisasi/rseselon2/edit/"+ row.id_kinerja_e2 + "/" + editmode);
 				<?//} else { ?>	
 					//alert("Silahkan Login sebagai Superadmin");
 				<?//} ?>
@@ -140,32 +167,7 @@
 				//$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>realisasi/rseselon2/grid"});
 			},0);
 			
-			// chan
-			$('#dg<?=$objectId;?>').datagrid({
-				onClickCell: function(rowIndex, field, value){
-					$('#dg<?=$objectId;?>').datagrid('selectRow', rowIndex);
-					var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
-					//alert(row.deskripsi_iku_kl);
-					switch(field){
-						case "kode_e2":
-							showPopup('#popdesc<?=$objectId?>', row.nama_e2);
-							break;
-						case "kode_sasaran_e2":
-							showPopup('#popdesc<?=$objectId?>', row.deskripsi_sasaran_e2);
-							break;
-						case "kode_ikk":
-							showPopup('#popdesc<?=$objectId?>', row.deskripsi_ikk);
-							break;
-						/* case "kode_kl":
-							showPopup('#popdesc<?=$objectId?>', row.nama_kl);
-							break; */
-						default:
-							closePopup('#popdesc<?=$objectId?>');
-							break;
-					}
-				}
-			});
-			
+		
 			$("#popdesc<?=$objectId?>").click(function(){
 				closePopup('#popdesc<?=$objectId?>');
 			});
@@ -249,16 +251,22 @@
 				<?=$this->rseselon2_model->getListFilterTahun($objectId)?>
 				</td>
 			</tr>
+			<tr style="margin-bottom: 10px;">
+				<td width="120px">Bulan :</td>
+				<td align="left">
+			  <?= $this->utility->getBulan("","filbulan",true,$objectId)?>
+				</td>
+			</tr>
 			<? //if ($this->session->userdata('unit_kerja_e1')==-1){?>
 			<tr>
-				<td>Unit Kerja Eselon I&nbsp;</td>
+				<td>Unit Kerja Eselon I :</td>
 				<td>
 					<?=$this->eselon1_model->getListFilterEselon1($objectId,$this->session->userdata('unit_kerja_e1'))?>				
 				</td>
 			</tr>
 			<?//}?>
 			<tr>
-				<td>Unit Kerja Eselon II&nbsp;</td>
+				<td>Unit Kerja Eselon II :</td>
 				<td><span class="fitem" id="divUnitKerja<?=$objectId;?>">
 					<?=$this->eselon2_model->getListFilterEselon2($objectId,$this->session->userdata('unit_kerja_e1'),$this->session->userdata('unit_kerja_e2'))?>
 					</span>
@@ -298,7 +306,7 @@
 	  </div>
 	</div>
 	
-	<table id="dg<?=$objectId;?>" class="easyui-datagrid" style="height:auto;width:auto" title="Data Capaian Kinerja Eselon II" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true">
+	<table id="dg<?=$objectId;?>"  style="height:auto;width:auto" title="Data Capaian Kinerja Eselon II" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true">
 	  <thead>
 	  <tr>
 		<th field="id_kinerja_e2" sortable="true" hidden="true" width="30px">id_kinerja_e2</th>
@@ -313,8 +321,9 @@
 		<th field="target" sortable="true" width="50px" align="right" formatter="formatPrice">Target</th>
 		<th field="satuan" sortable="true" width="60px">Satuan</th>
 		<th field="realisasi" sortable="true" width="50px" align="right" formatter="formatPrice">Capaian</th>
+		<th field="realisasi_persen" sortable="true" width="35px" align="right" formatter="formatPrice">Capaian<br>(%)</th>
 	  </tr>
 	  </thead>
 	</table>
 	
-	<div class="popdesc" id="popdesc<?=$objectId?>">pops</div>
+	<div class="popdesc" id="popdesc<?=$objectId?>">&nbsp;</div>

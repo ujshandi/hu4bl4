@@ -10,9 +10,7 @@ class rseselon1 extends CI_Controller {
 		//$this->output->enable_profiler(true);
 		$userdata = array ('logged_in' => TRUE);
 				//
-		$this->session->set_userdata($userdata);
 				
-		if ($this->session->userdata('logged_in') != TRUE) redirect('security/login');					
 		$this->load->model('/security/sys_menu_model');
 		$this->load->model('/realisasi/rseselon1_model');
 		$this->load->model('/rujukan/eselon1_model');
@@ -48,7 +46,6 @@ class rseselon1 extends CI_Controller {
 			$file1= $this->session->userdata('unit_kerja_e1');
 		echo $this->rseselon1_model->easyGrid($filtahun, $file1,$filbulan);
 	}
-	
 	
 	
 	private function get_form_values() {
@@ -119,12 +116,12 @@ class rseselon1 extends CI_Controller {
 			}
 			
 			// cek capaian bulan lalu
-/* dicomment dl request p.Toto 2013.08.16
+/* dicomment dl request p.Toto 2013.08.16 dibuka lagi tgl 2014.01.21 */
 			if($r['realisasi'] < $r['capaian']){
 				$pesan = 'Realisasi pada no. '.$i.' nilai tidak boleh lebih kecil dari nilai capaian bulan lalu.';
 				return FALSE;
 			}
-*/
+/**/
 			
 			// cek ke database
 			if($this->rseselon1_model->data_exist($data['tahun'], $data['triwulan'], $data['kode_e1'], $data['kode_sasaran_e1'], $r['kode_iku_e1'])){ 

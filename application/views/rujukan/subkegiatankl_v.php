@@ -1,4 +1,4 @@
-		<script  type="text/javascript" src="<?=base_url()?>public/js/autoNumeric.js"></script>
+
 	<script  type="text/javascript" >
 		$('.year').autoNumeric('init',{aSep: '', aDec: ',',vMin:'0',aPad:"false",vMax:"9999"});
 			$('.money').autoNumeric('init',{aSep: '.', aDec: ',',vMin:'0',aPad:"false",vMax:"999999999999999"});		
@@ -11,27 +11,25 @@
 					function (){
 						//setKegiatan<?=$objectId?>($("#kode_e2<?=$objectId?>").val());
 						$("#kode_e2<?=$objectId?>").change(function(){
-							setKegiatan<?=$objectId?>($(this).val(),$("#tahun<?=$objectId?>").val());
+							setKegiatan<?=$objectId?>($(this).val());
 						});	
-						setKegiatan<?=$objectId?>($("#kode_e2<?=$objectId?>").val(),$("#tahun<?=$objectId?>").val());
+						setKegiatan<?=$objectId?>($("#kode_e2<?=$objectId?>").val());
 					}
 				);
 			 }
 			 
 			 $("#kode_e1<?=$objectId?>").change(function(){
 				setListE2<?=$objectId?>();
-			  }); 
-			  
-			$("#tahun<?=$objectId?>").change(function(){
-				setKegiatan<?=$objectId;?>($("#kode_e2<?=$objectId?>").val(),$(this).val());
 			  });
 			  
-			function setKegiatan<?=$objectId;?>(e2,tahun){
+			function setKegiatan<?=$objectId;?>(e2){
+				var tahun = $('#tahun<?=$objectId?>').val();
+				if ((tahun==null)||(tahun=='')) tahun = '-1';
 				$("#divKegiatan<?=$objectId?>").load(
 					base_url+"rujukan/subkegiatankl/getListKegiatan/"+"<?=$objectId;?>"+"/"+e2+"/-1/"+tahun,
 					//on complete
 					function(){
-						$("textarea").autogrow();
+						$('textarea').autosize();   
 								
 						
 						if($("#drop<?=$objectId;?>").is(":visible")){
@@ -53,7 +51,7 @@
 			
 			  //inisialisasi
 			 setListE2<?=$objectId?>();
-			 setKegiatan<?=$objectId;?>($("#kode_e2<?=$objectId?>").val());
+			 ///setKegiatan<?=$objectId;?>($("#kode_e2<?=$objectId?>").val());
 			 
 			//end-------------------------------------
 			
@@ -92,23 +90,6 @@
 	
 	<!-- Dari Stef -->
 	<script type="text/javascript">
-		$(document).ready(function() {
-			/* CHAN
-			if($("#drop<?=$objectId;?>").is(":visible")){
-				$("#drop<?=$objectId;?>").slideToggle("slow");
-			}
-			
-			$("#txtkode_sasaran_e2<?=$objectId;?>").click(function(){
-				$("#drop<?=$objectId;?>").slideToggle("slow");
-			});
-			
-			$("#drop<?=$objectId;?> li").click(function(e){
-				var chose = $(this).text();
-				$("#txtkode_sasaran_e2<?=$objectId;?>").text(chose);
-				$("#drop<?=$objectId;?>").slideToggle("slow");
-			}); */
-
-		});
 		
 		function setIKK<?=$objectId;?>(valu){
 			document.getElementById('kode_kegiatan<?=$objectId;?>').value = valu;
@@ -208,7 +189,7 @@
 			newcell_2.childNodes[1].value = "";
 			newcell_2.childNodes[1].name = "detail[" + rowCount + "][nama_subkegiatan]";
 			
-			var newcell_3 = row.insertCell(2);
+			/* var newcell_3 = row.insertCell(2);
 			newcell_3.innerHTML = table.rows[1].cells[2].innerHTML;
 			newcell_3.childNodes[1].value = "";
 			newcell_3.childNodes[1].name = "detail[" + rowCount + "][lokasi]";
@@ -221,11 +202,12 @@
 			var newcell_5 = row.insertCell(4);
 			newcell_5.innerHTML = table.rows[1].cells[4].innerHTML;
 			newcell_5.childNodes[1].value = "";
-			newcell_5.childNodes[1].name = "detail[" + rowCount + "][satuan]";
+			newcell_5.childNodes[1].name = "detail[" + rowCount + "][satuan]"; */
 			
-			var newcell_6 = row.insertCell(5);
-			newcell_6.innerHTML = table.rows[1].cells[5].innerHTML;
+			var newcell_6 = row.insertCell(2);
+			newcell_6.innerHTML = table.rows[1].cells[2].innerHTML;
 			//newcell_3.childNodes[1].id = "satuan" + rowCount;
+			newcell_6.childNodes[1].class = "money";
 			newcell_6.childNodes[1].value = "";
 			newcell_6.childNodes[1].name = "detail[" + rowCount + "][total]";
 			//newcell_3.childNodes[1].readOnly = "true";
@@ -246,6 +228,13 @@
                 alert(e);
             }
         }
+		
+		cancel<?=$objectId;?>=function(){
+			// reload and close tab
+			$('#dg<?=$objectId;?>').datagrid('reload');
+			
+			$('#tt').tabs('close', 'Add Sub Kegiatan');					
+		}
 		
 		
     </script>
@@ -322,7 +311,7 @@
 						</div> -->
 						<div class="fitem">
 							<br>
-							<table id="tbl<?=$objectId;?>" border="1" width="100%" border="1" cellpadding="2" cellspacing="0" bordercolor="#CCCCCC">
+							<table id="tbl<?=$objectId;?>" border="1" width="70%" border="1" cellpadding="2" cellspacing="0" bordercolor="#CCCCCC">
 								<tr>
 									<td width="18px" bgcolor="#F4F4F4">Kode Sub Kegiatan</td>
 									<td width="60px" bgcolor="#F4F4F4">Nama Sub Kegiatan</td>
@@ -336,7 +325,7 @@
 										<input name="detail[1][kode_subkegiatan]" size="18">
 									</td>
 									<td>
-										<input name="detail[1][nama_subkegiatan]" size="60">
+										<input name="detail[1][nama_subkegiatan]" size="70">
 									</td>
 									<!--<td>
 										<input name="detail[1][lokasi]" size="20">
@@ -351,10 +340,11 @@
 								</tr>
 							</table>
 							<br>
-							<a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="addRow('tbl<?=$objectId;?>')">Tambah Sub Kegiatan</a>
-							<a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="deleteRow('tbl<?=$objectId;?>')">Hapus Sub Kegiatan</a>
+							<a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="addRow('tbl<?=$objectId;?>')">Add Sub Kegiatan</a>
+							<a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="deleteRow('tbl<?=$objectId;?>')">Delete Sub Kegiatan</a>
 							&nbsp;&nbsp;&nbsp;&nbsp;
-							<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveData<?=$objectId;?>()">Simpan</a>
+							<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveData<?=$objectId;?>()">Save</a>
+							<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="cancel<?=$objectId;?>()">Cancel</a>
 						</div>
 					</form>
 				</div>

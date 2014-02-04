@@ -6,13 +6,14 @@
 				//$('#fm<?=$objectId;?>').form('clear');  
 				//url = base_url+'pengukuran/pengukuraneselon1/save';  
 				
-				addTab("Add Kinerja Eselon I", "pengukuran/pengukuraneselon1/add");
+				addTab("Add Pengukuran Kinerja Eselon I", "pengukuran/pengukuraneselon1/add");
 			}
 			//end newData 
 			
 			editData<?=$objectId;?> = function (editmode){
 				<? //chan if ($this->session->userdata('unit_kerja_e1')=='-1'){?>				
 					var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
+					if (row==null) return;
 					addTab((editmode?"Edit":"View")+" Pengukuran Kinerja Eselon I", "pengukuran/pengukuraneselon1/edit/"+ row.id_pengukuran_e1 + "/" + editmode);
 				<?//} else { ?>	
 				//	alert("Silahkan Login sebagai Superadmin");
@@ -169,7 +170,7 @@
 				//$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>pengukuran/pengukuraneselon1/grid"});
 			},50);
 			
-			
+						
 			$("#popdesc<?=$objectId?>").click(function(){
 				closePopup('#popdesc<?=$objectId?>');
 			});
@@ -317,4 +318,4 @@
 	  </thead>
 	</table>
 
-	<div class="popdesc" id="popdesc<?=$objectId?>">pops</div>
+	<div class="popdesc" id="popdesc<?=$objectId?>">&nbsp;</div>

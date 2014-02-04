@@ -1,7 +1,7 @@
 	<script  type="text/javascript" >
 				
 		$(function(){
-		
+			$('textarea').autosize();   	
 		 	saveData<?=$objectId;?>=function(){
 				$('#fm<?=$objectId;?>').form('submit',{
 					url: base_url+'rencana/rktkl/save',
@@ -71,9 +71,20 @@
 			
 			newcell = row.insertCell(2);
 			newcell.innerHTML = table.rows[1].cells[2].innerHTML;
-			newcell.childNodes[1].selectedIndex = 0;
+			
+			newcell.childNodes[0].selectedIndex = 0;
+			newcell.childNodes[0].id = "divIKUKL<?=$objectId?>_"+ rowCount;
+			$(newcell.childNodes[0].id).html("");
+			var tahun = $("#tahun<?=$objectId;?>").val();
+			var kode_sasaran_kl = $("#kode_sasaran_kl<?=$objectId;?>").val();
+			
+			if (kode_sasaran_kl==null) kode_sasaran_kl = "-1";
+			setIKUKL<?=$objectId;?>(rowCount,tahun,kode_sasaran_kl,"","");
+			//newcell.childNodes[0].name = "detail[" + rowCount + "][kode_iku_kl]";
+			//alert(newcell.childNodes[1].id);
+			/* newcell.childNodes[1].selectedIndex = 0;
 			newcell.childNodes[1].id = rowCount;
-			newcell.childNodes[1].name = "detail[" + rowCount + "][kode_iku_kl]";
+			newcell.childNodes[1].name = "detail[" + rowCount + "][kode_iku_kl]"; */
 			
 			newcell = row.insertCell(3);
 			newcell.innerHTML = table.rows[1].cells[3].innerHTML;
@@ -161,18 +172,54 @@
 			
 		getListIkuKL<?=$objectId;?> = function(){
 			var tahun = $("#tahun<?=$objectId;?>").val();
+			var kode_kl = $("#kode_kl<?=$objectId;?>").val();
 			var kode_sasaran_kl = $("#kode_sasaran_kl<?=$objectId;?>").val();
 			
+			if (kode_kl==null) kode_kl = "-1";
 			if (kode_sasaran_kl==null) kode_sasaran_kl = "-1";
 				if(tahun.length < 4){
 					$("#tbodyiku<?=$objectId;?>").html('<tr><td colspan="5">Isi Tahun dengan benar</td></tr>');
 				}else{
 					$("#tbodyiku<?=$objectId;?>").load(
-						base_url+"rencana/rktkl/getIKU_kl/"+tahun+"/"+kode_sasaran_kl
+						base_url+"rencana/rktkl/getIKU_kl/"+kode_kl+"/"+tahun+"/"+kode_sasaran_kl,function(){
+						//	setIKUKL<?=$objectId;?>(1,tahun,kode_sasaran_kl,"","");
+						}
 					);
 			}
 		}	
 			
+			
+			
+			function setIKUKL<?=$objectId;?>(idx,tahun,sasaran,key,val){
+				if ((tahun==null)||(tahun=="")) tahun = "-1";
+				if ((sasaran==null)||(sasaran=="")) sasaran = "-1";
+				var name='kode_iku_kl';
+				$("#divIKUKL<?=$objectId?>_"+idx).load(
+					base_url+"rencana/rktkl/getListIKU_KL/"+idx+"/"+tahun+'/'+sasaran,
+					//on complete
+					function(){
+						$('textarea').autosize();   
+						if($("#drop<?=$objectId;?>"+idx).is(":visible")){
+							$("#drop<?=$objectId;?>"+idx).slideUp("slow");
+						}
+						
+						$("#txtkode_iku_kl<?=$objectId;?>"+idx).click(function(){
+							$("#drop<?=$objectId;?>"+idx).slideDown("slow");
+						});
+						
+						$("#drop<?=$objectId;?>"+idx+" li").click(function(e){
+							var chose = $(this).text();
+							$("#txtkode_iku_kl<?=$objectId;?>"+idx).val(chose);
+							$("#drop<?=$objectId;?>"+idx).slideUp("slow");
+						});
+						
+						if (key!=null)
+							$('#kode_iku_kl<?=$objectId;?>'+idx).val(key);
+						if (val!=null)
+							$('#txtkode_iku_kl<?=$objectId;?>'+idx).val(val);
+					}
+				);
+			}  
 			
 			
 			function setSasaranKL<?=$objectId;?>(tahun,key,val){
@@ -180,7 +227,7 @@
 				$("#divSasaranKL<?=$objectId?>").load(
 					base_url+"pengaturan/sasaran_eselon1/getListSasaranKL/"+"<?=$objectId;?>"+"/"+tahun,
 					function(){
-						$("textarea").autogrow();
+						$('textarea').autosize();   
 						if($("#drop<?=$objectId;?>").is(":visible")){
 							$("#drop<?=$objectId;?>").slideUp("slow");
 						}
@@ -192,8 +239,8 @@
 						$("#drop<?=$objectId;?> li").click(function(e){
 							var chose = $(this).text();
 							$("#txtkode_sasaran_kl<?=$objectId;?>").text(chose);
-							getListIkuKL<?=$objectId;?>();
-						//	alert($("#txtkode_sasaran_kl<?=$objectId;?>").text());
+							//getListIkuKL<?=$objectId;?>();
+							//alert(val);
 							$("#drop<?=$objectId;?>").slideUp("slow");
 						});
 						if (key!=null)
@@ -210,34 +257,25 @@
 			function setSasaran<?=$objectId;?>(valu){
 			//alert("here");
 				document.getElementById('kode_sasaran_kl<?=$objectId;?>').value = valu;
-				
+				getListIkuKL<?=$objectId;?>();
+			}
+			
+			function setIku<?=$objectId;?>(idx,name,valu){
+			//alert("here");
+				$('#kode_iku_kl<?=$objectId;?>'+idx).val(valu);
+				//getListIkuKL<?=$objectId;?>();
 			}
 			
 			// inisialisasi 
 			setSasaranKL<?=$objectId;?>($("#tahun<?=$objectId?>").val(),"","")
+			cancel<?=$objectId?> = function(){
+				$('#tt').tabs('close', 'Add RKT Kementerian');
+			}
     </script>
 	
 	<!-- Dari Stef -->
 	<script type="text/javascript">
-		$(document).ready(function() {
-			
-			/* chan
-			if($("#drop<?=$objectId;?>").is(":visible")){
-				$("#drop<?=$objectId;?>").slideUp("slow");
-			}
-			
-			$("#txtkode_sasaran_kl<?=$objectId;?>").click(function(){
-				$("#drop<?=$objectId;?>").slideDown("slow");
-			});
-			
-			$("#drop<?=$objectId;?> li").click(function(e){
-				var chose = $(this).text();
-				$("#txtkode_sasaran_kl<?=$objectId;?>").text(chose);
-				$("#drop<?=$objectId;?>").slideUp("slow");
-			}); */
 
-		});
-		
 		/*
 			chan
 		function setSasaran<?=$objectId;?>(valu){
@@ -346,11 +384,11 @@
 						<div class="fitem">
 							<label style="width:120px">Tahun :</label>
 							<input name="kl_id" class="" type="hidden">
-							<input id="tahun<?=$objectId?>" name="tahun"  class="easyui-validatebox" required="true" size="5" maxlength="4">
+							<input id="tahun<?=$objectId?>" name="tahun"  class="easyui-validatebox year" required="true" size="5" maxlength="4">
 						</div>					
 						<div class="fitem">
 							<label style="width:120px">Kementerian :</label>
-							<?=$this->kl_model->getListKL()?>
+							<?=$this->kl_model->getListKL($objectId)?>
 						</div>
 						<div class="fitem">
 							<label style="width:120px">Sasaran :</label>
@@ -363,7 +401,7 @@
 							<table id="tbl<?=$objectId;?>">
 								<thead>
 									<tr>
-										<th></th>
+										<!--<th></th> -->
 										<th width="20px" bgcolor="#F4F4F4">No.</th>
 										<th width="100%" bgcolor="#F4F4F4">Indikator Kerja Utama</th>
 										<th bgcolor="#F4F4F4">Target</th>
@@ -375,10 +413,10 @@
 								</tbody>
 							</table>
 							<br>
-							<a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="addRow<?=$objectId;?>('tbl<?=$objectId;?>')">Tambah IKU</a>
+						<!--	<a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="addRow<?=$objectId;?>('tbl<?=$objectId;?>')">Tambah IKU</a>
 							<a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="deleteRow<?=$objectId;?>('tbl<?=$objectId;?>')">Hapus IKU</a>
-							&nbsp;&nbsp;&nbsp;&nbsp;
-							<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveData<?=$objectId;?>()">Simpan</a>
+							&nbsp;&nbsp;&nbsp;&nbsp;-->
+							<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveData<?=$objectId;?>()">Save</a>&nbsp;<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="cancel<?=$objectId;?>()">Cancel</a>
 						</div>
 					</form>
 				</div>

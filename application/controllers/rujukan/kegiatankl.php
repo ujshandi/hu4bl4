@@ -5,12 +5,7 @@ class Kegiatankl extends CI_Controller {
 	function __construct()
 	{
 		parent::__construct();			
-		$userdata = array ('logged_in' => TRUE);
-		$this->session->set_userdata($userdata);
 		
-		//$this->output->enable_profiler(true);
-				
-		if ($this->session->userdata('logged_in') != TRUE) redirect('security/login');					
 		$this->load->model('/security/sys_menu_model');
 		$this->load->model('/rujukan/kegiatankl_model');
 		$this->load->model('/rencana/rpt_rkteselon1_model');
@@ -29,13 +24,27 @@ class Kegiatankl extends CI_Controller {
 	public function add(){
 		$data['title'] = 'Add Data Kegiatan';	
 		$data['objectId'] = 'kegiatankl';
-	  	$this->load->view('rujukan/kegiatankl_v',$data);
+		$result = new stdClass();
+		
+		$result->tahun = '';
+		$result->kode_e1 = $this->session->userdata('unit_kerja_e1');
+		$result->kode_e2 = '';
+		$result->kode_program = '';
+		$result->nama_program = '';
+		$result->total = '';
+		$result->kode_kegiatan = '';
+		$result->nama_kegiatan = '';
+		$data['result'] = $result;
+		$data['editMode'] = false;
+	  	//$this->load->view('rujukan/kegiatankl_v',$data);
+	  	$this->load->view('rujukan/kegiatankl_v_edit',$data);
 	}
 	
-	public function edit($id){
+	public function edit($tahun,$kode_kegiatan){
 		$data['title'] = 'Edit Data Kegiatan';	
 		$data['objectId'] = 'kegiatankl';
-		$data['result'] = $this->kegiatankl_model->getDataEdit($id);
+		$data['editMode'] = true;
+		$data['result'] = $this->kegiatankl_model->getDataEdit($tahun,$kode_kegiatan);
 	  	$this->load->view('rujukan/kegiatankl_v_edit',$data);
 	}
 	
@@ -80,32 +89,51 @@ class Kegiatankl extends CI_Controller {
 	function save_edit(){
 		$this->load->library('form_validation');
 		
-		$data['id_kegiatan_kl'] = $this->input->post('id_kegiatan_kl');
+		//$data['id_kegiatan_kl'] = $this->input->post('id_kegiatan_kl');
 		$data['tahun'] = $this->input->post('tahun');
+		$data['tahun_old'] = $this->input->post('tahun_old');
 		$data['kode_kegiatan'] = $this->input->post('kode_kegiatan');
+		$data['kode_kegiatan_old'] = $this->input->post('kode_kegiatan_old');
 		$data['nama_kegiatan'] = $this->input->post('nama_kegiatan');
 		$data['total'] = $this->input->post('total');
 		$data['kode_e2'] = $this->input->post('kode_e2');
 		$data['kode_program'] = $this->input->post('kode_program');
 		
-		$result = "";
+		$result = false;
 		
-		$result = $this->kegiatankl_model->UpdateOnDB_kegiatanKL($data);
+		if ($data['tahun_old']==''||$data['kode_program']=='') {
+			if ($this->kegiatankl_model->isExist($data['tahun'],$data['kode_kegiatan'])){
+				$result = false;
+				$msg = 'Kode Kegiatan '.$data['kode_kegiatan'].'untuk tahun '.$data['tahun'].' sudah ada.';
+			}				
+			else $result = $this->kegiatankl_model->InsertOnDB_kegiatanKL($data);
+				
+		}else {
+			if ($this->kegiatankl_model->isExist($data['tahun'],$data['kode_kegiatan'],$data['tahun_old'],$data['kode_kegiatan_old'])){
+				$result = false;
+				$msg = 'Kode Kegiatan '.$data['kode_kegiatan'].'untuk tahun '.$data['tahun'].' sudah ada.';
+			}				
+			else $result = $this->kegiatankl_model->UpdateOnDB_kegiatanKL($data);
+		}
+		
 		
 		if ($result){
 			echo json_encode(array('success'=>true));
 		} else {
-			echo json_encode(array('msg'=>'Some errors occured uy.'));
+			echo json_encode(array('msg'=>$msg));
 		}
 	}
 	
-	function delete($id=''){
-		if($id != ''){
-			$result = $this->kegiatankl_model->DeleteOnDb($id);
+	function delete($tahun='',$kode_kegiatan=''){
+		if($tahun != ''){
+			if ($this->kegiatankl_model->isSaveDelete($kode_kegiatan,$tahun))
+				$result = $this->kegiatankl_model->DeleteOnDb($tahun,$kode_kegiatan);
+			else
+				$result = false;
 			if ($result){
 				echo json_encode(array('success'=>true, 'haha'=>''));
 			} else {
-				echo json_encode(array('msg'=>'Some errors occured uy.', 'data'=> ''));
+				echo json_encode(array('msg'=>'Data tidak bisa dihapus karena sudah digunakan sebagai referensi data lainnya.', 'data'=> ''));
 			}
 		}
 	}

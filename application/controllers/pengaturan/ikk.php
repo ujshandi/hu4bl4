@@ -9,11 +9,7 @@ class Ikk extends CI_Controller {
 		//$this->output->enable_profiler(true);
 		
 	//	$userdata = array ('userLogin' => $userLogin,'logged_in' => TRUE,'groupId'=>$this->sys_login_model->groupId,'fullName'=>$this->sys_login_model->fullName,'userId'=>$this->sys_login_model->userId,'groupLevel'=>$this->sys_login_model->level);
-		$userdata = array ('logged_in' => TRUE);
-				//
-		$this->session->set_userdata($userdata);
-				
-		if ($this->session->userdata('logged_in') != TRUE) redirect('security/login');					
+						
 		$this->load->model('/security/sys_menu_model');
 		$this->load->model('/pengaturan/ikk_model');
 		$this->load->model('/pengaturan/iku_e1_model');
@@ -31,6 +27,13 @@ class Ikk extends CI_Controller {
 		//$this->load->view('footer_vw',$data);
 	}
 	
+	public function copy(){
+		$data['title'] = 'Copy Data IKK';	
+		$data['objectId'] = 'copyikk';
+		//$data['formLookupTarif'] = $this->tarif_model->lookup('#winLookTarif'.$data['objectId'],"#medrek_id".$data['objectId']);
+	  	$this->load->view('pengaturan/ikk_copy_v',$data);
+	}
+	
 	function grid($file1=null, $file2=null,$filtahun=null,$filkey=null){
 		if (($file1==null)&&($this->session->userdata('unit_kerja_e1'))!=-1)
 			$file1= $this->session->userdata('unit_kerja_e1');
@@ -46,7 +49,7 @@ class Ikk extends CI_Controller {
 	
 	function getNewCode($e2,$tahun,$kodesasaran){
 		//fieldName,$tblName,$condition,$prefix,$suffix,$minLength=5
-		$prefix = $this->utility->getValueFromSQL("select prefix_iku as rs from tbl_prefix where kode_e2 = '$e2'","-").$kodesasaran;//UNSET
+		$prefix = $this->utility->getValueFromSQL("select prefix_iku as rs from tbl_prefix where kode_e2 = '$e2'","-").str_replace(".","",$kodesasaran);//UNSET
 		//var_dump($prefix); die;
 		echo $this->utility->ourGetNextIDNum("kode_ikk","tbl_ikk"," and tahun = '$tahun'",$prefix.".","",2);
 	}
@@ -120,7 +123,29 @@ class Ikk extends CI_Controller {
 		}
 //		echo $status;
 		
+	}
+	
+	function saveCopy($tahun, $kode_e1, $kode_e2,$tahun_tujuan){		
+		$status = "";
+		$result = false;		
+		$data['pesan_error'] = '';
+		
+		# validasi
+		# message rules
+		//if ($result){
+			$data['tahun'] = $tahun;
+			$data['tahun_tujuan'] = $tahun_tujuan;
+			$data['kode_e2'] = $kode_e2;
+			$result = $this->ikk_model->copy($data,$status);
+			$data['pesan_error'] = $status;
+	//	}		
+		if ($result){
+			echo json_encode(array('success'=>true, 'msg'=>"Data Berhasil di copy"));
+		} else {
+			echo json_encode(array('msg'=>$data['pesan_error']));
 		}
+		//echo $status;
+	}
 		
 	function delete($tahun, $kode_ikk){
 		# cek keberadaan di RKT
@@ -138,8 +163,10 @@ class Ikk extends CI_Controller {
 		
 	}
 	
-	public function getListTahun($objectId=null){
-		echo $this->ikk_model->getListTahun($objectId);
+	public function getListTahun($objectId=null,$withAll=true){
+		if ($withAll=="false")
+			$withAll = false;
+		echo $this->ikk_model->getListTahun($objectId,$withAll);
 	}
 
 	public function excel($file1=null,$file2=null,$filtahun=null,$filkey=null){
