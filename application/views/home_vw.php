@@ -241,7 +241,7 @@
 							  data: { },
 							  success : function(data, textStatus){
 								
-								
+								//alert(data);
 								if (data==""){
 									
 									window.location.replace("security/login");
