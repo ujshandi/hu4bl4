@@ -73,7 +73,7 @@ class Home extends CI_Controller {
 	}
 	
 	function getLoginStatus(){
-		echo $this->session->userdata('logged_in');
+		echo $this->session->userdata('user_id');
 	}
 	
 }
