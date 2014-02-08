@@ -304,4 +304,4 @@
 	  </thead>  
 	</table>
 	
-	<div class="popdesc" id="popdesc<?=$objectId?>">pops</div>
+	<div class="popdesc" id="popdesc<?=$objectId?>">&nbsp;</div>
