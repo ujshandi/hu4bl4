@@ -486,11 +486,11 @@
 			
 			<table border="0" cellpadding="1" cellspacing="1">
 			<tr>
-					<td>Tahun :</td>
+					<td>Tahun :&nbsp;</td>
 					<td><span id="divTahun<?=$objectId?>"></span></td>
 				</tr>
 			<tr <?=($this->session->userdata('unit_kerja_e1')=='-1'?'':'style="display:none"')?>>
-				<td>Unit Kerja Eselon I :</td>
+				<td>Unit Kerja Eselon I :&nbsp;</td>
 				<td>
 					<?=$this->eselon1_model->getListFilterEselon1($objectId,$this->session->userdata('unit_kerja_e1'))?>
 				</td>
