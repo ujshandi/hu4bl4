@@ -74,18 +74,18 @@ class Pre_usulan1_e2 extends CI_Controller {
 	//chan
 	function getListSasaranE2($objectId,$kode="",$tahun=""){
 		$data['tahun'] = $tahun;
-		$data['kode'] = $kode;
+		$data['kode'] = "-1";//$kode;
 		//$data['e2'] = $e2;
 		$data['deskripsi'] = ($kode=='')?'':$this->sasaran_eselon2_model->getDeskripsiSasaranE2($kode, $tahun);
 		echo $this->sasaran_eselon2_model->getListSasaranE2($objectId, $kode, $data);
 	}
 	
 	//chan
-	function getListIkuE2($objectId,$kode="",$tahun=""){
+	function getListIkuE2($objectId,$kode="",$tahun="",$sasaran=""){
 		$data['tahun'] = $tahun;
 		$data['kode'] = $kode;
 	//	$data['deskripsi'] = ($kode=='')?'':$this->sasaran_eselon2_model->getDeskripsiSasaranE1($kode, $tahun);
-		echo $this->ikk_model->getListIKK_E2($objectId, $kode, $tahun,'dropIku');
+		echo $this->ikk_model->getListIKK_E2($objectId, $kode, $tahun,'dropIku',$sasaran);
 	}
 	
 	function save(){

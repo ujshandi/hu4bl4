@@ -297,7 +297,7 @@ class Pre_indikatif_e2_model extends CI_Model
 		return $out;
 	}
 	
-	public function getKegiatan_e2($objectId, $kode, $tahun,$exclude=false){
+	public function getKegiatan_e2($objectId, $kode, $tahun,$exclude=false,$kodesasaran="",$kodeikk=""){
 		$out = '';
 		$this->db->flush_cache();
 	/* 	$this->db->select('k.*,pre.jumlah, pre.preusulan1_e2_id');
@@ -319,13 +319,15 @@ class Pre_indikatif_e2_model extends CI_Model
 			$idxKegiatan = $i;
 			
 			$this->db->flush_cache();
-			$this->db->select('s.*,pre.preusulan1_e2_id,pre.jumlah');
+			$this->db->select('s.*,pre.preusulan1_e2_id,pre.jumlah,pre.kode_sasaran_e2,pre.kode_ikk');
 			$this->db->from('tbl_subkegiatan_kl s',false);
 			$this->db->join('tbl_pre_usulan1_e2 pre','s.kode_subkegiatan=pre.kode_subkegiatan and s.tahun=pre.tahun','left');
 			$this->db->order_by('id_subkegiatan_kl');
 			$this->db->where('s.kode_kegiatan',$r->kode_kegiatan);
 			$this->db->where('s.tahun',$r->tahun);
 			if ($exclude){
+				//$this->db->where('pre.kode_sasaran_e2',$kodesasaran);	
+				//$this->db->where('pre.kode_ikk',$kodeikk);	
 				$this->db->where("s.kode_subkegiatan not in (select kode_subkegiatan from tbl_pre_indikatif_e2 where tahun = $r->tahun) ");
 			}
 			//if($e2!=''){$this->db->where('kode_e2',$e2);}
@@ -352,6 +354,11 @@ class Pre_indikatif_e2_model extends CI_Model
 				foreach($queSub->result() as $z){
 				//	var_dump((int)$z->preusulan1_e2_id);
 					$checked = ((int)$z->preusulan1_e2_id>0?"checked":"");
+					/*if ($exclude){
+						if (($z->kode_sasaran_e2===$kodesasaran)&&($z->kode_ikk===$kodeikk)) {						
+							continue;
+						}
+					}*/
 					$out .= '<tr>
 					<td>'.($i+1).'</td>
 					<td><input type="hidden" name="detail['.$i.'][tipe]" value="subkegiatan"/><input type="checkbox" name="detail['.$i.'][chksub]" value="chksub" '.$checked.'/></td>					

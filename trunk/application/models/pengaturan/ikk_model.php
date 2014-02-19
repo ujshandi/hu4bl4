@@ -346,7 +346,7 @@ $this->db->set('kode_ikk',$data['kode_ikk']);
 		}
 	}
 	
-	 public function getListIKK_E2($objectId="", $e1="",$tahun = "-1",$ul_id='drop'){
+	 public function getListIKK_E2($objectId="", $e1="",$tahun = "-1",$ul_id='drop',$sasaran=""){
                 
                 $this->db->flush_cache();
                 $this->db->select('kode_ikk,deskripsi');
@@ -355,6 +355,8 @@ $this->db->set('kode_ikk',$data['kode_ikk']);
                 $this->db->order_by('kode_ikk');
                 
                 $this->db->where('tahun',$tahun);
+                if ($sasaran!="")
+                $this->db->where('kode_sasaran_e2',$sasaran);
                 $que = $this->db->get();
                 /*
                 $out = '<select name="kode_iku_e1'.$objectId.'" class="easyui-validatebox" required="true">';
