@@ -346,7 +346,7 @@ class Ongoing_e2_model extends CI_Model
 		
 	}
 	
-	public function getKegiatan_e2($objectId, $kode, $tahun,$exclude=false){
+	public function getKegiatan_e2($objectId, $kode, $tahun,$exclude=false,$kodesasaran="",$kodeikk=""){
 		$out = '';
 		$this->db->flush_cache();
 		/* $this->db->select('k.*,pre.jumlah, pre.predefinitif_e2_id,0 as anggaran',false);

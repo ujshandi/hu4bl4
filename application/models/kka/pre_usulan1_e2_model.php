@@ -45,7 +45,7 @@ class Pre_usulan1_e2_model extends CI_Model
 			$this->db->join('tbl_eselon2 d', 'd.kode_e2 = a.kode_e2');
 			$this->db->join('tbl_subkegiatan_kl subkl', 'subkl.kode_subkegiatan = a.kode_subkegiatan and subkl.tahun=a.tahun','left');
 			$this->db->join('tbl_kegiatan_kl k', 'k.kode_kegiatan = a.kode_kegiatan and k.tahun=a.tahun','left');
-			$this->db->order_by("a.tahun DESC, a.kode_kegiatan ASC");
+			$this->db->order_by("a.tahun DESC, a.kode_kegiatan DESC");
 			$query = $this->db->get();
 			
 			$i=0;
@@ -155,12 +155,14 @@ class Pre_usulan1_e2_model extends CI_Model
 	
 	public function getDataEdit($id){
 		$this->db->flush_cache();
-		$this->db->select('a.*, b.deskripsi as sasaran, c.deskripsi as ikk,e.nama_e1, d.nama_e2');
+		$this->db->select('a.*, b.deskripsi as sasaran, c.deskripsi as ikk,e.nama_e1, d.nama_e2,k.nama_kegiatan, subkl.nama_subkegiatan');
 		$this->db->from('tbl_pre_usulan1_e2 a');
 		$this->db->join('tbl_sasaran_eselon2 b', 'b.kode_sasaran_e2 = a.kode_sasaran_e2 and b.tahun=a.tahun');
 		$this->db->join('tbl_ikk c', 'c.kode_ikk = a.kode_ikk and c.tahun = a.tahun');
 		$this->db->join('tbl_eselon2 d', 'd.kode_e2 = a.kode_e2');
 		$this->db->join('tbl_eselon1 e', 'e.kode_e1 = d.kode_e1');
+		$this->db->join('tbl_subkegiatan_kl subkl', 'subkl.kode_subkegiatan = a.kode_subkegiatan and subkl.tahun=a.tahun','left');
+		$this->db->join('tbl_kegiatan_kl k', 'k.kode_kegiatan = a.kode_kegiatan and k.tahun=a.tahun','left');
 		$this->db->where('a.preusulan1_e2_id', $id);
 		
 		return $this->db->get()->row();

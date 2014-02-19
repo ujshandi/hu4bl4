@@ -298,7 +298,7 @@ class Pre_definitif_e2_model extends CI_Model
 		return $out;
 	}
 	
-	public function getKegiatan_e2($objectId, $kode, $tahun,$exclude=false){
+	public function getKegiatan_e2($objectId, $kode, $tahun,$exclude=false,$kodesasaran="",$kodeikk=""){
 		$out = '';
 		$this->db->flush_cache();
 		/* $this->db->select('k.*,pre.jumlah, pre.preindikatif_e2_id');

@@ -119,8 +119,10 @@
 				<?}?>
 				
 				tahun =  $('#tahun<?=$objectId;?>').val();
+				sasaran =  $("#kode_sasaran_e2<?=$objectId;?>").val();
+				if (sasaran=="") sasaran = "-1";
 				$("#divIkk<?=$objectId?>").load(
-					base_url+"kka/post_e2/getListIkuE2/"+"<?=$objectId;?>"+"/"+e2+"/"+tahun,
+					base_url+"kka/post_e2/getListIkuE2/"+"<?=$objectId;?>"+"/"+e2+"/"+tahun+"/"+sasaran,
 					function(){
 						$('textarea').autosize();  
 						if($("#dropIku<?=$objectId;?>").is(":visible")){
@@ -218,7 +220,9 @@
 				document.getElementById('kode_sasaran_e2<?=$objectId;?>').value = valu;
 				setpendukung<?=$objectId?>();
 			}
-			
+			var e2 = $("#kode_e2<?=$objectId;?>").val();
+			var tahun = $("#tahun<?=$objectId;?>").val();
+			setIkkE2<?=$objectId;?> (e2,tahun);	
 			// set IKU E1 berdasarkan unit kerja eselon 1
 			/* var kode_e1 = $('#kode_e1<?=$objectId;?>').val();
 			var tahun = $('#tahun<?=$objectId;?>').val();

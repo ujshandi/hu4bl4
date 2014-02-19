@@ -115,6 +115,22 @@
 							<input type="hidden" name="old_kode_ikk" value="<?=$result->kode_ikk?>">
 						</div>
 						<div class="fitem">
+							<label style="width:150px">Kegiatan :</label>
+							<input type="hidden" name="kode_kegiatan" value="<?=$result->kode_kegiatan?>">
+							<span style="display:block;margin-left: 150px;">
+							<?=$result->kode_kegiatan.' - '.$result->nama_kegiatan?>
+							</span>
+							
+						</div>
+						<div class="fitem">
+							<label style="width:150px">Sub Kegiatan :</label>
+							<input type="hidden" name="kode_subkegiatan" value="<?=$result->kode_subkegiatan?>">
+							<span style="display:block;margin-left: 150px;">
+							<?=$result->kode_subkegiatan.' - '.$result->nama_subkegiatan?>
+							</span>
+							
+						</div>
+						<div class="fitem">
 							<label style="width:150px">Jumlah :</label>
 							<input name="jumlah" class="easyui-validatebox money" required="true" style="text-align:right" size="20" value="<?=$result->jumlah;?>">
 							

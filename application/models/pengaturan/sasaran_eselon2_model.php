@@ -330,7 +330,7 @@ class Sasaran_eselon2_model extends CI_Model
 		$out = '<div id="tcContainer"><input id="kode_sasaran_e2'.$objectId.'" name="kode_sasaran_e2" type="hidden" class="h_code" value="'.$kode.'">';
 		$out .= '<textarea id="txtkode_sasaran_e2'.$objectId.'" name="txtkode_sasaran_e2'.$objectId.'" class="easyui-validatebox textdown" required="true" readonly>'.$deskripsi.'</textarea>';
 		$out .= '<ul id="drop'.$objectId.'" class="dropdown">';
-		$out .= '<li value="0">-- Pilih --</li>';
+		$out .= '<li value="0" onclick="setSasaran'.$objectId.'(\'-1\')">-- Pilih --</li>';
 		
 		foreach($que->result() as $r){
 			$out .= '<li onclick="setSasaran'.$objectId.'(\''.$r->kode_sasaran_e2.'\')">'.$r->deskripsi.'</li>';

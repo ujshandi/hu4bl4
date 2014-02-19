@@ -54,6 +54,7 @@
 			$("#tahun<?=$objectId;?>").change(function(){
 			 	var e2 = $("#kode_e2<?=$objectId;?>").val();
 				setSasaranE2<?=$objectId;?>(e2,$(this).val());
+				 $("#kode_sasaran_e2<?=$objectId;?>").val("");
 				setIkkE2<?=$objectId;?>(e2,$(this).val());
 				setKegiatanE2<?=$objectId;?>(e2,$(this).val()); 
 			});
@@ -64,8 +65,13 @@
 				<?}?>
 				
 				tahun =  $('#tahun<?=$objectId;?>').val();
+				sasaran =  $("#kode_sasaran_e2<?=$objectId;?>").val();
+				kodeikk =  $("#kode_ikk<?=$objectId;?>").val();
+				
+				if (sasaran=="") sasaran = "-1";
+				if (kodeikk==null) kodeikk="-1";
 				$("#tbodykegiatan<?=$objectId;?>").load(
-					base_url+"kka/pre_definitif_e2/getKegiatan_e2/"+e2+"/"+tahun,
+					base_url+"kka/pre_definitif_e2/getKegiatan_e2/"+e2+"/"+tahun+"/"+sasaran+"/"+kodeikk,
 					function(){
 						$('.money').autoNumeric('init',{aSep: '.', aDec: ',',vMin:'0',aPad:"false",vMax:"999999999999999"});
 
@@ -117,8 +123,10 @@
 				<?}?>
 				
 				tahun =  $('#tahun<?=$objectId;?>').val();
+				sasaran =  $("#kode_sasaran_e2<?=$objectId;?>").val();
+				if (sasaran=="") sasaran = "-1";
 				$("#divIkk<?=$objectId?>").load(
-					base_url+"kka/pre_definitif_e2/getListIkuE2/"+"<?=$objectId;?>"+"/"+e2+"/"+tahun,
+					base_url+"kka/pre_definitif_e2/getListIkuE2/"+"<?=$objectId;?>"+"/"+e2+"/"+tahun+"/"+sasaran,
 					function(){
 						$('textarea').autosize();  
 						if($("#dropIku<?=$objectId;?>").is(":visible")){
@@ -189,7 +197,10 @@
 			if(valu != null){
 				document.getElementById('kode_sasaran_e2<?=$objectId;?>').value = valu;
 			}
-			
+			var e2 = $("#kode_e2<?=$objectId;?>").val();
+			var tahun = $("#tahun<?=$objectId;?>").val();
+			setIkkE2<?=$objectId;?> (e2,tahun);	
+			setKegiatanE2<?=$objectId;?>(e2,tahun); 
 			// set IKU E1 berdasarkan unit kerja eselon 1
 			/* var kode_e1 = $('#kode_e1<?=$objectId;?>').val();
 			var tahun = $('#tahun<?=$objectId;?>').val();
@@ -209,7 +220,10 @@
 			
 			if(valu != null){
 				document.getElementById('kode_ikk<?=$objectId;?>').value = valu;
-			}			
+			}	
+			var e2 = $("#kode_e2<?=$objectId;?>").val();
+			var tahun = $("#tahun<?=$objectId;?>").val();
+			setKegiatanE2<?=$objectId;?>(e2,tahun); 		
 			
 		}
 			
