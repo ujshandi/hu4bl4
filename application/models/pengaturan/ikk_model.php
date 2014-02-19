@@ -346,6 +346,43 @@ $this->db->set('kode_ikk',$data['kode_ikk']);
 		}
 	}
 	
+	 public function getListIKK_E2($objectId="", $e1="",$tahun = "-1",$ul_id='drop'){
+                
+                $this->db->flush_cache();
+                $this->db->select('kode_ikk,deskripsi');
+                $this->db->from('tbl_ikk');
+                $this->db->where('kode_e2', $e1);
+                $this->db->order_by('kode_ikk');
+                
+                $this->db->where('tahun',$tahun);
+                $que = $this->db->get();
+                /*
+                $out = '<select name="kode_iku_e1'.$objectId.'" class="easyui-validatebox" required="true">';
+                
+                foreach($que->result() as $r){
+                        $out .= '<option value="'.$r->kode_iku_e1.'">'.$r->deskripsi.'</option>';
+                }
+                
+                $out .= '</select>';
+                */
+                
+                $out = '<div id="tcContainer"><input id="kode_ikk'.$objectId.'" name="kode_ikk" type="hidden" class="h_code" value="0">';
+                $out .= '<textarea name="txtkode_ikk'.$objectId.'" id="txtkode_ikk'.$objectId.'" class="textdown" required="true" readonly>-- Pilih --</textarea>';
+                $out .= '<ul id="'.$ul_id.$objectId.'" class="dropdown">';
+                $out .= '<li value="0"  onclick="setIkk'.$objectId.'(\'\')">-- Pilih --</li>';
+                
+                foreach($que->result() as $r){
+                        $out .= '<li onclick="setIkk'.$objectId.'(\''.$r->kode_ikk.'\')">'.$r->deskripsi.'</li>';
+                }
+                $out .= '</ul></div>';
+                
+                //chan
+                if ($que->num_rows()==0){
+                        $out = "Data IKK untuk tingkat Eselon II ini belum tersedia.";
+                }
+                
+                echo $out;
+        }
 
 	public function getListIKK($objectId=""){
 		

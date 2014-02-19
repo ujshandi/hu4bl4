@@ -482,9 +482,9 @@ class Pre_usulan1_e2_model extends CI_Model
 		$this->db->flush_cache();
 		$this->db->select('distinct tahun',false);
 		$this->db->from('tbl_pre_usulan1_e2');
-		$e1 = $this->session->userdata('unit_kerja_e1');
-		if (($e1!="-1")&&($e1!=null)){
-			$this->db->where('kode_sasaran_e2',$e1);
+		$e2 = $this->session->userdata('unit_kerja_e2');
+		if (($e2!="-1")&&($e2!=null)){
+			$this->db->where('kode_e2',$e2);
 			//$value = $e1;
 		}
 		$this->db->order_by('tahun');

@@ -235,7 +235,7 @@
 				<tr>
 					<td>Tahun :</td>
 					<td>
-					<?=$this->sasaran_eselon1_model->getListFilterTahun($objectId)?>
+					<?=$this->pre_definitif_e1_model->getListFilterTahun($objectId)?>
 					</td>
 					<td width="10px"></td>
 					<td>

@@ -83,7 +83,7 @@
 				$("#divSasaranE2<?=$objectId?>").load(
 					base_url+"kka/pre_definitif_e2/getListSasaranE2/"+"<?=$objectId;?>"+"/"+e2+"/"+tahun,
 					function(){
-						$("textarea").autogrow();
+						$('textarea').autosize();  
 						if($("#drop<?=$objectId;?>").is(":visible")){
 							$("#drop<?=$objectId;?>").slideUp("slow");
 						}
@@ -120,7 +120,7 @@
 				$("#divIkk<?=$objectId?>").load(
 					base_url+"kka/pre_definitif_e2/getListIkuE2/"+"<?=$objectId;?>"+"/"+e2+"/"+tahun,
 					function(){
-						$("textarea").autogrow();
+						$('textarea').autosize();  
 						if($("#dropIku<?=$objectId;?>").is(":visible")){
 							$("#dropIku<?=$objectId;?>").slideUp("slow");
 						}

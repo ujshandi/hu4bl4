@@ -303,6 +303,22 @@ class Kegiatankl_model extends CI_Model
 		return $this->db->get()->row()->nama_kegiatan;
 	}
 	
+	public function getAnggaranSubkegiatan($kodekegiatan,$tahun,$modelMonev){
+		$this->db->flush_cache();
+		$this->db->select('sum(jumlah) as  jumlah',false);
+		switch ($modelMonev) {
+				case "indikatif" : $this->db->from('tbl_pre_indikatif_e2');break;
+				case "definitif" : $this->db->from('tbl_pre_definitif_e2');break;
+				default : $this->db->from('tbl_pre_usulan1_e2');
+		}
+		//model monev belum terpakai
+		
+		$this->db->where('tahun', $tahun);
+		$this->db->where('kode_kegiatan', $kodekegiatan);
+		
+		return $this->db->get()->row()->jumlah;
+	}
+	
 	public function getListKegiatan($objectId="",$e2="",$data=""){
 		
 		$this->db->flush_cache();
