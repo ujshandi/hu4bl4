@@ -38,7 +38,7 @@
 <div id="chartKinerjaE1<?=$objectId?>" style="height:350px;width:350px;float:left;color:#FFFFFF"> </div> 
 <div  style="width:10px;float:left">&nbsp;</div>
 
-<table id="dg<?=$objectId;?>" class="easyui-datagrid" style="height:auto;width:auto" title="Data Capaian IKU Eselon I"  fitColumns="true" singleSelect="true" rownumbers="true" pagination="true">
+<table id="dg<?=$objectId;?>" class="easyui-datagrid" style="height:350px;width:auto" title="Data Capaian IKU Eselon I"  fitColumns="true" singleSelect="true" rownumbers="true" pagination="true">
 	  <thead>
 	  <tr>
 		<th field="kode_e1" sortable="true" width="20">Kode Unit Kerja</th>		

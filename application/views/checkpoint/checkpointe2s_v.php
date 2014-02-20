@@ -666,7 +666,7 @@
 	  </div>
 	</div>
 	
-	<table id="dg<?=$objectId;?>" style="height:auto;width:auto"
+	<table id="dg<?=$objectId;?>" style="height:450px;width:auto"
 	 title="Data Checkpoint Eselon II" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true">
 	  <thead>
 	  <tr>
