@@ -20,8 +20,9 @@
 				<td>Tahun :</td>
 				<td><?=$this->sasaran_eselon1_model->getListFilterTahun($objectId,false)?></td>
 			</tr>
-				<tr  <?=($this->session->userdata('unit_kerja_e1')=='-1'?'':'style="display:none"')?>>
-					<td>Unit Kerja Eselon I&nbsp</td>
+			<!--=($this->session->userdata('unit_kerja_e1')=='-1'?'':'style="display:none"')?> -->
+				<tr  >
+					<td>Unit Kerja Eselon I :</td>
 					<td>
 						<?=$this->eselon1_model->getListFilterEselon1($objectId,$this->session->userdata('unit_kerja_e1'),false)?>
 					</td>
@@ -57,7 +58,7 @@
 	
 <div id="chartCapaianKL<?=$objectId?>" style="height:350px;width:350px;float:left"></div> 
 <div  style="width:10px;float:left">&nbsp;</div> 
-<table id="dg<?=$objectId;?>" class="easyui-datagrid" style="height:auto;width:auto" title="Data Capaian IKU Kementerian"  fitColumns="true" singleSelect="true" nowrap="false" rownumbers="true" pagination="true" showFooter="true">
+<table id="dg<?=$objectId;?>" class="easyui-datagrid" style="height:auto;width:auto" title="Data Capaian IKU Eselon I"  fitColumns="true" singleSelect="true" nowrap="false" rownumbers="true" pagination="true" showFooter="true">
 	  <thead>
 	  <tr>
 		<th field="deskripsi"   sortable="false" width="250">Deskripsi</th>
