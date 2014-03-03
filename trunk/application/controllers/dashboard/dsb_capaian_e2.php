@@ -42,9 +42,9 @@ class Dsb_capaian_e2 extends CI_Controller {
 	}
 	
 
-	public function grid($filtahun=null,$file1=null,$file2=null,$filsasaran=null){
+	public function grid($filtahun=null,$filsasaran=null){
 		
-		echo $this->dsb_capaian_e2_model->easyGrid($filtahun,$file1,$file2,$filsasaran);
+		echo $this->dsb_capaian_e2_model->easyGrid($filtahun,$filsasaran);
 		 $this->dataPie = $this->dsb_capaian_e2_model->dataPie;
 		 // $data = array("Tercapai"=>20,"Tidak Tercapai"=>3);
 			//var_dump($this->dataPie );die;
