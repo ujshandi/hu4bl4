@@ -53,7 +53,7 @@
 				<td>Unit Kerja Eselon II :</td>
 				<td>
 					<span id="divEselon2<?=$objectId?>">
-						<?=$this->eselon2_model->getListFilterEselon2($objectId,$this->session->userdata('unit_kerja_e1'),$this->session->userdata('unit_kerja_e2'))?>
+						<?=$this->eselon2_model->getListFilterEselon2($objectId,$this->session->userdata('unit_kerja_e1'),$this->session->userdata('unit_kerja_e2'),false)?>
 					 </span>
 				</td>
 			</tr>			
@@ -108,14 +108,16 @@
 $(document).ready(function(){
 	
 	$("#filter_tahun<?=$objectId;?>").change(function(){	
-					<? if ($this->session->userdata('unit_kerja_e1')!='-1') {?>
-				 e1 = '<?=$this->session->userdata('unit_kerja_e1');?>';
-				 $("#filter_e1<?=$objectId;?>").val(e1);
-				<?}?>		
-				  getListSasaran<?=$objectId;?>($(this).val(),e1);
+				<? if ($this->session->userdata('unit_kerja_e2')!='-1') {?>
+				 e2 = '<?=$this->session->userdata('unit_kerja_e2');?>';
+				 $("#filter_e2<?=$objectId;?>").val(e2);
+				<?} else {?>		
+					var e2 = $("#filter_e2<?=$objectId;?>").val();
+				<?}?>
+				  getListSasaran<?=$objectId;?>($(this).val(),e2);
 				
 			});
-	$("#filter_e1<?=$objectId;?>").change(function(){				
+	$("#filter_e2<?=$objectId;?>").change(function(){				
 				  getListSasaran<?=$objectId;?>($("#filter_tahun<?=$objectId;?>").val(),$(this).val());
 				
 			});
@@ -135,13 +137,13 @@ $(document).ready(function(){
 							$("#drop<?=$objectId;?>").slideUp("slow");
 						}
 						
-						$("#txtkode_sasaran_e1<?=$objectId;?>").click(function(){
+						$("#txtkode_sasaran_e2<?=$objectId;?>").click(function(){
 							$("#drop<?=$objectId;?>").slideDown("slow");
 						});
 						
 						$("#drop<?=$objectId;?> li").click(function(e){
 							var chose = $(this).text();
-							$("#txtkode_sasaran_e1<?=$objectId;?>").text(chose);
+							$("#txtkode_sasaran_e2<?=$objectId;?>").text(chose);
 						//	alert($("#txtkode_sasaran_e1<?=$objectId;?>").text());
 							$("#drop<?=$objectId;?>").slideUp("slow");
 						});
