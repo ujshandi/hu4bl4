@@ -33,6 +33,7 @@ class Rpt_penetapankl_model extends CI_Model
 		$offset = ($page-1)*$limit;  
 		$pdfdata = array();
 		$totalProgram =0;
+		$kodekl='';
 		if ($count>0){
 			if($filtahun != '' && $filtahun != '-1' && $filtahun != null) {
 				$this->db->where("rkt.tahun",$filtahun);
@@ -52,8 +53,8 @@ class Rpt_penetapankl_model extends CI_Model
 			//$this->db->select("*",false);
 			$this->db->select("distinct sasaran.deskripsi as sasaran_strategis, iku.deskripsi as indikator_kinerja, rkt.target, iku.satuan",false);
 			//$this->db->from('tbl_rkt_kl');
-			$this->db->from('tbl_pk_kl rkt inner join tbl_iku_kl iku on iku.kode_iku_kl = rkt.kode_iku_kl
-inner join tbl_sasaran_kl sasaran on sasaran.kode_sasaran_kl = rkt.kode_sasaran_kl',false);
+			$this->db->from('tbl_pk_kl rkt inner join tbl_iku_kl iku on iku.kode_iku_kl = rkt.kode_iku_kl  and iku.tahun=rkt.tahun
+inner join tbl_sasaran_kl sasaran on sasaran.kode_sasaran_kl = rkt.kode_sasaran_kl  and sasaran.tahun=rkt.tahun ',false);
 			$query = $this->db->get();
 			
 			$i=0;
@@ -130,7 +131,7 @@ inner join tbl_sasaran_kl sasaran on sasaran.kode_sasaran_kl = rkt.kode_sasaran_
 				$response->lastNo = 0;
 		}
 		
-		$response->footer[0]['sasaran_strategis']='<b>Jumlah Anggaran</b>';
+		$response->footer[0]['sasaran_strategis']='<b>Jumlah Total Anggaran Tahun '.$filtahun.'</b>';
 		$response->footer[0]['indikator_kinerja']='<b>'.$this->utility->cekNumericFmt($totalProgram).'</b>';
 		$response->footer[0]['no']='';
 		$response->footer[0]['program']='';
@@ -138,7 +139,7 @@ inner join tbl_sasaran_kl sasaran on sasaran.kode_sasaran_kl = rkt.kode_sasaran_
 		$response->footer[0]['no_indikator']='';
 		$response->footer[0]['target']='';
 		//utk footer pdf ================
-		$pdfdata[] = array("",'Jumlah Anggaran','',$this->utility->cekNumericFmt($this->getTotalProgram($filtahun)),'','','',1);
+		$pdfdata[] = array("",'Jumlah Total Anggaran Tahun '.$filtahun,'',$this->utility->cekNumericFmt($this->getTotalProgram($filtahun)),'','','',1);
 	//-----------------------------------
 	if ($purpose==1) //grid normal
 			return json_encode($response);
@@ -173,7 +174,7 @@ inner join tbl_sasaran_kl sasaran on sasaran.kode_sasaran_kl = rkt.kode_sasaran_
 		if ($where!="")
 			$where = " where ".substr($where,5,strlen($where));
 			
-		$sql = 'select count(*) as num_rows from (select distinct sasaran.deskripsi as sasaran_strategis, iku.deskripsi as indikator_kinerja, rkt.target ,iku.satuan from tbl_pk_kl rkt inner join tbl_iku_kl iku on iku.kode_iku_kl = rkt.kode_iku_kl inner join tbl_sasaran_kl sasaran on sasaran.kode_sasaran_kl = rkt.kode_sasaran_kl  '.$where.') as t1';
+		$sql = 'select count(*) as num_rows from (select distinct sasaran.deskripsi as sasaran_strategis, iku.deskripsi as indikator_kinerja, rkt.target ,iku.satuan from tbl_pk_kl rkt inner join tbl_iku_kl iku on iku.kode_iku_kl = rkt.kode_iku_kl  and iku.tahun=rkt.tahun inner join tbl_sasaran_kl sasaran on sasaran.kode_sasaran_kl = rkt.kode_sasaran_kl  and sasaran.tahun=rkt.tahun '.$where.') as t1';
 		$q = $this->db->query($sql);
 		return $q->row()->num_rows; 	
 	}
