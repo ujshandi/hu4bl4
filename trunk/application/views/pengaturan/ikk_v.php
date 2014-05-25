@@ -5,7 +5,7 @@
 			$('textarea').autosize();   
 			loadTahun<?=$objectId;?> = function (){
 				$('#divTahun<?=$objectId;?>').load(
-					base_url+"pengaturan/ikk/getListTahun/"+"<?=$objectId;?>"
+					base_url+"pengaturan/ikk/getListTahun/"+"<?=$objectId;?>"+"/true"
 				);
 			}
 			
