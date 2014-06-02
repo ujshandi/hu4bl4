@@ -333,7 +333,7 @@ class Sasaran_eselon2_model extends CI_Model
 		$out .= '<li value="0" onclick="setSasaran'.$objectId.'(\'-1\')">-- Pilih --</li>';
 		
 		foreach($que->result() as $r){
-			$out .= '<li onclick="setSasaran'.$objectId.'(\''.$r->kode_sasaran_e2.'\')">'.$r->deskripsi.'</li>';
+			$out .= '<li onclick="setSasaran'.$objectId.'(\''.$r->kode_sasaran_e2.'\')">['.$r->kode_sasaran_e2.'] '.$r->deskripsi.'</li>';
 		}
 		$out .= '</ul></div>';
 		
@@ -436,6 +436,60 @@ class Sasaran_eselon2_model extends CI_Model
 		$out .= '</select>';
 		
 		echo $out;
+	}
+	
+	public function getDataEdit($tahun, $kode_sasaran_e2){
+		$this->db->flush_cache();
+		$this->db->select('*');
+		$this->db->from('tbl_sasaran_eselon2 a');
+		//$this->db->join('tbl_sasaran_eselon1 b', 'b.kode_sasaran_e1 = a.kode_sasaran_e1  and a.tahun=b.tahun');
+		//$this->db->join('tbl_iku_eselon1 c', 'c.kode_iku_e1 = a.kode_iku_e1 and c.tahun = a.tahun');
+		//$this->db->join('tbl_eselon1 d', 'd.kode_e1 = a.kode_e1');
+		$this->db->where('a.tahun', $tahun);
+		$this->db->where('a.kode_sasaran_e2', $kode_sasaran_e2);
+		
+		return $this->db->get()->row();
+	}
+	
+	public function isSaveDelete($kode_e2,$kode_sasaran,$tahun){	
+		
+		$this->db->where('kode_sasaran_e2',$kode_sasaran); //buat validasi		
+		$this->db->where('kode_e2',$kode_e2); //buat validasi		
+		$this->db->where('tahun',$tahun); //buat validasi		
+		$this->db->select('*');
+		$this->db->from('tbl_ikk');
+						
+		$query = $this->db->get();
+		$rs = $query->num_rows() ;		
+		$query->free_result();
+		$isSave = ($rs==0);
+		if ($isSave){
+			$this->db->flush_cache();
+			$this->db->where('kode_sasaran_e2',$kode_sasaran); //buat validasi		
+			$this->db->where('tahun',$tahun); //buat validasi		
+			$this->db->where('kode_e2',$kode_e2); //buat validasi		
+			$this->db->select('*');
+			$this->db->from('tbl_rkt_eselon2');
+							
+			$query = $this->db->get();
+			$rs = $query->num_rows() ;		
+			$query->free_result();
+			$isSave = ($rs==0);
+			if ($isSave){
+				$this->db->flush_cache();
+				$this->db->where('kode_sasaran_e2',$kode_sasaran); //buat validasi		
+				$this->db->where('kode_e2',$kode_e2); //buat validasi		
+				$this->db->where('tahun',$tahun); //buat validasi			
+				$this->db->select('*');
+				$this->db->from('tbl_pk_eselon2');
+								
+				$query = $this->db->get();
+				$rs = $query->num_rows() ;		
+				$query->free_result();
+				$isSave = ($rs==0);
+			}
+		}
+		return $isSave;
 	}
 	
 }

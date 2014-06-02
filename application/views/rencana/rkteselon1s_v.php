@@ -26,8 +26,12 @@
 			deleteData<?=$objectId;?> = function (){
 				
 					var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
+					if(row.status != '0'){
+							alert('Maaf data tidak bisa dihapus, karena sudah ditetapkan di PK.');
+							return;
+						}
 					if(row){
-						if(confirm("Apakah yakin akan menghapus data RKT ?")){
+						if(confirm("Apakah yakin akan menghapus data '" + row.kode_iku + "'?")){
 							var response = '';
 							$.ajax({ type: "GET",
 									 url: base_url+'rencana/rkteselon1/delete/' + row.id_rkt_e1,

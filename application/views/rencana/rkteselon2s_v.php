@@ -107,7 +107,12 @@
 			deleteData<?=$objectId;?> = function (){
 				
 					var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
+					
 					if(row){
+						if(row.status != '0'){
+							alert('Maaf data tidak bisa dihapus, karena sudah ditetapkan di PK.');
+							return;
+						}
 						if(confirm("Apakah yakin akan menghapus data '" + row.kode_ikk + "'?")){
 							var response = '';
 							$.ajax({ type: "GET",

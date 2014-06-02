@@ -197,7 +197,7 @@
 				});
 			}
 			//end saveData
-			
+			setE2Filter<?=$objectId?>('<?=FILTER_E1?>');
 			setTimeout(function(){
 				searchData<?=$objectId?>();
 			},100);
@@ -307,13 +307,13 @@
 	  </tr>
 	  </table>
 	  <div style="margin-bottom:5px">
-		<? if ($this->sys_menu_model->cekAkses("ADD;",304,$this->session->userdata('group_id'),$this->session->userdata('level_id'))) {?>
+		<? if ($this->sys_menu_model->cekAkses("ADD;",518,$this->session->userdata('group_id'),$this->session->userdata('level_id'))) {?>
 			<a href="#" onclick="newData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-add" plain="true">Add</a>  
 		<?}?>
-		<? if ($this->sys_menu_model->cekAkses("EDIT;",304,$this->session->userdata('group_id'),$this->session->userdata('level_id'))) {?>
+		<? if ($this->sys_menu_model->cekAkses("EDIT;",518,$this->session->userdata('group_id'),$this->session->userdata('level_id'))) {?>
 			<a href="#" onclick="editData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-edit" plain="true">Edit</a>
 		<?}?>
-		<? if ($this->sys_menu_model->cekAkses("PRINT;",304,$this->session->userdata('group_id'),$this->session->userdata('level_id'))) {?>
+		<? if ($this->sys_menu_model->cekAkses("PRINT;",518,$this->session->userdata('group_id'),$this->session->userdata('level_id'))) {?>
 			<!--<a href="#" onclick="printData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-print" plain="true">Print</a> -->
 		<?}?>
 	  </div>
