@@ -94,8 +94,8 @@
 						
 						if (key!=null)
 							$('#kode_iku_e1<?=$objectId;?>').val(key);
-						if (val!=null)
-							$('#txtkode_iku_e1<?=$objectId;?>').val(val);
+						if ((val!=null) &&  (key!=null))
+							$('#txtkode_iku_e1<?=$objectId;?>').val('['+key+'] '+val);
 					}
 				);
 			}  
@@ -378,8 +378,8 @@
 					//	alert(val);
 						if (key!=null)
 							$('#kode_sasaran_e2ListSasaran<?=$objectId;?>').val(key);
-						if (val!=null)
-							$('#txtkode_sasaran_e2ListSasaran<?=$objectId;?>').val(val);
+						if ((val!=null) &&  (key!=null))
+							$('#txtkode_sasaran_e2ListSasaran<?=$objectId;?>').val('['+key+'] '+val);
 					}
 				); 
 				//alert("here");

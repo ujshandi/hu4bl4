@@ -267,8 +267,8 @@
 						if (key!=null)
 							$('#kode_sasaran_kl<?=$objectId;?>').val(key);
 						
-						if ((val!=null)&&(val!=""))
-							$('#txtkode_sasaran_kl<?=$objectId;?>').val(val);
+						if ((val!=null) &&  (key!=null))
+							$('#txtkode_sasaran_kl<?=$objectId;?>').val('['+key+'] '+val);
 					}
 				);
 				//alert("here");

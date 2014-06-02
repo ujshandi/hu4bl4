@@ -87,8 +87,8 @@
 						
 						if (key!=null)
 							$('#kode_sasaran_e1<?=$objectId;?>').val(key);
-						if (val!=null)
-							$('#txtkode_sasaran_e1<?=$objectId;?>').val(val);
+						if ((val!=null) &&  (key!=null))
+							$('#txtkode_sasaran_e1<?=$objectId;?>').val('['+key+'] '+val);
 					}
 				); 
 				//alert("here");

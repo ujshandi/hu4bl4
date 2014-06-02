@@ -53,8 +53,8 @@
 						
 						if (key!=null)
 							$('#kode_iku_kl<?=$objectId;?>').val(key);
-						if (val!=null)
-							$('#txtkode_iku_kl<?=$objectId;?>').val(val);
+						if ((val!=null) &&  (key!=null))
+							$('#txtkode_iku_kl<?=$objectId;?>').val('['+key+'] '+val);
 					}
 				);
 			}  
@@ -245,10 +245,13 @@
 					$('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Edit IKU Eselon I');
 					$('#fm<?=$objectId;?>').form('load',row);
 					//initCombo<?=$objectId?>();
-					setIKUKL<?=$objectId;?>($("#tahun<?=$objectId?>").val(),row.kode_iku_kl,row.deskripsi_ikukl);
-					//setListE2<?=$objectId?>(row.kode_e2);
-					kodeE1Change<?=$objectId?>(true);
-					setSasaranE1<?=$objectId?>($("#tahun<?=$objectId?>").val(),$("#kode_e1<?=$objectId?>").val(),row.kode_sasaran_e1,row.deskripsi_sasaran_e1);
+					setTimeout(function(){
+						setSasaranE1<?=$objectId?>($("#tahun<?=$objectId?>").val(),$("#kode_e1<?=$objectId?>").val(),row.kode_sasaran_e1,row.deskripsi_sasaran_e1);
+						setIKUKL<?=$objectId;?>($("#tahun<?=$objectId?>").val(),row.kode_iku_kl,row.deskripsi_ikukl);
+						//setListE2<?=$objectId?>(row.kode_e2);
+						//kodeE1Change<?=$objectId?>(true);
+					},1000);
+				//	
 					/* // ajax
 					var response = '';
 					$.ajax({ type: "GET",   
@@ -369,8 +372,8 @@
 						
 						if (key!=null)
 							$('#kode_sasaran_e1ListSasaran<?=$objectId;?>').val(key);
-						if (val!=null)
-							$('#txtkode_sasaran_e1ListSasaran<?=$objectId;?>').val(val);
+						if ((val!=null) &&  (key!=null))
+							$('#txtkode_sasaran_e1ListSasaran<?=$objectId;?>').val('['+key+'] '+val);
 					}
 				); 
 				//alert("here");
